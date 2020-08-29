@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8" />
+
+    <script type="text/javascript">
+    if((navigator.userAgent.indexOf('iPhone') > 0) || navigator.userAgent.indexOf('iPod') > 0 || (navigator.userAgent.indexOf('Android') > 0 && navigator.userAgent.indexOf('Mobile') > 0)){
+            document.write('<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">');
+        }else{
+            document.write('<meta name="viewport" content="width=1200,user-scalable=yes">');
+        }
+    </script>
+
+<noscript><meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"></noscript>
+
+    <link rel="stylesheet" th:href="@{/css/front/normalize.css}" media="all"></link>
+    <link rel="stylesheet" th:href="@{/script/slick/slick.css}" media="all"></link>
+    <link rel="stylesheet" th:href="@{/script/slick/slick-theme.css}" media="all"></link>
+    <link rel="stylesheet" th:href="@{/css/front/modal-video.min.css}" media="all"></link>
+    <link rel="stylesheet" th:href="@{/css/front/common.css}" media="all"></link>
+
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script type="text/javascript" th:src="@{/scripts/front/slick/slick.min.js}"></script>
+    <script type="text/javascript" th:src="@{/scripts/front/jquery-modal-video.min.js}"></script>
+    <script type="text/javascript" th:src="@{/scripts/front/common.js}"></script>
+
+    <title>予約情報｜エンジョイゴルフ24</title>
+    <meta name="Keywords" content="" />
+    <meta name="Description" content="" />
+    <meta property="og:image" content="http://">
+
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script src="https://rawgit.com/jquery/jquery-ui/master/ui/i18n/datepicker-ja.js"></script>
+  <script>
+  $( function() {
+    $( "#datepicker" ).datepicker();
+  } );
+  </script>
+</head>
+<body id="top" >
+
+<div id="allwrap">
+
+<header>
+  <div class="line">
+    <div class="inner">
+      <div class="lead">日本のゴルフを、もっと豊かに、もっと上質に。</div>
+      <nav class="member">
+        <a href="/login/" class="regist">新規会員登録</a>
+        <a href="/login/" class="login">ログアウト</a>
+      </nav>
+    </div>
+  </div>
+  <div class="inner">
+    <div class="logo"><a href="/"><img th:src="@{/images/front/logo.svg}" alt="Enjoy Golf24" width="300"/></a><span>予約管理システム</span></div>
+    <div class="menu_btn sp_only"><div class="sp_menubtn"><span></span><span></span><span></span></div></div>
+    <nav id="gnavi">
+      <div class="gnavi_inner">
+      <ul>
+        <li><a href="/shop_vacancies/" class="booking1"><span>新規予約</span></a></li>
+        <li><a href="/booking/" class="booking2"><span>予約情報</span></a></li>
+      </ul>
+      </div>
+    </nav>
+    
+  </div>
+</header>
+
+<main id="booking">
+  <div class="inner">
+
+  <section>
+    <div id="memberdata">
+      <dl>
+        <dt>会員番号：</dt><dd th:text="${memberCode}"><input type="hidden" th:field="*{memberCode}"></dd>
+        <dt>お名前：</dt><dd th:text="${memberName}"></dd>
+        <dt>保有ポイント：</dt><dd><span th:text="${monthlyPoint}"></span>/<span th:text="${eventPoint}"></span></dd>
+      </dl>
+    </div>
+
+    <h1>部屋予約（新規）</h1>
+    <form id="form" class="booking_search"  method="post" th:action="@{/admin/booking/front}" th:object="${memberReservationManageListForm}">
+      <dl class="reserve">
+        <dt>店舗</dt>
+        <dd><div class="shop">
+          <select>
+            <option>曙橋店</option>
+          </select>
+          </div>
+        </dd>
+        <dt>予約日</dt>
+        <dd>
+          <div class="date"><input type="text" readonly name="" id="datepicker" th:field="*{reservationDate}"/></div>
+          <div class="time">
+          <select>
+            <optgroup label="AM">
+              <option>00:00～01:00</option> 
+              <option>01:00～02:00</option> 
+              <option>02:00～03:00</option> 
+              <option>03:00～04:00</option> 
+              <option>04:00～05:00</option> 
+              <option>05:00～06:00</option> 
+              <option>06:00～07:00</option> 
+              <option>07:00～08:00</option>
+              <option>08:00～09:00</option> 
+              <option>09:00～10:00</option> 
+              <option>10:00～11:00</option> 
+              <option>11:00～12:00</option>
+            </optgroup>
+            <optgroup label="PM">
+              <option>12:00～13:00</option> 
+              <option>13:00～14:00</option> 
+              <option>14:00～15:00</option> 
+              <option>15:00～16:00</option> 
+              <option>16:00～17:00</option> 
+              <option>17:00～18:00</option> 
+              <option>18:00～19:00</option> 
+              <option>19:00～20:00</option> 
+              <option>20:00～21:00</option> 
+              <option>21:00～22:00</option> 
+              <option>22:00～23:00</option> 
+              <option>23:00～24:00</option> 
+            </optgroup>
+          </select>
+          </div>
+        </dd>
+      </dl>
+      <button type="submit">検索</button>
+    </form>  
+    <div class="frame">
+      <div class="sp_only mb10 tac"><small>一覧は横にスクロールできます。</small></div>
+      <div class="sp_scroll_table">
+        <table class="reserve_list">
+          <thead>
+            <tr>
+              <th>時間</th>
+              <th>ポイント</th>
+              <th th:each="batnumber, iter : ${batNumbers}"><span th:text="${batnumber}"></span></th>
+            </tr>
+          </thead>
+          <tbody>
+          <tr th:each="data, itemStat : ${timeSchedule}"　th:data-consumedpoint="${data.consumedPoint}" th:data-timeslotname="${data.timeSlotName}">
+              <th><span th:text="${data.timeSlotName}"></span></td>
+              <td>
+                <img th:if="${data.consumedPoint == '3'}" th:src="@{/images/front/booking_3p.png}" alt="3P"/>
+                <img th:if="${data.consumedPoint == '5'}" th:src="@{/images/front/booking_5p.png}" alt="5P"/>
+                <img th:if="${data.consumedPoint == '10'}" th:src="@{/images/front/booking_10p.png}" alt="10P"/>
+              </td>
+              <td th:each="batData, itemStat : ${data.reservationList}" th:data-batnumbercd="${batData.batNumberCd}" th:data-batnumber="${batData.batNumber}">
+              <span th:if="${batData.expireFlag == '1'}">×</span>
+              <span th:if="${batData.expireFlag == '0'}">
+                <span th:if="${batData.emptyFlag == '0'}">×</span>
+                <span th:if="${batData.emptyFlag == '1'}"><a id="btnRegisterBooking" class="c-link-text text-blue user-func" href="#" th:url="@{/admin/booking/register}">〇</a></span>
+              </span>
+              <!-- span th:text="${batData.memberCode}"></span-->
+              </td>
+          </tr>
+
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  </div>
+</main>
+
+<div class="pagetop">
+  <div class="inner">
+    <a href="#top">PAGE TOP</a>
+  </div>
+</div>
+  
+  
+<footer>
+  <div class="inner">
+    <nav>
+    <a href="/company/" class="company">会社案内</a>
+      ｜
+    <a href="/policy/" class="privacy">サイトの利用条件・個人情報保護に関して</a>
+    <a href="/safety_shop/" class="safe"><i><img th:src="@{/images/front/cca.png}" alt="画像"/></i>CLEAN AREA 安全対策</a>
+    </nav>
+    <div class="address">（株）Enjoygolf24<br class="sp_only">
+      <span class="pc_only">｜</span>
+      〒000-0000 ダミーダミーダミー ダミーダミー<br class="sp_only">
+      <span class="pc_only">｜</span>
+      TEL:<a href="tel:">03-0000-0000</a>
+      <span>｜</span>
+      FAX:03-0000-0000</div>
+    <div class="copyright">&copy; 2020 Enjoygolf24</div>
+  </div>
+</footer>
+</div>
+
+</body>
+</html>

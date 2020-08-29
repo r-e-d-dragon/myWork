@@ -1,0 +1,236 @@
+@import url("./openSans.css");
+.mypage-index .hdg-mypage .c-ttl {
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #999999; }
+
+.mypage-index .hdg-mypage .text {
+  font-size: 20px;
+  color: #222222; }
+
+    .text-margin{
+  margin-bottom: 55px;
+    font-size: 20px;
+  color: #222222; }
+
+.mypage-index .card-mypage {
+
+
+  -ms-flex-line-pack: center;
+      align-content: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+
+  padding: 30px 25px 25px;
+  background-color: #f4f4f4;
+  border: 2px solid transparent;
+  border-radius: 4px; }
+  .mypage-icon {
+    margin-bottom: 20px;
+    text-align: center; }
+  .mypage-index .card-mypage .title {
+    margin-bottom: 10px;
+    font-size: 20px;
+    font-weight: bold;
+    color: #008bd5;
+    line-height: 1.1;
+    text-align: center; }
+    .mypage-index .card-mypage .title .bigger {
+      font-size: 24px; }
+  .mypage-index .card-mypage .text {
+    text-align: center;
+    font-size: 14px;
+    line-height: 1.7; }
+  .mypage-index .card-mypage .note {
+    font-size: 12px;
+    line-height: 1.5;
+    color: #999999;
+    text-align: center; }
+  .mypage-index .card-mypage:hover {
+    background-color: #f6fcff;
+    border-color: #008bd5;
+    cursor:pointer }
+
+.mypage-index .link {
+  font-size: 14px;
+  color: #008bd5;
+  letter-spacing: 2px;
+  cursor:pointer;
+  text-decoration: underline; }
+  .mypage-index .link:hover {
+    text-decoration: none; }
+
+.mypage-index .card-mypage-dasabled {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-line-pack: center;
+      align-content: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  width: 100%;
+  padding: 30px 25px 25px;
+  background-color: #f4f4f4;
+  border: 2px solid transparent;
+  border-radius: 4px;
+  pointer-events: none; }
+  .mypage-index .card-mypage-dasabled .icon {
+    margin-bottom: 20px;
+    text-align: center; }
+  .mypage-index .card-mypage-dasabled .title {
+    margin-bottom: 10px;
+    font-size: 20px;
+    font-weight: bold;
+    color: #999999;
+    line-height: 1.1;
+    text-align: center; }
+    .mypage-index .card-mypage-dasabled .title .bigger {
+      font-size: 24px; }
+  .mypage-index .card-mypage-dasabled .text {
+    text-align: center;
+    font-size: 14px;
+    line-height: 1.7; }
+  .mypage-index .card-mypage-dasabled .note {
+    font-size: 12px;
+    line-height: 1.5;
+    color: #999999;
+    text-align: center; }
+
+.menu-disabled {
+    color: #999999 !important;
+    pointer-events: none;
+    cursor: default;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -user-select: none;
+    opacity: 1;
+
+}
+.menu-disabled a:hover {
+          text-decoration: none;
+          opacity: 1;}
+
+
+.mypage-index .list-mypage-nav {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  margin: 0 -5px; }
+  .mypage-index .list-mypage-nav .item {
+    padding: 0 5px;
+    -webkit-box-flex: 1;
+        -ms-flex: 1;
+            flex: 1; }
+
+.mypage-account-index .border-middle {
+  margin: 0 5px;
+  position: relative;
+  width: 30px;
+  height: 1px;
+  background: #000; }
+
+.mypage-account-index .box-register {
+  width: 695px;
+  margin: 0 -5px; }
+  .mypage-account-index .box-register .item {
+    -webkit-box-flex: 1;
+        -ms-flex: 1;
+            flex: 1;
+    padding: 0 5px; }
+
+.mypage-custom-index .box-condition {
+  padding: 30px;
+  background: #f4f4f4;
+  border-radius: 5px; }
+  .mypage-custom-index .box-condition .box-01 {
+    width: 688px; }
+    .mypage-custom-index .box-condition .box-01 .box-middle {
+      display: inline-block;
+      margin: 4px 5px 0 5px;
+      font-weight: bold; }
+  .mypage-custom-index .box-condition .box-02 {
+    width: 510px; }
+
+.mypage-custom-index .list-radio-01 {
+  display: inline-block;
+  vertical-align: top; }
+  .mypage-custom-index .list-radio-01 li {
+    display: inline-block;
+    margin-left: 5px; }
+    .mypage-custom-index .list-radio-01 li:first-child {
+      margin-left: 0; }
+
+.mypage-custom-index .input-calendar {
+  position: relative;
+  display: inline-block;
+  vertical-align: top; }
+  .mypage-custom-index .input-calendar .c-input {
+    width: 200px; }
+  .mypage-custom-index .input-calendar .ico-calendar {
+    position: absolute;
+    top: 50%;
+    right: 8px;
+    width: 30px;
+    height: 40px;
+    -webkit-transform: translateY(-50%);
+        -ms-transform: translateY(-50%);
+            transform: translateY(-50%);
+    padding: 6px 3px;
+    cursor: pointer; }
+
+.mypage-custom-index .text-number {
+  font-size: 18px;
+  font-weight: bold;
+  color: #008bd5; }
+  .mypage-custom-index .text-number span {
+    font-weight: normal;
+    color: #555555; }
+
+.link {
+  font-size: 14px;
+  color: #008bd5;
+  letter-spacing: 2px;
+  cursor:pointer;
+  text-decoration: underline; }
+.link:hover {
+    text-decoration: none; }
+    
+    .form-register .box-register {
+    width: 695px;
+    margin: 0 -5px;
+}
+      
+    .form-register .box-register .item {
+    -webkit-box-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    padding: 0 5px;
+}
+
+.form-register .middle-border {
+  margin: 0 10px;
+  position: relative;
+  width: 30px;
+  height: 1px;
+  background: #000; }
+
+.form-register .txt-error {
+  display: inline-block;
+  padding: 4px 7px;
+  background-color: rgba(255, 0, 0, 0.05);
+  color: #f20000;
+  font-size: 16px;
+  font-weight: normal; }

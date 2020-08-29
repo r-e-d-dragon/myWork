@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout-main}">
+<head>
+    <title>店舗管理者登録</title>
+    <link rel="stylesheet" th:href="@{/css/admin/mypage.css}"></link>
+    <script type="text/javascript" th:src="@{/scripts/admin/asp/user/registerUser.js}"></script>
+</head>
+<body>
+<div layout:fragment="content"><!-- /** layout contents start */ -->
+    <form id="form"  method="post" th:action="@{/admin/asp/registerUser/finish}" th:object="${managerRegisterForm}">
+        <div class="wrapper mypage-custom-index" id="body-index">
+            <section>
+                <h1 class="c-ttl c-ttl__01 m-b-50">店舗管理者登録</h1>
+                <div class="form-register">
+		          <section class="m-b-55">
+					<div class="c-box-account m-b-20">
+		              <h2 class="c-ttl c-ttl__03 m-b-20">お店舗管理者情報を入力してください</h2>
+		              <div class="row align-items-start m-b-20">
+		                <div class="d-flex justify-content-between align-items-start m-t-5">
+		                  <span class="text c-ttl c-ttl__04">店舗</span>
+		                </div>
+		                <div>
+		                	<select th:field="*{aspCode}" class="selectBoxCss select-option width-240" th:errorclass="fieldError">
+		                    	<option th:each="cdItem : ${aspCodeCdMap}" th:value="${cdItem.key}" th:text="${cdItem.value}" th:errorclass="fieldError"></option>
+		                  	</select>
+		                </div>
+		               </div>
+		               
+		               <div class="row align-items-start m-b-20">
+		                <div class="d-flex justify-content-between align-items-start m-t-10">
+		                  <span class="text c-ttl c-ttl__04">権限区分</span>
+		                  <span class="tag-icon tag-red m-t-5">必須</span>
+		                </div>
+		                <div>
+		                  <select th:field="*{authTypeCd}" class="selectBoxCss select-option width-240" th:errorclass="fieldError">
+		                    <option th:each="authTypeCdItem : ${authTypeCdMap}" th:value="${authTypeCdItem.key}" th:text="${authTypeCdItem.value}" th:errorclass="fieldError"></option>
+		                  </select>
+		                </div>
+		               </div>
+		               
+		               <div class="row align-items-start m-b-20">
+		                 <div class="d-flex justify-content-between align-items-start m-t-10">
+		                   <span id="nameKanji" class="text c-ttl c-ttl__04">お名前</span>
+		                   <span class="tag-icon tag-red m-t-5">必須</span>
+		                 </div>
+		                 <div>
+		                   <div class="width-500 c-box-name d-flex justify-content-between align-items-center">
+		                   <input type="hidden" th:field="*{loginUserCd}">
+		                    <input class="c-input" type="text" maxlength="20" placeholder="山田" style="width: 240px;" th:field="*{lastName}" th:errorclass="fieldError">
+		                    <input class="c-input" type="text" maxlength="20" placeholder="花子" style="width: 240px;" th:field="*{firstName}" th:errorclass="fieldError">
+				           </div>
+		                  </div>
+		                </div>
+		                
+		                <div class="row align-items-start m-b-20">
+		                 <div class="d-flex justify-content-between align-items-start m-t-10">
+		                   <span id="nameKanji" class="text c-ttl c-ttl__04">フリガナ</span>
+		                   <span class="tag-icon tag-red m-t-5">必須</span>
+		                 </div>
+		                 <div>
+		                   <div class="width-500 c-box-name d-flex justify-content-between align-items-center">
+		                    <input class="c-input" type="text" maxlength="20" placeholder="ヤマダ" style="width: 240px;" th:field="*{lastNameKana}" th:errorclass="fieldError">
+		                    <input class="c-input" type="text" maxlength="20" placeholder="ハナコ"  style="width: 240px;" th:field="*{firstNameKana}" th:errorclass="fieldError">
+				           </div>
+		                  </div>
+		                </div>
+		                
+		                <div class="row align-items-start m-b-20">
+			              <div class="d-flex justify-content-between align-items-start m-t-10"><span class="text c-ttl c-ttl__04">郵便番号</span><span class="tag-icon tag-gray m-t-5">任意</span></div>
+			              <div>
+			                <div class="d-flex justify-content-start align-items-center">
+			                  <div class="width-330 d-flex justify-content-between align-items-center">
+			                    <input class="c-input width-150 number" type="text" th:field="*{zip1}" th:errorclass="fieldError" maxlength="3" placeholder="103"><span class="middle-border"></span>
+			                    <input class="c-input width-150 number" type="text" th:field="*{zip2}" th:errorclass="fieldError" maxlength="4" placeholder="0034">
+			                  </div>
+			                  <span class="m-l-20 m-t-5">
+			                    <small><a class="c-link-text text-blue user-func" id="btnSearchAddress" href="" th:url="@{/public/common/searchAddress}">住所変換</a></small>
+			                  </span>
+			                  <div id="address_dlg" style="display:none;">
+			                    <select id="address_list"></select>
+			                  </div>
+			                </div>
+			              </div>
+			            </div>
+			            
+			            <div class="row align-items-start m-b-20">
+			              <div class="d-flex justify-content-between align-items-start m-t-10"><span class="text c-ttl c-ttl__04">ご住所</span><span class="tag-icon tag-gray m-t-5">任意</span></div>
+			              <div>
+			                <input class="c-input m-b-5" type="text" th:field="*{address1}" th:errorclass="fieldError" maxlength="60" placeholder="" style="width: 500px;">
+			                <input class="c-input" type="text" th:field="*{address2}" th:errorclass="fieldError" maxlength="60" placeholder="" style="width: 500px;">
+			              </div>
+			            </div>
+			            
+			            <div class="row align-items-start m-b-20">
+			              <div class="d-flex justify-content-between align-items-start m-t-10"><span class="text c-ttl c-ttl__04">電話番号</span><span class="tag-icon tag-red m-t-5">必須</span></div>
+			              <div>
+			                <input class="c-input" type="text" th:field="*{phone}" th:errorclass="fieldError" maxlength="20" placeholder="00-0000-0000">
+			              </div>
+			            </div>
+			            
+			            <div class="row align-items-start m-b-20">
+			              <div class="d-flex justify-content-between align-items-start m-t-10"><span class="text c-ttl c-ttl__04">メールアドレス</span>
+			                <span class="tag-icon tag-red m-t-5">必須</span>
+			              </div>
+			              <div>
+			                <input class="c-input" type="text" maxlength="256" placeholder="" th:field="*{email}" value="" th:errorclass="fieldError">
+			              </div>
+			            </div>
+			            
+			            <div class="row align-items-start m-b-20">
+			              <div class="d-flex justify-content-between align-items-start m-t-10"><span class="text c-ttl c-ttl__04">メールアドレス（確認用）</span>
+			                <span class="tag-icon tag-red m-t-5">必須</span>
+			              </div>
+			              <div>
+			                <input class="c-input" type="text" maxlength="256" placeholder="" th:field="*{emailConfirm}" value="" th:errorclass="fieldError">
+			              </div>
+			            </div>
+		        
+		            </div>
+		            </section>
+		            </div>
+            
+            <div class="c-box-confirm text-center m-b-70">
+            <div class="m-b-55">
+              <a id="registerBtn" class="c-btn btn-primary btn-confirm m-b-15" href="#" th:url="@{/admin/asp/registerUser/finish}">登録</a>
+            </div>
+          </div>
+             
+            </section>
+            
+        </div>
+    </form>
+</div> <!-- /** layout contents finish */ -->
+</body>
+</html>

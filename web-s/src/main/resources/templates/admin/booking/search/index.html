@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout-main}">
+<head>
+    <title>予約検索</title>
+    <link rel="stylesheet" th:href="@{/css/admin/mypage.css}"></link>
+</head>
+<body>
+<div layout:fragment="content"><!-- /** layout contents start */ -->
+    <form id="form"  method="post" th:action="@{/admin/booking/search}" th:object="${memberReservationManageListForm}">
+        <div class="wrapper mypage-custom-index" id="body-index">
+
+            <section>
+                <div class="box-filter m-b-0 c-form-01 text-md" >
+                </div>
+                <h3 class="c-ttl c-ttl__03 m-b-10">予約検索</h3>
+                <div class="c-form-01 m-b-20">
+	                <table class="table-search m-b-20" >
+	                <tbody>
+	                	<tr>
+	                        <th class="text-letf" width="20%">店舗名</th>
+	                        <td class="text-left" colspan="3"><p th:text="${aspName}"></p><input type="hidden" th:field="*{aspCode}"><input type="hidden" th:field="*{loginUserCd}"></td>
+	                    </tr>
+						<tr>
+							<th class="text-letf" width="20%">予約番号</th>
+							<td class="text-left" width="30%"><input type="text" maxlength="20" placeholder="" th:field="*{reservationNumber}" value="" th:errorclass="fieldError"></td>
+							<th class="text-letf" width="20%">予約日時</th>
+							<td class="text-letf"><input type="text" maxlength="20" placeholder="" th:field="*{reservationDate}" value="" th:errorclass="fieldError"></td>
+						</tr>
+						<tr>
+							<th class="text-letf" width="20%">会員番号</th>
+							<td class="text-letf" colspan="3"><input type="text" maxlength="20" placeholder="" th:field="*{memberCode}" value="" th:errorclass="fieldError"></td>
+						</tr>
+						<tr>
+							<th class="text-letf" width="20%">お名前</th>
+							<td class="text-letf"><div class="tableLabel">（姓）</div><input type="text" maxlength="20" placeholder="山田" style="width: 240px;" th:field="*{lastName}" th:errorclass="fieldError"></td>
+							<td class="text-letf" colspan="2"><div class="tableLabel">（名）</div><input type="text" maxlength="20" placeholder="花子" style="width: 240px;" th:field="*{firstName}" th:errorclass="fieldError"></td>
+						</tr>
+						<tr>
+							<th class="text-letf" width="20%">フリガナ</th>
+							<td class="text-letf"><div class="tableLabel">（セイ）</div><input type="text" maxlength="20" placeholder="ヤマダ" style="width: 240px;" th:field="*{lastNameKana}" th:errorclass="fieldError"></td>
+							<td class="text-letf" colspan="2"><div class="tableLabel">（メイ）</div><input type="text" maxlength="20" placeholder="ハナコ"  style="width: 240px;" th:field="*{firstNameKana}" th:errorclass="fieldError"></td>
+						</tr>
+						<tr>
+							<th class="text-letf" width="20%">電話番号</th>
+							<td class="text-letf" colspan="3"><input type="text" th:field="*{phone}" th:errorclass="fieldError" maxlength="20" placeholder="00-0000-0000"></td>
+						</tr>
+						<tr>
+							<th class="text-letf" width="20%">メールアドレス</th>
+							<td class="text-letf" colspan="3"><input type="text" maxlength="256" placeholder="〇〇〇@〇〇〇.com" th:field="*{email}" value="" th:errorclass="fieldError"></td>
+						</tr>
+						</tbody>
+					</table>
+
+	                <div class="align-items-center">
+	                  <a id="searchBtn" class="c-btn btn-primary m-l-50" href="#" th:url="@{/admin/booking/search}">検索する</a>
+	                  <input type="reset" id="resetBtn" class="c-btn btn-primary swap m-l-30" value="リセット">
+					  <a id="registerBtn" class="c-btn btn-primary swap m-l-30" href="#" th:url="@{/admin/booking/top}">新規予約</a>
+        	        </div>
+                </div>
+            </section>
+
+            <div class="box-filter m-b-0 c-form-01 text-md" >
+            </div>
+            <h3 class="c-ttl c-ttl__03 m-b-10">予約情報</h3>
+			<section>
+                <div class="box-filter d-flex justify-content-between m-b-5 c-form-01 text-md" >
+                    <div class="text-number d-flex justify-content-start align-items-center">
+                        <span th:text="${pageInfo == null} ? '0' : ${pageInfo.getTotal()}" ></span> 
+                        <span class="text-md">件の予約があります。</span>
+                    </div>
+                </div>
+                <div class="box-filter m-b-0 c-form-01 text-md" >
+                </div>
+                <table class="table-detail m-b-40" >
+               	<tr>
+                    <th class="text-center" width="5%">No</th>
+			        <th class="text-center" width="15%">店舗名</th>
+			        <th class="text-center" width="25%">予約番号</th>
+			        <th class="text-center" width="25%">会員名</th>
+			        <th class="text-center" width="15%">打席番号</th>
+			        <th class="text-center" width="15%">予約日付</th>
+			        <th class="text-center" width="15%">予約時間</th>
+			        <th class="text-center" width="10%">消費<br>ポイント</th>
+                    <th class="text-center" width="10%">ポイント<br>種別</th>
+			        <th class="text-center" width="15%"> </th>
+			    </tr>
+			    <div th:if="${pageInfo != null}" >
+			         <tr th:each="data , itemStat : ${pageInfo.list}" th:class="${itemStat.odd}? 'odd' : 'even'">
+			            <td class="text-center"><span th:text="${itemStat.count}"></span></td>
+				        <td class="text-center"><span th:text="${data.aspName}"></span></td>
+			            <td class="text-center"><span th:text="${data.reservationNumber}"></span></td>
+			            <td class="text-center"><span th:text="${data.lastName + ' ' + data.firstName}"></span></td>
+				        <td class="text-center"><span th:text="${data.batNumber}"></span></td>
+				        <td class="text-center"><span th:text="${data.reservationDate}"></span></td>
+				        <td class="text-center"><span th:text="${data.reservationTime}"></span></td>
+				        <td class="text-center"><span th:text="${data.consumedPoint}"></span></td>
+                        <td class="text-center"><span><img th:if="${data.pointCategoryCode == '002'}" th:src="@{/images/common/e.png}" alt="イベントポイント" width="30"/><img th:if="${data.pointCategoryCode == '001'}" th:src="@{/images/common/m.png}" alt="月ポイント" width="30"/></span></td>
+				        <td th:if="${data.expireFlag=='1'}" class="text-center">
+		                  -
+		                </td>
+		                <td th:if="${data.expireFlag=='0'}" class="text-center">
+			              <a id="searchBtn" class="box-btn__1col .btn-col" href="#" th:url="@{/admin/booking/cancle}" th:value="${data.reservationId}" target="selectedReservationId">キャンセル</a>
+		                </td>
+				    </tr>
+			    </div>
+               	</table>
+                
+               	<div class="m-b-40" th:if="${pageInfo != null}" >
+                    <div class="text-center">
+                        <span class="text m-r-20" th:if="${pageInfo.isIsFirstPage()}">&lt;前へ</span>
+                        <a class="c-link-text m-r-20" th:unless="${pageInfo.isIsFirstPage()}" href="#" th:url="@{/admin/booking/search/listprev}" id="list_prev">&lt;前へ</a>
+                        &nbsp;<span th:text="${pageInfo.pageNum}"></span>&nbsp;
+                        <span class="text m-l-20" th:if="${pageInfo.isIsLastPage()}">次へ&gt;</span>
+                        <a class="c-link-text m-l-20" th:unless="${pageInfo.isIsLastPage()}" href="#" th:url="@{/admin/booking/search/listnext}" id="list_next">次へ&gt;</a>
+                    </div>
+				    <input type="hidden" th:field="*{pageNo}" th:value="${pageInfo.pageNum}" />
+				    <input type="hidden" th:field="*{selectedReservationId}" />
+                </div>
+            </section>
+        </div>
+    </form>
+</div> <!-- /** layout contents finish */ -->
+</body>
+</html>

@@ -1,0 +1,296 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.enjoygolf24.api.common.database.mybatis.repository.MenuMapper">
+
+	<resultMap id="TblMenuWithRecursiveResultMap"  type="com.enjoygolf24.api.common.database.mybatis.bean.TblMenuInfo">
+        <result property="path" column="path"  typeHandler="org.apache.ibatis.type.ArrayTypeHandler" />
+        <result property="parentPath" column="parent_path"  typeHandler="org.apache.ibatis.type.ArrayTypeHandler" />
+        <result property="pathString" column="path_string"  typeHandler="org.apache.ibatis.type.ArrayTypeHandler" />
+    </resultMap>
+    
+
+    <select id="getMainMenuListByUser" resultMap="TblMenuWithRecursiveResultMap">
+		WITH RECURSIVE search_menu(
+            memu_id,
+            parent_id,
+            caption,
+            description,
+            url,
+            order_no,
+            availability_cd,
+            user_type_cd,
+            register_user,
+            register_date,
+            update_user,
+            update_date,
+            upd_seq,
+            active_cd,
+            link_type,
+            path_string ,
+            level, 
+            path, 
+            parent_path, 
+            cycle)
+        AS (
+            SELECT
+                g.*,
+                ARRAY[g.caption :: TEXT] path_string,
+                0 ,
+                ARRAY [g.memu_id :: TEXT ],
+                ARRAY [CAST(0 as TEXT)] parent_path,
+                false
+            FROM tbl_menu g
+            WHERE g.parent_id = '0'
+            AND g.availability_cd = '01'
+            
+            UNION ALL
+
+            SELECT
+                g.* ,
+                path_string || g.caption :: TEXT,
+                level + 1,
+                path || g.memu_id :: TEXT,
+                parent_path || g.parent_id :: TEXT,
+                g.memu_id = ANY(path)
+            FROM tbl_menu g, search_menu sb
+            WHERE g.parent_id = sb.memu_id AND NOT CYCLE
+            AND g.availability_cd = '01'
+        )
+        SELECT distinct SC.*
+        FROM search_menu SC
+            inner join (
+                select insc.* from search_menu insc             
+                    left outer join tbl_role_menu trm on  trm.menu_id = insc.memu_id and trm.availability_cd = '01'
+                    inner join tbl_role tr on tr.role_id = trm.role_id and tr.availability_cd = '01'
+                    inner join tbl_user_role tur on tur.role_id = tr.role_id 
+                <where>
+                	<if test="userCode != null and userCode != ''">
+                		tur.user_code = #{userCode}
+                	</if>
+                 </where>   
+            ) rslt on SC.memu_id = any(rslt.path)
+           <where>
+           		<![CDATA[ 
+           			rslt.level <= 2
+           		]]>
+           		and SC.link_type in ('01','02')
+           </where>
+        order by level, order_no
+    </select>
+    <select id="getMainMenuListByUserAndMenu" resultMap="TblMenuWithRecursiveResultMap">
+		WITH RECURSIVE search_menu(
+            memu_id,
+            parent_id,
+            caption,
+            description,
+            url,
+            order_no,
+            availability_cd,
+            user_type_cd,
+            register_user,
+            register_date,
+            update_user,
+            update_date,
+            upd_seq,
+            active_cd,
+            link_type,
+            path_string ,
+            level, 
+            path, 
+            parent_path, 
+            cycle)
+        AS (
+            SELECT
+                g.*,
+                ARRAY[g.caption :: TEXT] path_string,
+                0 ,
+                ARRAY [g.memu_id :: TEXT ],
+                ARRAY [CAST(0 as TEXT)] parent_path,
+                false
+            FROM tbl_menu g
+            WHERE g.parent_id = '0'
+            AND g.availability_cd = '01'
+            
+            UNION ALL
+
+            SELECT
+                g.* ,
+                path_string || g.caption :: TEXT,
+                level + 1,
+                path || g.memu_id :: TEXT,
+                parent_path || g.parent_id :: TEXT,
+                g.memu_id = ANY(path)
+            FROM tbl_menu g, search_menu sb
+            WHERE g.parent_id = sb.memu_id AND NOT CYCLE
+            AND g.availability_cd = '01'
+        )
+        SELECT distinct SC.*
+        FROM search_menu SC
+            inner join (
+                select insc.* from search_menu insc             
+                    left outer join tbl_role_menu trm on  trm.menu_id = insc.memu_id and trm.availability_cd = '01'
+                    inner join tbl_role tr on tr.role_id = trm.role_id and tr.availability_cd = '01'
+                    inner join tbl_user_role tur on tur.role_id = tr.role_id 
+                <where>
+                	<if test="userCode != null and userCode != ''">
+                		tur.user_code = #{userCode}
+                	</if>
+                 </where>   
+            ) rslt on SC.memu_id = any(rslt.path)
+           <where>
+           		<![CDATA[ 
+           			rslt.level <= 2
+           		]]>
+                <if test="menuId != null and menuId != ''">
+                	and #{menuId} = any(rslt.path)
+                </if>
+                and SC.link_type in ('01','02')
+           </where>
+        order by level, order_no
+    </select>
+    <select id="getMainMenuListByUserAndMenuAndUrl" resultMap="TblMenuWithRecursiveResultMap">
+		WITH RECURSIVE search_menu(
+            memu_id,
+            parent_id,
+            caption,
+            description,
+            url,
+            order_no,
+            availability_cd,
+            user_type_cd,
+            register_user,
+            register_date,
+            update_user,
+            update_date,
+            upd_seq,
+            active_cd,
+            link_type,
+            path_string ,
+            level, 
+            path, 
+            parent_path, 
+            cycle)
+        AS (
+            SELECT
+                g.*,
+                ARRAY[g.caption :: TEXT] path_string,
+                0 ,
+                ARRAY [g.memu_id :: TEXT ],
+                ARRAY [CAST(0 as TEXT)] parent_path,
+                false
+            FROM tbl_menu g
+            WHERE g.parent_id = '0'
+            AND g.availability_cd = '01'
+            
+            UNION ALL
+
+            SELECT
+                g.* ,
+                path_string || g.caption :: TEXT,
+                level + 1,
+                path || g.memu_id :: TEXT,
+                parent_path || g.parent_id :: TEXT,
+                g.memu_id = ANY(path)
+            FROM tbl_menu g, search_menu sb
+            WHERE g.parent_id = sb.memu_id AND NOT CYCLE
+            AND g.availability_cd = '01'
+        )
+        SELECT distinct SC.*
+        FROM search_menu SC
+            inner join (
+                select insc.* from search_menu insc             
+                    left outer join tbl_role_menu trm on  trm.menu_id = insc.memu_id and trm.availability_cd = '01'
+                    inner join tbl_role tr on tr.role_id = trm.role_id and tr.availability_cd = '01'
+                    inner join tbl_user_role tur on tur.role_id = tr.role_id 
+                <where>
+                	<if test="userCode != null and userCode != ''">
+                		tur.user_code = #{userCode}
+                	</if>
+                 </where>   
+            ) rslt on SC.memu_id = any(rslt.path)
+           <where>
+           		<![CDATA[ 
+           			rslt.level <= 2
+           		]]>
+           		<if test="menuId != null and menuId != ''">
+                	and #{menuId} = any(rslt.path) and SC.level > 0
+                </if>
+                <if test="url != null and url != ''">
+                	and rslt.url = #{url}
+                </if>
+                 and SC.link_type in ('01','02')
+           </where>
+        order by level, order_no
+    </select>
+
+	<select id="getMenuPath" resultMap="TblMenuWithRecursiveResultMap">
+		WITH RECURSIVE search_menu(
+            memu_id,
+            parent_id,
+            caption,
+            description,
+            url,
+            order_no,
+            availability_cd,
+            user_type_cd,
+            register_user,
+            register_date,
+            update_user,
+            update_date,
+            upd_seq,
+            active_cd,
+            link_type,
+            path_string ,
+            level, 
+            path, 
+            parent_path, 
+            cycle)
+        AS (
+            SELECT
+                g.*,
+                ARRAY[g.caption :: TEXT] path_string,
+                0 ,
+                ARRAY [g.memu_id :: TEXT ],
+                ARRAY [CAST(0 as TEXT)] parent_path,
+                false
+            FROM tbl_menu g
+            WHERE g.parent_id = '0'
+            AND g.availability_cd = '01'
+            
+            UNION ALL
+
+            SELECT
+                g.* ,
+                path_string || g.caption :: TEXT,
+                level + 1,
+                path || g.memu_id :: TEXT,
+                parent_path || g.parent_id :: TEXT,
+                g.memu_id = ANY(path)
+            FROM tbl_menu g, search_menu sb
+            WHERE g.parent_id = sb.memu_id AND NOT CYCLE
+            AND g.availability_cd = '01'
+        )
+        SELECT distinct SC.*
+        FROM search_menu SC
+            inner join (
+                select insc.* from search_menu insc             
+                    left outer join tbl_role_menu trm on  trm.menu_id = insc.memu_id and trm.availability_cd = '01'
+                    inner join tbl_role tr on tr.role_id = trm.role_id and tr.availability_cd = '01'
+                    inner join tbl_user_role tur on tur.role_id = tr.role_id 
+                <where>
+                	<if test="userCode != null and userCode != ''">
+                		tur.user_code = #{userCode}
+                	</if>
+                 </where>   
+            ) rslt on SC.memu_id = any(rslt.path)
+           <where>
+                <if test="url != null and url != ''">
+                	and rslt.url = #{url}
+                </if>
+                and SC.link_type != '02'
+           </where>
+        order by level, order_no
+    </select>
+
+</mapper>

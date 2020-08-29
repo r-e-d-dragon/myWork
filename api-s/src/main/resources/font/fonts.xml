@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fontFamilies>
+    <fontFamily name="IPAexゴシック">
+        <normal>fonts/ipaexg.ttf</normal>
+<!--    <bold>太字フォント ファイルの相対パス</bold> -->
+<!--    <italic>イタリック フォント ファイルの相対パス</italic> -->
+        <pdfEncoding>Identity-H</pdfEncoding>
+        <pdfEmbedded>true</pdfEmbedded>
+    </fontFamily>
+
+    <fontFamily name="IPAex明朝">
+        <normal>/fonts/ipaexm.ttf</normal>
+        <pdfEncoding>Identity-H</pdfEncoding>
+        <pdfEmbedded>true</pdfEmbedded>
+    </fontFamily>
+	<fontFamily name="HYGR-KOR">
+        <normal>/fonts/H2GTRM.ttf</normal>
+        <pdfEncoding>Identity-H</pdfEncoding>
+        <pdfEmbedded>true</pdfEmbedded>
+    </fontFamily>
+</fontFamilies>

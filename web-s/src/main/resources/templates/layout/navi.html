@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<body>
+<div class="nav-global" layout:fragment="navbar">
+<nav class="top-nav-breadcrumb m-b-30">
+	<div sec:authorize="isAuthenticated()" >
+	<nav class="nav-breadcrumb-short">
+		<ul class="list-nav">
+			 <li class="item"
+	                  th:each="menu, itemStat : ${session.SESSION_USER_MENU}">
+	              <a th:if="${itemStat.index < session.SESSION_USER_MENU.size()-1}" class="list-link" id="subMenuButton" 
+	                        th:text="${menu.caption}" th:href="@{${menu.url}}"></a>
+	              <span th:if="${itemStat.index == session.SESSION_USER_MENU.size()-1}" th:text="${menu.caption}"></span>
+	          </li>
+		</ul>
+	</nav>
+	</div>
+</nav>
+</div>
+</body>
+</html>

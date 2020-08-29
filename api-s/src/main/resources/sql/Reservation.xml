@@ -1,0 +1,129 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.enjoygolf24.api.common.database.mybatis.repository.ReservationMapper">
+
+    <select id="getMemberReservationList" resultType="com.enjoygolf24.api.common.database.mybatis.bean.MemberReservationManage">
+        select
+            rev.reservation_id         as reservation_id
+            , rev.reservation_number   as reservation_number
+            , rev.status               as status
+            , rev.member_code          as member_code
+            , rev.asp_code             as asp_code
+            , rev.bat_number           as bat_number
+            , rev.reservation_date     as reservation_date
+            , rev.reservation_time     as reservation_time
+            , rev.consumed_point       as consumed_point
+            , rev.point_category_code  as point_category_code
+            , rev.point_grade          as point_grade
+            , rev.register_user        as register_user
+            , rev.register_date        as register_date
+            , rev.update_user          as update_user
+            , rev.update_date          as update_date
+            , asp.asp_name             as asp_name
+            , usr.last_name            as last_name
+            , usr.first_name           as first_name
+            , case when to_timestamp(to_char(rev.reservation_date, 'YYYY/MM/DD')||' '||substring(rev.reservation_time, 0, 3), 'YYYY/MM/DD HH24') > current_timestamp then 0 else 1 end as expire_flag 
+        from
+            tbl_reservation rev 
+        inner join tbl_asp asp 
+                on rev.asp_code = asp.asp_code
+        left outer join tbl_user usr 
+                on rev.member_code = usr.member_code
+       	<where>
+        <if test="reservationNumber != null and reservationNumber != ''">
+            and rev.reservation_number like CONCAT('%',REPLACE(#{reservationNumber},'%','¥%'),'%') ESCAPE '¥'
+        </if>
+        <if test="memberCode != null and memberCode != ''">
+            and rev.member_code like CONCAT('%',REPLACE(#{memberCode},'%','¥%'),'%') ESCAPE '¥'
+        </if>
+        <if test="batNumber != null and batNumber != ''">
+            and rev.bat_number = #{batNumber}
+        </if>
+        <if test="aspCode != null and aspCode != ''">
+            and rev.asp_code = #{aspCode}
+        </if>
+        <if test="reservationDate != null and reservationDate != ''">
+            and rev.reservation_date = to_date(#{reservationDate}, 'YYYY/MM/DD')
+        </if>
+        <if test="reservationTime != null and reservationTime != ''">
+            and rev.reservation_time = #{reservationTime}
+        </if>
+        <if test="status != null and status != ''">
+            and rev.status = #{status}
+        </if>
+        <if test="status == null or status == ''">
+       	    and (rev.status = '1' or (rev.status = '0' and rev.register_date > current_timestamp + '-3 minute' )) 
+        </if>
+        <if test="valide == true">
+            and to_timestamp(to_char(rev.reservation_date, 'YYYY/MM/DD')||' '||substring(rev.reservation_time, 0, 3), 'YYYY/MM/DD HH24') > current_timestamp
+        </if>        
+       	</where>
+        order by reservation_date desc, reservation_time desc
+    </select>
+
+    <select id="getReservationList" resultType="com.enjoygolf24.api.common.database.mybatis.bean.MemberReservationManage">
+        select
+            cdm.cd                      as bat_number_cd
+            , cdm.name                  as bat_number
+            , pcm.time_slot             as time_slot
+            , pcm.time_slot_name        as time_slot_name
+            , pcm.consume_point         as consumed_point
+            , rslt.member_code          as member_code
+            , rslt.status               as status
+            , rslt.asp_code             as asp_code
+            , rslt.reservation_id       as reservation_id
+   			<![CDATA[ 
+            , case when to_timestamp(coalesce(to_char(rslt.reservation_date, 'YYYY/MM/DD)'), #{reservationDate})|| ' ' ||pcm.time_slot, 'YYYY/MM/DD HH24') < current_timestamp then 1 else 0 end as expire_flag 
+       		]]>            
+            , case 
+              when rslt.status = '0' then 0 
+              when coalesce(rslt.member_code, '') = '' then 1 else 0 end as empty_flag
+        from 
+            code_master cdm
+        left outer join tbl_point_consume_master pcm 
+                     on pcm.date_kind = #{dateKind}
+        left outer join (
+             select rev.* from tbl_reservation rev
+              inner join tbl_asp asp on rev.asp_code = asp.asp_code
+            <where>
+            <if test="aspCode != null and aspCode != ''">
+                and rev.asp_code = #{aspCode}
+            </if>
+            <if test="reservationDate != null and reservationDate != ''">
+                and rev.reservation_date = to_date(#{reservationDate}, 'YYYY/MM/DD')
+            </if>
+            and (rev.status = '1' or (rev.status = '0' and rev.register_date > current_timestamp + '-3 minute' ))
+            </where>
+        ) rslt on rslt.reservation_time = pcm.time_slot_name and rslt.bat_number = cdm.name 
+        <where>
+            cdm.code_type='990'
+		</where>
+        order by pcm.time_slot, cdm.cd
+    </select>
+
+    <select id="getMemberPointManageList" resultType="com.enjoygolf24.api.common.database.mybatis.bean.MemberReservationManage">
+        select 
+            pm.id                   as point_manage_id
+          , pm.member_code          as member_code
+          , pm.point_type           as point_type
+          , pm.point_amount         as point_amount
+          , pm.reservation_number   as reservation_number
+          , pm.consumed_point       as consumed_point
+          , to_char(pm.start_date, 'YYYY/MM/DD')    as start_date
+          , to_char(pm.end_date, 'YYYY/MM/DD')      as end_date
+          , pm.category_code        as category_code
+        from tbl_point_manage pm
+        <where>
+            pm.member_code =  #{memberCode} 
+            <if test="categoryCode != null and categoryCode != ''">
+                and pm.category_code = #{categoryCode}
+            </if>
+            <if test="reservationDate != null and reservationDate != ''">
+                and to_date(#{reservationDate}, 'YYYY/MM/DD') between pm.start_date and pm.end_date
+            </if>
+        </where>
+        order by pm.end_date, pm.start_date
+    </select>
+
+</mapper>

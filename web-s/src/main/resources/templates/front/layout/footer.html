@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<body>
+<div id="global-footer" class="footer" layout:fragment="footer">
+  <footer>
+  <div class="inner">
+    <nav>
+    <a th:href="@{/company/}" class="company">会社案内</a>
+      ｜
+    <a th:href="@{/policy/}" class="privacy">サイトの利用条件・個人情報保護に関して</a>
+    <a th:href="@{/safety_shop/}" class="safe"><i><img th:src="@{/images/front/cca.png}" alt="画像"/></i>CLEAN AREA 安全対策</a>
+    </nav>
+    <div class="address">（株）Enjoygolf24<br class="sp_only">
+      <span class="pc_only">｜</span>
+      〒000-0000 ダミーダミーダミー ダミーダミー<br class="sp_only">
+      <span class="pc_only">｜</span>
+      TEL:<a href="tel:">03-0000-0000</a>
+      <span>｜</span>
+      FAX:03-0000-0000</div>
+    <div class="copyright">&copy; 2020 Enjoygolf24</div>
+  </div>
+</footer>
+</div>
+</body>
+</html>

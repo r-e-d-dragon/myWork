@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout-main}">
+<head>
+	<title>TOP PAGE</title>
+	<link rel="stylesheet" th:href="@{/css/admin/view/index.css}"></link>
+	<script type="text/javascript" th:src="@{/scripts/admin/view/index.js}"></script>
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+    var initmessage = /*[[#{confirm.init}]]*/ '';
+    /*]]>*/
+	</script>
+
+</head>
+<body>
+<div layout:fragment="content"><!-- /** layout contents start */ -->
+  <div class="main-visual sec-top" style="margin-bottom: 10px;" id="mainvisual">
+    <div class="wrapper topindex" id="topindex">
+      <div class="main">
+        <div class="slider" id="mainvisualBg">
+           <div class="item"><img th:src="@{/images/mainimg_ex.jpg}" alt=""></div> 
+        </div>
+        
+        <div class="box-form">
+        <form id="login_form" method="post" th:action="@{'/login/entry'}">
+          <div class="title">[[#{labels.login}]]</div>
+          <div class="box-input m-b-20">
+             <p th:text='#{labels.userId} + #{labels.must}'/>
+             <input class="c-input" th:placeholder="#{labels.userId}" type="text" id="userid" name="userid" autofocus="" required="">
+          </div>
+          <div class="box-input m-b-15">
+            <p th:text='#{labels.password} + #{labels.must}'/>
+            <input class="c-input" th:placeholder="#{labels.password}" type="password" id="password" name="password" required="">
+          </div>
+          <p><a class="forgot-password" id="btnReminder" th:href="@{/reminder}" th:text="#{labels.reminder}"></a></p>
+          <div class="box-btn text-center m-t-20">
+            <div class="item">
+              <a href="#" id="btnLogin" class="btn c-btn btn-primary btn-block swap" th:text="#{labels.login}"></a>
+            </div>
+          </div>
+        </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> <!-- /** layout contents finish */ -->
+</body>
+</html>

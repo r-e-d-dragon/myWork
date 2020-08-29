@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<body>
+<header id="global-header" class="header header-logged-in" layout:fragment="header">
+<div class="header-in">
+  <div class="header-logo"><a class="logo" th:href="@{/}">
+    <!-- /** <img th:src="@{/images/logo.png}" width="100" th:alt="#{titles.system}" />  */ -->
+    </a>
+    <div class="txt-slogan"><h1 class="text" th:text="#{titles.system}"></h1></div>
+  </div>
+  <div class="header-nav">
+    <div class="header-link">
+      <ul class="list-link">
+        <li class="item" sec:authorize="isAuthenticated()"><a th:href="@{/}">トップ</a></li>
+        <li class="item" sec:authorize="isAuthenticated()"><a th:href="@{/}">AAAAAAA</a></li>
+        <li class="item logout" sec:authorize="isAuthenticated()"><a th:href="@{/logout}">ログアウト</a></li>
+      </ul>
+    </div>
+    <div class="header-link">
+        <ul class="list-link">
+        <li class="item" sec:authorize="isAuthenticated()"><p class="text-margin"> < <span th:text="${#authentication.principal.getCompany().getAspName()}"></span> > </p></li>
+        <li class="item" sec:authorize="isAuthenticated()"><p class="text-margin"><span th:text="${#authentication.principal.getUser().getUserName()}"></span>様</p></li>
+        </ul>
+    </div>
+    
+  </div>
+</div>
+</header>
+</body>
+</html>

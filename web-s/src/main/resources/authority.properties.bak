@@ -1,0 +1,4 @@
+public.menu.access=/public/**,/
+member.menu.access=/user/**
+instructor.menu.access=/instructor/**
+admin.menu.access=/admin,/admin/main,/admin/booking/*

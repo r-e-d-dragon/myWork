@@ -1,0 +1,24 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.enjoygolf24.api.common.database.mybatis.repository.AspMapper">
+
+    <select id="getAspList" resultType="com.enjoygolf24.api.common.database.bean.TblAsp">
+       select * from tbl_asp
+       <where>
+            <if test="aspName != null and aspName != ''">
+                 and asp_name like CONCAT('%',REPLACE(#{aspName},'%','¥%'),'%') ESCAPE '¥'
+            </if>
+            <if test="aspCode != null and aspCode != ''">
+                and asp_code like CONCAT('%',REPLACE(#{aspCode},'%','¥%'),'%') ESCAPE '¥'
+            </if>
+            
+            <if test="aspAddress != null and aspAddress != ''">
+                AND address1 like CONCAT('%',REPLACE(#{aspAddress},'%','¥%'),'%') ESCAPE '¥'
+            </if>
+      </where>
+      order by asp_code
+    </select>
+
+
+</mapper>

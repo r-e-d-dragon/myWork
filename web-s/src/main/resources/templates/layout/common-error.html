@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<body>
+<div id="global-error" class="commonerror" layout:fragment="errors" >
+	<ul th:if="${customError != null}" th:class="${customError.hasAnyErrors()}  ? 'ul-error'" >
+	    <li th:each="e : ${customError.detailedErrors()}" th:class="li-error">
+	        <span th:text="${e.detailMessage}">The error message</span><br>
+	    </li>
+	</ul>
+</div>
+</body>

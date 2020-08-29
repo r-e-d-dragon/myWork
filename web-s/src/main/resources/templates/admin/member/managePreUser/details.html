@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout-main}">
+<head>
+    <title>体験会員情報変更</title>
+    <link rel="stylesheet" th:href="@{/css/admin/mypage.css}"></link>
+</head>
+<body>
+<div layout:fragment="content"><!-- /** layout contents start */ -->
+
+    <form id="form"  method="post" th:action="@{/admin/member/managePreUser/details/finish}" th:object="${preMemberInfoManageForm}">
+        <div class="wrapper mypage-custom-index" id="body-index">
+            <section>
+                <h1 class="c-ttl c-ttl__01 m-b-50">体験会員情報変更</h1>
+                <div class="form-register">
+		          <section class="m-b-55">
+					<div class="c-box-account m-b-20">
+		              <h2 class="c-ttl c-ttl__03 m-b-20">お客様情報を入力してください</h2>
+		              <div class="row align-items-start m-b-20">
+		                <div class="d-flex justify-content-between align-items-start m-t-5">
+		                  <span class="text c-ttl c-ttl__04">店舗</span>
+		                </div>
+		                <div><p th:text="*{aspName}"></p><input type="hidden" th:field="*{aspCode}"><input type="hidden" th:field="*{loginUserCd}"><input type="hidden" th:field="*{preMemberCode}"></div>
+		               </div>
+		               		               
+		               <div class="row align-items-start m-b-20">
+		                 <div class="d-flex justify-content-between align-items-start m-t-10">
+		                   <span id="nameKanji" class="text c-ttl c-ttl__04">お名前</span>
+		                   <span class="tag-icon tag-red m-t-5">必須</span>
+		                 </div>
+		                 <div>
+		                   <div class="width-500 c-box-name d-flex justify-content-between align-items-center">
+		                    <input class="c-input" type="text" maxlength="20" placeholder="山田" style="width: 240px;" th:field="*{lastName}" th:errorclass="fieldError">
+		                    <input class="c-input" type="text" maxlength="20" placeholder="花子" style="width: 240px;" th:field="*{firstName}" th:errorclass="fieldError">
+				           </div>
+		                  </div>
+		                </div>
+		                
+		                <div class="row align-items-start m-b-20">
+		                 <div class="d-flex justify-content-between align-items-start m-t-10">
+		                   <span id="nameKanji" class="text c-ttl c-ttl__04">フリガナ</span>
+		                   <span class="tag-icon tag-red m-t-5">必須</span>
+		                 </div>
+		                 <div>
+		                   <div class="width-500 c-box-name d-flex justify-content-between align-items-center">
+		                    <input class="c-input" type="text" maxlength="20" placeholder="ヤマダ" style="width: 240px;" th:field="*{lastNameKana}" th:errorclass="fieldError">
+		                    <input class="c-input" type="text" maxlength="20" placeholder="ハナコ"  style="width: 240px;" th:field="*{firstNameKana}" th:errorclass="fieldError">
+				           </div>
+		                  </div>
+		                </div>
+			            
+			            <div class="row align-items-start m-b-20">
+			              <div class="d-flex justify-content-between align-items-start m-t-10"><span class="text c-ttl c-ttl__04">電話番号</span><span class="tag-icon tag-gray m-t-5">任意</span></div>
+			              <div>
+			                <input class="c-input" type="text" th:field="*{phone}" th:errorclass="fieldError" maxlength="20" placeholder="00-0000-0000">
+			              </div>
+			            </div>
+			            
+			            <div class="row align-items-start m-b-20">
+			              <div class="d-flex justify-content-between align-items-start m-t-10"><span class="text c-ttl c-ttl__04">メールアドレス</span>
+			                <span class="tag-icon tag-red m-t-5">必須</span>
+			              </div>
+			              <div>
+			                <input class="c-input" type="text" maxlength="256" placeholder="〇〇〇@〇〇〇.com" th:field="*{email}" value="" th:errorclass="fieldError">
+			              </div>
+			            </div>
+			            
+			            <div class="row align-items-start m-b-20">
+			              <div class="d-flex justify-content-between align-items-start m-t-10"><span class="text c-ttl c-ttl__04">メールアドレス（確認用）</span>
+			                <span class="tag-icon tag-red m-t-5">必須</span>
+			              </div>
+			              <div>
+			                <input class="c-input" type="text" maxlength="256" placeholder="〇〇〇@〇〇〇.com" th:field="*{emailConfirm}" value="" th:errorclass="fieldError">
+			              </div>
+			            </div>
+	
+			            <div class="row align-items-start m-b-20">
+			              <div class="d-flex justify-content-between align-items-start m-t-10"><span class="text c-ttl c-ttl__04">内容</span>
+			                <span class="tag-icon tag-gray m-t-5">任意</span>
+			              </div>
+			              <div>
+			                <textarea class="c-textarea" cols="4" rows="80" maxlength="1200" th:field="*{memo}" th:errorclass="fieldError"></textarea>
+			              </div>
+			            </div>	
+     		        
+		            </div>
+		            </section>
+		            </div>
+            
+            <div class="c-box-confirm text-center m-b-70">
+            <div class="m-b-55">
+              <a id="registerBtn" class="c-btn btn-primary btn-confirm m-b-15" href="#" th:url="@{/admin/member/managePreUser/details/finish}">登録</a><br/>
+              <a id="returnBtn" class="btn-continue c-btn btn-primary width-210 swap text-center" th:href="@{/admin/member/managePreUser}">一覧へ</a>
+            </div>
+          </div>
+             
+            </section>
+            
+        </div>
+    </form>
+</div> <!-- /** layout contents finish */ -->
+</body>
+</html>

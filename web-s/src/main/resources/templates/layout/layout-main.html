@@ -1,0 +1,36 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html lang="ja" xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <title layout:title-pattern="$CONTENT_TITLE | $LAYOUT_TITLE">[[#{titles.system}]]</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Language" content="ja">
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <link rel="shortcut icon" th:href="@{/images/favicon.ico}">
+    <link th:href="@{/webjars/bootstrap/4.5.0/css/bootstrap.min.css}" rel="stylesheet" />
+    <link th:href="@{/webjars/jquery-ui/1.12.1/jquery-ui.min.css}" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/css/all.min.css" rel="stylesheet" />
+    <link th:href="@{/css/admin/base.css}" rel="stylesheet" />
+    <script type="text/javascript" th:src="@{/webjars/jquery/3.5.1/jquery.js}"></script>
+    <script type="text/javascript" th:src="@{/webjars/jquery-ui/1.12.1/jquery-ui.js}"></script>
+    <script type="text/javascript" th:src="@{/webjars/bootstrap/4.5.0/js/bootstrap.js}"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/js/all.min.js"></script>
+    <script type="text/javascript" th:src="@{/scripts/common.js}"></script>
+</head>
+
+<body>
+    <div layout:replace="~{layout/header::header}"></div>
+    <div layout:replace="~{layout/navi::navbar}"></div>
+    <div class="container">
+    	<div layout:replace="~{layout/common-error :: errors}"></div>
+        <div id="content" class="clearfix">
+            <div layout:fragment="content" th:remove="tag"></div>
+        </div>
+    </div>
+    <div layout:replace="~{layout/commonData :: data}"></div>
+    <div layout:replace="~{layout/footer::footer}"></div>
+</body>
+</html>

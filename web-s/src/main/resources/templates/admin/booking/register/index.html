@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout-main}">
+<head>
+    <title>予約登録</title>
+    <link rel="stylesheet" th:href="@{/css/admin/mypage.css}"></link>
+    <script type="text/javascript" th:src="@{/scripts/admin/booking/register.js?ver=0.9}"></script>
+</head>
+<body>
+<div layout:fragment="content"><!-- /** layout contents start */ -->
+    <form id="form"  method="post" th:action="@{/admin/booking/finish}" th:object="${memberReservationRegisterForm}">
+
+        <div class="wrapper mypage-custom-index" id="body-index">
+            <section>
+                <h1 class="c-ttl c-ttl__01 m-b-50">予約登録</h1>
+                <div class="form-register">
+                  <section class="m-b-55">
+                    <div class="c-box-account m-b-20">
+                        <div class="row align-items-start m-b-20">
+                          <div class="d-flex justify-content-between align-items-start m-t-10">
+                            <span class="text c-ttl c-ttl__04">店舗</span>
+                          </div>
+                          <div><p th:text="${aspName}"></p><input type="hidden" th:field="*{aspCode}"><input type="hidden" th:field="*{loginUserCd}"></div>
+                        </div>
+                       
+                        <div class="row align-items-start m-b-20">
+                          <div class="d-flex justify-content-between align-items-start m-t-10">
+                            <span class="text c-ttl c-ttl__04">予約日時</span>
+                          </div>
+                          <div><span th:text="*{reservationDate}"></span><input type="hidden" th:field="*{reservationDate}"></div>
+                        </div>
+
+                        <div class="row align-items-start m-b-20">
+                          <div class="d-flex justify-content-between align-items-start m-t-10">
+                            <span class="text c-ttl c-ttl__04">予約時間</span>
+                          </div>
+                          <div><span th:text="*{reservationTime}"></span><input type="hidden" th:field="*{reservationTime}"></div>
+                        </div>
+
+
+                        <div class="row align-items-start m-b-20">
+                          <div class="d-flex justify-content-between align-items-start m-t-10">
+                              <span class="text c-ttl c-ttl__04">会員番号</span><span class="tag-icon tag-red m-t-5">必須</span>
+                          </div>
+                          
+                          <div>
+                          <div class="d-flex justify-content-start align-items-center">
+                              <div class="width-330 d-flex justify-content-between align-items-center">
+                                <input class="c-input" type="text" th:field="*{memberCode}" th:errorclass="fieldError">
+                              </div>
+                              <span class="m-l-20 m-t-5">
+                                <a class="c-link-text text-blue user-func" id="btnSearchUser" href="#" th:url="@{/public/common/searchUser}">検索</a>
+                              </span>
+                          </div>
+                          </div>
+                        </div>
+
+                        <div class="row align-items-start m-b-20">
+                          <div class="d-flex justify-content-between align-items-start m-t-10">
+                            <span class="text c-ttl c-ttl__04">打席番号</span>
+                          </div>
+                          <div><span th:text="*{batNumber}"></span><input type="hidden" th:field="*{batNumberCd}"><input type="hidden" th:field="*{batNumber}"></div>
+                        </div>
+
+                        <div class="row align-items-start m-b-20">
+                          <div class="d-flex justify-content-between align-items-start m-t-10">
+                            <span class="text c-ttl c-ttl__04">使用ポイント</span>
+                          </div>
+                          <div><span th:text="*{consumedPoint}"></span> <span th:text="Point"></span><input type="hidden" th:field="*{consumedPoint}"></div>
+                        </div>
+
+                        <div class="row align-items-start m-b-20">
+                          <div class="d-flex justify-content-between align-items-start m-t-10">
+                            <span class="text c-ttl c-ttl__04">会員名</span>
+                          </div>
+                          <div><input type="text" th:field="*{memberName}" readonly></div>
+                        </div>
+
+                        <div class="row align-items-start m-b-20">
+                          <div class="d-flex justify-content-between align-items-start m-t-10">
+                            <span class="text c-ttl c-ttl__04">月ポイント</span>
+                          </div>
+                          <div><input class="c-input width-100" type="text" th:field="*{validMonthlyPoint}" readonly> <input class="c-input width-100" type="text" th:field="*{monthlyPoint}" readonly></div>
+                        </div>
+                        <div class="row align-items-start m-b-20">
+                          <div class="d-flex justify-content-between align-items-start m-t-10">
+                            <span class="text c-ttl c-ttl__04">イベントポイント</span>
+                          </div>
+                          <div><input class="c-input width-100" type="text" th:field="*{validEventPoint}" readonly> <input class="c-input width-100" type="text" th:field="*{eventPoint}" readonly></div>
+                        </div>
+                       
+                       <div class="row align-items-start m-b-20">
+                        <div class="d-flex justify-content-between align-items-start m-t-10">
+                          <span class="text c-ttl c-ttl__04">ポイント区分</span>
+                          <span class="tag-icon tag-red m-t-5">必須</span>
+                        </div>
+                        <div>
+                          <select th:field="*{pointCategoryCode}" class="selectBoxCss select-option width-240" th:errorclass="fieldError">
+                            <option th:value="${monthlyPoint}" th:text="月ポイント" th:errorclass="fieldError"></option>
+                            <option th:value="${eventPoint}" th:text="イベントポイント" th:errorclass="fieldError"></option>
+                          </select>
+                        </div>
+                       </div>
+                    </div>
+                  </section>
+                </div>
+            
+                <section class="reservation_dialog">
+                <p class="text-warning" id="reservation_message"></p>
+                <span class="m-b-50">【<span class="text c-ttl c-ttl__04" id="selectedMemberName"></span>】予約一覧</span>
+                <div>
+                <table class="table-search m-b-20" >
+                <tr>
+                    <th class="text-center" width="20%">店舗名</th>
+                    <th class="text-center" width="30%">予約番号</th>
+                    <th class="text-center" width="15%">打席番号</th>
+                    <th class="text-center" width="20%">予約日付</th>
+                    <th class="text-center" width="20%">予約時間</th>
+                </tr>
+                </table>
+                </div>
+                </section>                
+                
+                <div class="c-box-confirm text-center m-b-70">
+                <div class="align-items-center registerBtn">
+                  <a id="registerBtn" class="c-btn btn-primary btn-confirm m-b-15" href="#" th:url="@{/admin/booking/finish}" autofocus>予約登録</a>
+                </div>
+                <div class="align-items-center">
+                  <a id="returnBtn" class="btn-continue c-btn btn-primary width-210 swap text-center" href="#" th:url="@{/admin/booking/top}">戻る</a>
+                </div>
+                </div>
+                <input type="hidden" th:field="*{reservationId}" value="">
+                <input type="hidden" th:field="*{valid}">
+                <input type="hidden" th:field="*{limitReservationCount}">
+                <input type="hidden" th:field="*{limitMonthlyReservationCount}">
+                <input type="hidden" th:field="*{limitEventReservationCount}">
+          　　　　　　　</section>
+            
+        </div>
+        
+    </form>
+</div> <!-- /** layout contents finish */ -->
+</body>
+</html>

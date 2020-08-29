@@ -1,0 +1,168 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.enjoygolf24.api.common.database.mybatis.repository.MemberMapper">
+
+    <select id="setAuthStatusCd" resultType="com.enjoygolf24.api.common.database.mybatis.bean.MemberRegister">
+     update tbl_auth_key_manage
+     SET auth_status_cd = #{authStatusCd},
+     update_date = now(),
+     update_seq = update_seq +1
+     WHERE member_code = #{memberCode}
+     AND processing_cd = #{processingCd}
+    </select>
+    
+    <select id="getMemberList" resultType="com.enjoygolf24.api.common.database.mybatis.bean.MemberInfoManage">
+    	<if test="name != null and name != ''">
+            <bind name="namePattern" value="'%' + name + '%'" />
+        </if>
+       select 
+	       	*
+       from 
+       		(
+			    (select
+			    *
+			    from tbl_user
+			    where member_type_cd != '01'
+	            and not use_flag in ('00', '09')
+	            and asp_code = #{aspCode}
+	            ) u
+			    inner join
+			    (select
+			        cd
+			        ,name AS memberTypeName
+			    from code_master
+			    where code_type='001'
+			    ) cdm
+			    on u.member_type_cd = cdm.cd  
+			 )
+	       <where>
+	            <if test="memberCode != null and memberCode != ''">
+	                 and member_code = #{memberCode}
+	            </if>
+	            <if test="name != null and name != ''">
+	                and CONCAT(last_name,first_name) like CONCAT('%',REPLACE(#{name},'%','¥%'),'%') ESCAPE '¥'
+	                or CONCAT(last_name_kana,first_name_kana) like CONCAT('%',REPLACE(#{name},'%','¥%'),'%') ESCAPE '¥'
+	            </if>            
+	            <if test="phone != null and phone != ''">
+	                 and phone like CONCAT('%',REPLACE(#{phone},'%','¥%'),'%') ESCAPE '¥'
+	            </if>
+	            <if test="email != null and email != ''">
+	                 and email like CONCAT('%',REPLACE(#{email},'%','¥%'),'%') ESCAPE '¥'
+	            </if>
+      </where>
+      order by member_code
+    </select>
+    
+    <select id="getManagerList" resultType="com.enjoygolf24.api.common.database.mybatis.bean.MemberInfoManage">
+    	<if test="name != null and name != ''">
+            <bind name="namePattern" value="'%' + name + '%'" />
+        </if>
+       select 
+               *
+       from 
+               (
+                (select
+                *
+                from tbl_user
+                where member_type_cd ='01'
+	            and not use_flag in ('00', '09')) u
+                inner join
+                (select
+                asp_code as aspCodeU
+                ,asp_name
+                from tbl_asp)a
+                on u.asp_code = a.aspCodeU
+             )
+	       <where>
+	       		<if test="aspCode != null and aspCode != ''">
+	                 and asp_code = #{aspCode}
+	            </if>
+	            <if test="aspName != null and aspName != ''">
+	                 and asp_name like CONCAT('%',REPLACE(#{aspNAme},'%','¥%'),'%') ESCAPE '¥'
+	            </if>
+	            <if test="memberCode != null and memberCode != ''">
+	                 and member_code = #{memberCode}
+	            </if>
+	            <if test="name != null and name != ''">
+	                and CONCAT(last_name,first_name) like CONCAT('%',REPLACE(#{name},'%','¥%'),'%') ESCAPE '¥'
+	                or CONCAT(last_name_kana,first_name_kana) like CONCAT('%',REPLACE(#{name},'%','¥%'),'%') ESCAPE '¥'
+	            </if>   
+	            <if test="phone != null and phone != ''">
+	                 and phone like CONCAT('%',REPLACE(#{phone},'%','¥%'),'%') ESCAPE '¥'
+	            </if>
+	            <if test="email != null and email != ''">
+	                 and email like CONCAT('%',REPLACE(#{email},'%','¥%'),'%') ESCAPE '¥'
+	            </if>
+      </where>
+      order by member_code
+    </select>
+    
+    <select id="getPreMemberList" resultType="com.enjoygolf24.api.common.database.mybatis.bean.PreMemberInfoManage">
+    	<if test="name != null and name != ''">
+            <bind name="namePattern" value="'%' + name + '%'" />
+        </if>
+       select 
+	       	*
+       from tbl_user_pre
+	       <where>
+	            <if test="memberCode != null and memberCode != ''">
+	                 and pre_member_code = #{memberCode}
+	            </if>
+	            <if test="name != null and name != ''">
+	                and CONCAT(last_name,first_name) like CONCAT('%',REPLACE(#{name},'%','¥%'),'%') ESCAPE '¥'
+	                or CONCAT(last_name_kana,first_name_kana) like CONCAT('%',REPLACE(#{name},'%','¥%'),'%') ESCAPE '¥'
+	            </if>            
+	            <if test="phone != null and phone != ''">
+	                 and phone like CONCAT('%',REPLACE(#{phone},'%','¥%'),'%') ESCAPE '¥'
+	            </if>
+	            <if test="email != null and email != ''">
+	                 and email like CONCAT('%',REPLACE(#{email},'%','¥%'),'%') ESCAPE '¥'
+	            </if>
+	           	and use_flag = '1'
+	           	and asp_code = #{aspCode}
+      </where>
+      order by pre_member_code
+    </select>
+    
+    <select id="getMemberListForPointManage" resultType="com.enjoygolf24.api.common.database.mybatis.bean.PointManage">
+       select 
+	       	*
+       from 
+       		(
+			    (select
+			    *
+			    from tbl_user
+			    where member_type_cd ='03'
+	            and use_flag ='01'
+	            and asp_code = #{aspCode}) u
+	            inner join
+                (select
+                    cd
+                    ,name AS memberGradeName
+                    ,code_type
+                from code_master
+                where code_type='004'
+                ) cdm
+                on u.member_grade_code = cdm.cd  
+             )
+	       <where>
+	            <if test="memberCode != null and memberCode != ''">
+	                 and member_code = #{memberCode}
+	            </if>
+	            <if test="name != null and name != ''">
+	                and CONCAT(last_name,first_name) like CONCAT('%',REPLACE(#{name},'%','¥%'),'%') ESCAPE '¥'
+	                or CONCAT(last_name_kana,first_name_kana) like CONCAT('%',REPLACE(#{name},'%','¥%'),'%') ESCAPE '¥'
+	            </if>
+	            <if test="phone != null and phone != ''">
+	                 and phone like CONCAT('%',REPLACE(#{phone},'%','¥%'),'%') ESCAPE '¥'
+	            </if>
+	            <if test="email != null and email != ''">
+	                 and email like CONCAT('%',REPLACE(#{email},'%','¥%'),'%') ESCAPE '¥'
+	            </if>
+      </where>
+      order by member_code
+    </select>
+
+
+</mapper>

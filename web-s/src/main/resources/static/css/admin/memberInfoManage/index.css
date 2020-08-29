@@ -1,0 +1,51 @@
+.table-search th {
+    width: 20%;
+    text-align: center;
+}
+
+.table-search td {
+    padding: 5px 25px;
+    border: none;
+    border-bottom: 1px solid #999 !important;
+}
+
+.table-search td .tableLabel{
+    width:70px;
+    display:inline-block
+}
+
+.table-search {
+	line-height: 50px;
+}
+
+.table-detail th {
+    text-align: center;
+}
+
+.table-detail td {
+	text-align: center;
+    overflow: hidden;
+}
+
+
+
+
+
+.d-table {
+  display: table !important; }
+
+.d-table-row {
+  display: table-row !important; }
+
+.d-table-cell {
+  display: table-cell !important; }
+
+.d-flex {
+  display: -webkit-box !important;
+  display: -ms-flexbox !important;
+  display: flex !important; }
+
+.d-inline-flex {
+  display: -webkit-inline-box !important;
+  display: -ms-inline-flexbox !important;
+  display: inline-flex !important; }
