@@ -7,4 +7,7 @@ public interface PointCategoryCd {
 
 	/** イベントポイント */
 	public static final String EVENT_POINT = "002";
+
+	/** 管理者ー一括予約 */
+	public static final String ADMIN_POINT = "999";
 }

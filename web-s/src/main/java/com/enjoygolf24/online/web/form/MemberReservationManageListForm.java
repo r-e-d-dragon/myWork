@@ -88,6 +88,10 @@ public class MemberReservationManageListForm implements Serializable {
 	private int limitEventReservationCount;
 	private int limitMonthlyReservationCount;
 
+	private String action;
+
+	private List<String> chkBatNumbers;
+
 	@PageSize
 	int pageSize = DefaultPageSizeUtility.DEFAULT_PAGE_SIZE;
 
