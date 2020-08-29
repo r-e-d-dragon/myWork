@@ -1,0 +1,11 @@
+apply plugin: "org.springframework.boot"
+apply plugin: 'war'
+
+dependencies {
+    providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
+}
+
+war {
+    enabled = true
+    //rootSpec.exclude("**/DUMMY_DATA")
+}
