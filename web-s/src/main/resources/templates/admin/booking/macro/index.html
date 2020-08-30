@@ -4,28 +4,45 @@
     xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout-main}">
 <head>
     <title>一括予約管理</title>
-  
-    <link rel="stylesheet" th:href="@{/scripts/datepicker/ui/1.12.1/jquery-ui.css}"></link>
-    <script type="text/javascript" th:src="@{/scripts/datepicker/ui/1.12.1/jquery-ui.js}"></script>
-    <script type="text/javascript" th:src="@{/scripts/datepicker/datepicker-ja.js}"></script>
-
     <link rel="stylesheet" th:href="@{/css/admin/mypage.css}"></link>
 
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="https://rawgit.com/jquery/jquery-ui/master/ui/i18n/datepicker-ja.js"></script>
     <script>
     $( function() {
-      $("#fromDatepicker").datepicker();
-      $("#toDatepicker").datepicker();
+      $('#fromDatepicker').datepicker({
+          minDate: 0 ,
+          showButtonPanel: true
+      });      
+      $("#toDatepicker").datepicker({
+    	  minDate: 0,
+    	  showButtonPanel: true
+      });
+      
+      (function(){
+    	  var old_fn = $.datepicker._updateDatepicker;
+    	  $.datepicker._updateDatepicker = function(inst) {
+    	    old_fn.call(this, inst);
+    	    var buttonPane = $(this).datepicker("widget").find(".ui-datepicker-buttonpane");
+    	    var buttonHtml = "<button type='button' class='ui-datepicker-clean ui-state-default ui-priority-primary ui-corner-all'>削除</button>";
+    	    $(buttonHtml).appendTo(buttonPane).click(
+    	      function(ev) {
+    	        $.datepicker._clearDate(inst.input);
+    	    });
+    	  }
+    	})();      
     });
     </script>
 </head>
 <body>
 
 <div layout:fragment="content"><!-- /** layout contents start */ -->
-    <form id="form"  method="post" th:action="@{/admin/booking/macro/confirm}" th:object="${memberReservationManageListForm}">
+    <form id="form"  method="post" th:action="@{/admin/booking/macro/confirm}" th:object="${macroReservationManageListForm}">
 
         <div class="wrapper mypage-custom-index" id="body-index">
             <section>
-                <h3 class="c-ttl c-ttl__01 m-b-50">一括予約登録・削除</h3>
+                <h3 class="c-ttl c-ttl__03 m-b-50">一括予約登録・削除</h3>
                 <div class="form-register">
                   <section class="m-b-55">
                     <div class="c-box-account m-b-20">
@@ -41,85 +58,113 @@
                             <span class="text c-ttl c-ttl__04">予約期間</span>
                           </div>
                           <div>
-                            <div>FROM:
-                            <input type="text" readonly name="fromReservationDate" id="fromDatepicker"/><br>
-  	                          <select  name="sampleName" style="vertical-align: middle;">
-				              <option>00:00～01:00</option> 
-				              <option>01:00～02:00</option> 
-				              <option>02:00～03:00</option> 
-				              <option>03:00～04:00</option> 
-				              <option>04:00～05:00</option> 
-				              <option>05:00～06:00</option> 
-				              <option>06:00～07:00</option> 
-				              <option>07:00～08:00</option>
-				              <option>08:00～09:00</option> 
-				              <option>09:00～10:00</option> 
-				              <option>10:00～11:00</option> 
-				              <option>11:00～12:00</option>
-				              <option>12:00～13:00</option> 
-				              <option>13:00～14:00</option> 
-				              <option>14:00～15:00</option> 
-				              <option>15:00～16:00</option> 
-				              <option>16:00～17:00</option> 
-				              <option>17:00～18:00</option> 
-				              <option>18:00～19:00</option> 
-				              <option>19:00～20:00</option> 
-				              <option>20:00～21:00</option> 
-				              <option>21:00～22:00</option> 
-				              <option>22:00～23:00</option> 
-				              <option>23:00～24:00</option> 
-			    	          </select>
-                            </div>
-                            <span>　～　</span>
-                            <div>TO:
-                            <input type="text" readonly name="toReservationDate" id="toDatepicker"/><br>
-                              <select  name="sampleName" style="vertical-align: middle;">
-                              <option>00:00～01:00</option> 
-                              <option>01:00～02:00</option> 
-                              <option>02:00～03:00</option> 
-                              <option>03:00～04:00</option> 
-                              <option>04:00～05:00</option> 
-                              <option>05:00～06:00</option> 
-                              <option>06:00～07:00</option> 
-                              <option>07:00～08:00</option>
-                              <option>08:00～09:00</option> 
-                              <option>09:00～10:00</option> 
-                              <option>10:00～11:00</option> 
-                              <option>11:00～12:00</option>
-                              <option>12:00～13:00</option> 
-                              <option>13:00～14:00</option> 
-                              <option>14:00～15:00</option> 
-                              <option>15:00～16:00</option> 
-                              <option>16:00～17:00</option> 
-                              <option>17:00～18:00</option> 
-                              <option>18:00～19:00</option> 
-                              <option>19:00～20:00</option> 
-                              <option>20:00～21:00</option> 
-                              <option>21:00～22:00</option> 
-                              <option>22:00～23:00</option> 
-                              <option>23:00～24:00</option> 
-                              </select>
-                            </div>
-                          </div> 
+                          <table>
+                          <thead>
+                            <tr>
+                              <th>　 </th>
+                              <th>予約日</th>
+                              <th>　</th>
+                              <th>予約時間</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td><span>FROM:</span></td>
+                              <td>
+	                            <input class="c-input" type="text" readonly th:field="*{fromReservationDate}" id="fromDatepicker"/>
+                              </td>
+                              <td>　</td>
+                              <td>
+                                <select class="selectBoxCss select-option width-180"　id="fromReservationTime" name="fromReservationTime">
+                                  <option>00:00～01:00</option> 
+                                  <option>01:00～02:00</option> 
+                                  <option>02:00～03:00</option> 
+                                  <option>03:00～04:00</option> 
+                                  <option>04:00～05:00</option> 
+                                  <option>05:00～06:00</option> 
+                                  <option>06:00～07:00</option> 
+                                  <option>07:00～08:00</option>
+                                  <option>08:00～09:00</option> 
+                                  <option>09:00～10:00</option> 
+                                  <option>10:00～11:00</option> 
+                                  <option>11:00～12:00</option>
+                                  <option>12:00～13:00</option>
+                                  <option>13:00～14:00</option> 
+                                  <option>14:00～15:00</option> 
+                                  <option>15:00～16:00</option> 
+                                  <option>16:00～17:00</option> 
+                                  <option>17:00～18:00</option> 
+                                  <option>18:00～19:00</option> 
+                                  <option>19:00～20:00</option> 
+                                  <option>20:00～21:00</option> 
+                                  <option>21:00～22:00</option> 
+                                  <option>22:00～23:00</option> 
+                                  <option>23:00～24:00</option>
+                                </select>
+                              </td>
+                            </tr>
+                            <tr><td colspan="4"><div class="box-filter m-b-0 c-form-01 text-md" >　</div></td></tr>
+                            <tr>
+                              <td><span>TO:</span></td>
+                              <td>
+                                <input class="c-input" type="text" readonly th:field="*{toReservationDate}" id="toDatepicker"/>
+                              </td>
+                              <td>　</td>
+                              <td>
+	                            <select class="selectBoxCss select-option width-180" id="toReservationTime" name="toReservationTime">
+	                              <option>00:00～01:00</option> 
+	                              <option>01:00～02:00</option> 
+	                              <option>02:00～03:00</option> 
+	                              <option>03:00～04:00</option> 
+	                              <option>04:00～05:00</option> 
+	                              <option>05:00～06:00</option> 
+	                              <option>06:00～07:00</option> 
+	                              <option>07:00～08:00</option>
+	                              <option>08:00～09:00</option> 
+	                              <option>09:00～10:00</option> 
+	                              <option>10:00～11:00</option> 
+	                              <option>11:00～12:00</option>
+	                              <option>12:00～13:00</option> 
+	                              <option>13:00～14:00</option> 
+	                              <option>14:00～15:00</option> 
+	                              <option>15:00～16:00</option> 
+	                              <option>16:00～17:00</option> 
+	                              <option>17:00～18:00</option> 
+	                              <option>18:00～19:00</option> 
+	                              <option>19:00～20:00</option> 
+	                              <option>20:00～21:00</option> 
+	                              <option>21:00～22:00</option> 
+	                              <option>22:00～23:00</option> 
+	                              <option>23:00～24:00</option> 
+	                            </select>
+                              </td>
+                            </tr>
+                          </tbody>
+                          </table>
+                          </div>
                         </div>
-
 
                         <div class="row align-items-start m-b-20">
                           <div class="d-flex justify-content-between align-items-start m-t-10">
                             <span class="text c-ttl c-ttl__04">打席番号</span>
                           </div>
                           <div>
-     <th:block th:each="batnumber : ${batNumbers}">
-      <input type="checkbox" th:field="*{chkBatNumbers}" name="chkBatNumbers" th:value="${batnumber}" th:text="${batnumber}"/>
-    </th:block>
+						    <th:block th:each="batnumber : ${batNumbers}">
+						    <input class="custom-checkbox" type="checkbox" th:field="*{chkBatNumbers}" name="chkBatNumbers" th:value="${batnumber}" th:text="${batnumber}"/>
+						    </th:block>
                           </div>
                         </div>
-
-                       
                     </div>
+
+	                <div class="c-box-confirm text-center m-b-70">
+	                <div class="align-items-center registerBtn">
+	                  <a id="registerBtn" class="c-btn btn-primary m-b-30" href="#" th:url="@{/admin/booking/macro/confirm}" autofocus>一括予約登録</a>
+	                </div>
+	                </div>
                   </section>
                 </div>
-            
+
+<!-- 
                 <section class="reservation_dialog">
                 <p class="text-warning" id="reservation_message"></p>
                 <span class="m-b-50">一括予約一覧</span>
@@ -149,12 +194,8 @@
                 </table>
                 </div>
                 </section>                
+ -->            
                 
-                <div class="c-box-confirm text-center m-b-70">
-                <div class="align-items-center registerBtn">
-                  <a id="registerBtn" class="c-btn btn-primary btn-confirm m-b-15" href="#" th:url="@{/admin/booking/macro/confirm}" autofocus>一括予約登録</a>
-                </div>
-                </div>
           　　　　　　　</section>
         </div>
         
