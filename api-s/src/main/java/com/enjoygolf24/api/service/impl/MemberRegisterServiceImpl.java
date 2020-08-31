@@ -49,7 +49,6 @@ public class MemberRegisterServiceImpl implements MemberRegisterService {
 
 	private static final String ASP_AUTH_URL = "%s/public/open/initPassword/admin?encryptedkey=%s";
 
-	// TODO: modify member auth url?
 	private static final String MEMBER_AUTH_URL = "%s/public/open/initPassword?encryptedkey=%s";
 
 	@Autowired
@@ -293,9 +292,9 @@ public class MemberRegisterServiceImpl implements MemberRegisterService {
 	private String generateAuthUrl(TblAuthKeyManage AuthKeyManage, String memberTypeCode) {
 
 		if (MemberTypeCd.MANAGER.equals(memberTypeCode)) {
-			return String.format(ASP_AUTH_URL, "http://localhost:8080", AuthKeyManage.getAuthKey());
+			return String.format(ASP_AUTH_URL, "http://localhost:80", AuthKeyManage.getAuthKey());
 		} else {
-			return String.format(MEMBER_AUTH_URL, "http://localhost:8080", AuthKeyManage.getAuthKey());
+			return String.format(MEMBER_AUTH_URL, "http://localhost:80", AuthKeyManage.getAuthKey());
 		}
 
 	}

@@ -25,8 +25,10 @@
 			    from tbl_user
 			    where member_type_cd != '01'
 	            and not use_flag in ('00', '09')
+	            <if test="aspCode != null and aspCode != ''">
 	            and asp_code = #{aspCode}
-	            ) u
+	            </if>
+	            ) u	
 			    inner join
 			    (select
 			        cd
@@ -120,7 +122,9 @@
 	                 and email like CONCAT('%',REPLACE(#{email},'%','¥%'),'%') ESCAPE '¥'
 	            </if>
 	           	and use_flag = '1'
-	           	and asp_code = #{aspCode}
+	           	<if test="aspCode != null and aspCode != ''">
+	            and asp_code = #{aspCode}
+	            </if>
       </where>
       order by pre_member_code
     </select>
@@ -135,7 +139,10 @@
 			    from tbl_user
 			    where member_type_cd ='03'
 	            and use_flag ='01'
-	            and asp_code = #{aspCode}) u
+	            <if test="aspCode != null and aspCode != ''">
+	            and asp_code = #{aspCode}
+	            </if>
+	            ) u	            
 	            inner join
                 (select
                     cd
