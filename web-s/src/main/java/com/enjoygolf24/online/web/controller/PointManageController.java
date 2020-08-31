@@ -23,6 +23,7 @@ import com.enjoygolf24.api.common.utility.DefaultPageSizeUtility;
 import com.enjoygolf24.api.common.utility.LoginUtility;
 import com.enjoygolf24.api.common.validator.groups.All;
 import com.enjoygolf24.api.common.validator.groups.Search0;
+import com.enjoygolf24.api.service.AspService;
 import com.enjoygolf24.api.service.CdMapService;
 import com.enjoygolf24.api.service.PointService;
 import com.enjoygolf24.online.web.form.PointManageForm;
@@ -41,6 +42,9 @@ public class PointManageController {
 
 	@Autowired
 	PointService pointService;
+
+	@Autowired
+	AspService aspService;
 
 	@Autowired
 	private CdMapService cdMapService;
@@ -261,8 +265,9 @@ public class PointManageController {
 
 	private void initListForm(PointManageListForm form, Model model) {
 		String aspCode = LoginUtility.getLoginUser().getAspCode();
-		// TODO: set null if asp code were head office -> modify mapper
-		form.setAspCode(aspCode);
+		if (!aspService.getAspByName("本社").getAspCode().equals(aspCode)) {
+			form.setAspCode(aspCode);
+		}
 	}
 
 	private void initDetailForm(PointManageForm form, Model model, String memberCode) {

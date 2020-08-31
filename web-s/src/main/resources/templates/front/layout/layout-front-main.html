@@ -3,7 +3,14 @@
     xmlns:th="http://www.thymeleaf.org"
     xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
-
+	<script type="text/javascript">
+	if((navigator.userAgent.indexOf('iPhone') > 0) || navigator.userAgent.indexOf('iPod') > 0 || (navigator.userAgent.indexOf('Android') > 0 && navigator.userAgent.indexOf('Mobile') > 0)){
+	        document.write('<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">');
+	    }else{
+	        document.write('<meta name="viewport" content="width=1200,user-scalable=yes">');
+	    }
+	</script>
+	<noscript><meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"></noscript>
     <title>エンジョイゴルフ24</title>
 	<meta name="Keywords" content="" />
 	<meta name="Description" content="" />
@@ -13,9 +20,6 @@
     <meta http-equiv="Cache-Control" content="no-cache">
     <meta http-equiv="pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <link th:href="@{/webjars/bootstrap/4.5.0/css/bootstrap.min.css}" rel="stylesheet" />
-    <link th:href="@{/webjars/jquery-ui/1.12.1/jquery-ui.min.css}" rel="stylesheet" />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/css/all.min.css" rel="stylesheet" />
     <link rel="stylesheet" th:href="@{/css/front/normalize.css}" media="all" />
 	<link rel="stylesheet" th:href="@{/scripts/slick/slick.css}" media="all" />
 	<link rel="stylesheet" th:href="@{/scripts/slick/slick-theme.css}" media="all" />

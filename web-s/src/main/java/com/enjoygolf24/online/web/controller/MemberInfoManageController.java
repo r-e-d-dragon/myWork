@@ -23,6 +23,7 @@ import com.enjoygolf24.api.common.utility.DefaultPageSizeUtility;
 import com.enjoygolf24.api.common.utility.LoginUtility;
 import com.enjoygolf24.api.common.validator.groups.All;
 import com.enjoygolf24.api.common.validator.groups.Search0;
+import com.enjoygolf24.api.service.AspService;
 import com.enjoygolf24.api.service.CdMapService;
 import com.enjoygolf24.api.service.MemberInfoManageService;
 import com.enjoygolf24.online.web.form.MemberInfoManageForm;
@@ -44,6 +45,9 @@ public class MemberInfoManageController {
 
 	@Autowired
 	private CdMapService cdMapService;
+
+	@Autowired
+	AspService aspService;
 
 	@RequestMapping(value = "/index", method = RequestMethod.POST)
 	public String aspListIndex(@ModelAttribute("memberInfoManageListForm") MemberInfoManageListForm form,
@@ -209,8 +213,9 @@ public class MemberInfoManageController {
 
 	private void initListForm(MemberInfoManageListForm form, Model model) {
 		String aspCode = LoginUtility.getLoginUser().getAspCode();
-		// TODO: set null if asp code were head office -> modify mapper
-		form.setAspCode(aspCode);
+		if (!aspService.getAspByName("本社").getAspCode().equals(aspCode)) {
+			form.setAspCode(aspCode);
+		}
 	}
 
 	private void initDetailForm(MemberInfoManageForm form, Model model, String memberCode) {

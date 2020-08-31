@@ -3,29 +3,11 @@
     xmlns:th="http://www.thymeleaf.org"
     xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{front/layout/layout-front-main}">
 <head>
-	<script type="text/javascript">
-	if((navigator.userAgent.indexOf('iPhone') > 0) || navigator.userAgent.indexOf('iPod') > 0 || (navigator.userAgent.indexOf('Android') > 0 && navigator.userAgent.indexOf('Mobile') > 0)){
-	        document.write('<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">');
-	    }else{
-	        document.write('<meta name="viewport" content="width=1200,user-scalable=yes">');
-	    }
-	</script>
-
-
-<noscript><meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"></noscript>
-
-  <script>
-    $(function(){
-
-      $(".js-modal-btn").modalVideo();
-      
-    });
-    
-  </script>
-
-  
-  
-  
+	<title>エンジョイゴルフ24とは｜エンジョイゴルフ24</title>
+	<meta name="Keywords" content="">
+	<meta name="Description" content="">
+	<meta property="og:image" content="http://">
+    <script type="text/javascript" th:src="@{/scripts/front/reference/introduce.js}"></script>
 </head>
 <div layout:fragment="content"><!-- /** layout contents start */ -->
 

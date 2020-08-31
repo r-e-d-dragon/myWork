@@ -2029,6 +2029,30 @@ main#local #policy .sidenavi h3 {
     max-width: 376px;
     margin: 0 auto 0px;
     display: block; }
+    
+    #login a.greenBtn{
+    background: #0aa005;
+    text-align: center;
+    height: 48px;
+    color: #fff;
+    font-weight: bold;
+    border-radius: 5px;
+    box-shadow: 0 3px 5px 0 rgba(0, 0, 0, 0.2);
+    border: none;
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    max-width: 376px;
+    margin: 0 auto 0px;
+    text-align: center;
+    line-height: 48px;
+    text-decoration: none;
+    display: block; }
+    
+    #login a.greenBtn:hover{
+    	opacity: 1;
+    }
+
 
 /*------------------------------------------*/
 main#booking h1 {

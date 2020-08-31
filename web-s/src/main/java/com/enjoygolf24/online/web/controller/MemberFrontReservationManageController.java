@@ -70,7 +70,8 @@ public class MemberFrontReservationManageController {
 		logger.info("Start memberReservationList Controller");
 
 
-		memberForm.setSelectedMemberCode("user1@user.com");
+		// memberForm.setSelectedMemberCode("user1@user.com");
+		memberForm.setSelectedMemberCode("admin2@user.com");
 
 		// 会員コード
 		if (!StringUtil.isEmpty(memberForm.getSelectedMemberCode())) {

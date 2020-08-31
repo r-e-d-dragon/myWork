@@ -145,6 +145,7 @@
               <td>
                 <img th:if="${data.consumedPoint == '3'}" th:src="@{/images/front/booking_3p.png}" alt="3P"/>
                 <img th:if="${data.consumedPoint == '5'}" th:src="@{/images/front/booking_5p.png}" alt="5P"/>
+                <img th:if="${data.consumedPoint == '7'}" th:src="@{/images/front/booking_7p_temp.png}" alt="7P"/>
                 <img th:if="${data.consumedPoint == '10'}" th:src="@{/images/front/booking_10p.png}" alt="10P"/>
               </td>
               <td th:each="batData, itemStat : ${data.reservationList}" th:data-batnumbercd="${batData.batNumberCd}" th:data-batnumber="${batData.batNumber}">

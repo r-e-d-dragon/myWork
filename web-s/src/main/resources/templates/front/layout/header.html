@@ -9,8 +9,8 @@
     <div class="inner">
       <div class="lead">日本のゴルフを、もっと豊かに、もっと上質に。</div>
       <nav class="member">
-        <a th:href="@{/login/}" class="regist">新規会員登録</a>
-        <a th:href="@{/login/}" class="login">ログイン</a>
+        <a th:href="@{/public/login}" class="regist">新規会員登録</a>
+        <a th:href="@{/public/login}" class="login">ログイン</a>
       </nav>
     </div>
   </div>
@@ -25,14 +25,14 @@
           <div class="sub">
             <ul>
               <li><a th:href="@{/public/reference/introduce}">Enjoy golf24とは</a></li>
-              <li><a th:href="@{/private/shop/}">店舗一覧</a></li>
-              <li><a th:href="@{/private/price/}">料金/ポイント</a></li>
-              <li><a th:href="@{/private/membership/}">会員になるには</a></li>
+              <li><a th:href="@{/public/branchInfo}">店舗一覧</a></li>
+              <li><a th:href="@{/public/reference/price}">料金/ポイント</a></li>
+              <li><a th:href="@{/public/reference/membership}">会員になるには</a></li>
             </ul>
           </div>
         </li>
         <li><span class="uc partner"><span>Partnership　<em>加盟店募集</em></span></span></li>
-        <li><a th:href="@{/news/}" class="news"><span>News　<em>ニュースリリース</em></span></a></li>
+        <li><a th:href="@{/public/news}" class="news"><span>News　<em>ニュースリリース</em></span></a></li>
       </ul>
       </div>
     </nav>
