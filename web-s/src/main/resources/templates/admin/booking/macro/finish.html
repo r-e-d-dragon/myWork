@@ -26,6 +26,14 @@
 
                     <div class="row align-items-start m-b-20">
                       <div class="d-flex justify-content-between align-items-start m-t-10">
+                        <span class="text c-ttl c-ttl__04">一括予約名</span>
+                        <span class="tag-icon tag-red m-t-5">必須</span>
+                      </div>
+                      <div><span th:text="${macroName}"></span></div>
+                    </div>
+
+                    <div class="row align-items-start m-b-20">
+                      <div class="d-flex justify-content-between align-items-start m-t-10">
                         <span class="text c-ttl c-ttl__04">予約番号</span>
                       </div>
                       <div><span th:text="*{reservationNumber}"></span></div>
@@ -77,9 +85,9 @@
                         <span class="text c-ttl c-ttl__04">打席番号</span>
                       </div>
                       <div>
-                        <th:block th:each="batnumber : ${chkBatNumbers}">
-                        <span th:text="${batnumber}">　</span>　
-                        </th:block>
+                        <div>
+                          <p class="badge badge-primary c-ttl c-ttl__04" th:each="item : ${chkBatNumbers}" th:text="${item}"></p>
+                        </div>
                       </div>
                     </div>
                 </div>

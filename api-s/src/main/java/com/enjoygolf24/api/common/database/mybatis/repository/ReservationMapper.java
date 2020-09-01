@@ -21,4 +21,6 @@ public interface ReservationMapper {
 
 	public List<MemberReservationManage> getMemberPointManageList(@Param("memberCode") String memberCode,
 			@Param("categoryCode") String categoryCode, @Param("reservationDate") String reservationDate);
+
+	public List<MemberReservationManage> getMacroReservationList(@Param("aspCode") String aspCode);
 }

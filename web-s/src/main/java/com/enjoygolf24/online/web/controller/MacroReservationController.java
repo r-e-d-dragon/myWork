@@ -18,9 +18,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.enjoygolf24.api.common.code.ReservationStatusCd;
 import com.enjoygolf24.api.common.database.bean.TblAsp;
 import com.enjoygolf24.api.common.database.jpa.repository.CodeMasterRepository;
 import com.enjoygolf24.api.common.database.jpa.repository.TblPointConsumeMasterRepository;
+import com.enjoygolf24.api.common.database.mybatis.bean.MemberReservationManage;
 import com.enjoygolf24.api.common.utility.DateUtility;
 import com.enjoygolf24.api.common.utility.LoginUtility;
 import com.enjoygolf24.api.common.validator.groups.All;
@@ -29,6 +31,7 @@ import com.enjoygolf24.api.service.MacroReservationManageService;
 import com.enjoygolf24.api.service.MemberInfoManageService;
 import com.enjoygolf24.online.web.form.MacroReservationManageListForm;
 import com.enjoygolf24.online.web.form.MemberReservationManageListForm;
+import com.github.pagehelper.PageInfo;
 
 @Controller
 @RequestMapping("/admin/booking/macro")
@@ -65,6 +68,8 @@ public class MacroReservationController {
 		List<String> batNumbers = codeMasterRepository.findByCodeTypeOrderByCd("990").stream().map(p -> p.getName())
 				.collect(Collectors.toList());
 		model.addAttribute("batNumbers", batNumbers);
+
+		serchCommonLogic(form, model);
 
 		logger.info("End macrosReservationInfo Controller");
 		return "/admin/booking/macro/index";
@@ -139,16 +144,19 @@ public class MacroReservationController {
 		// 予約番号
 		String reservationNumber = DateUtility.getCurrentDateTime("yyyyMMdd-HHmmssSSS");
 		form.setReservationNumber(reservationNumber);
+		form.setStatus(ReservationStatusCd.STATUS_FIXED);
+		// 選択打席番号
+		form.setBatNumber(String.join(",", form.getChkBatNumbers()));
 
-		// 予約登録
-		List<String> ids = macroReservationManageService
-				.MacroReservationRegister(form.createMemberReservationServiceBean());
+		// 一括予約登録
+		macroReservationManageService.MacroReservationRegister(form.createMemberReservationServiceBean());
 
 		searchForm.setReservationNumber(reservationNumber);
 
 		model.addAttribute("action", "ins");
 		model.addAttribute("reservationNumber", searchForm.getReservationNumber());
 
+		model.addAttribute("macroName", form.getMacroName());
 		model.addAttribute("fromReservationDate", form.getFromReservationDate());
 		model.addAttribute("fromReservationTime", form.getFromReservationTime());
 		model.addAttribute("toReservationDate", form.getToReservationDate());
@@ -188,15 +196,15 @@ public class MacroReservationController {
 
 		initListForm(form, model);
 
-//		List<MemberReservationManage> memberReservationList = memberReservationManageService.getMemberReservationList(
-//				form.getReservationNumber(), form.getMemberCode(), LoginUtility.getLoginUser().getAspCode(),
-//				form.getReservationDate(), form.getStatus(), false, form.getPageNo(), form.getPageSize());
-//
-//		PageInfo<MemberReservationManage> pageInfo = new PageInfo<MemberReservationManage>(memberReservationList);
-//		model.addAttribute("pageInfo", pageInfo);
-//		form.setReservationList(memberReservationList);
-//
-//		model.addAttribute("modelMemberReservationList", memberReservationList);
+		List<MemberReservationManage> macroReservationList = macroReservationManageService
+				.getMacroReservationList(LoginUtility.getLoginUser().getAspCode(), form.getPageNo(),
+						form.getPageSize());
+
+		PageInfo<MemberReservationManage> pageInfo = new PageInfo<MemberReservationManage>(macroReservationList);
+		model.addAttribute("pageInfo", pageInfo);
+		form.setReservationList(macroReservationList);
+
+		model.addAttribute("macroReservationList", macroReservationList);
 	}
 
 }

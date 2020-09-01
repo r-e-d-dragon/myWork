@@ -23,6 +23,13 @@
                           </div>
                           <div><span th:text="${aspName}"></span><input type="hidden" th:field="*{aspCode}"><input type="hidden" th:field="*{loginUserCd}"></div>
                         </div>
+
+                        <div class="row align-items-start m-b-20">
+                          <div class="d-flex justify-content-between align-items-start m-t-10">
+                            <span class="text c-ttl c-ttl__04">一括予約名</span>
+                          </div>
+                          <div><span th:text="*{macroName}"></span><input type="hidden" th:field="*{macroName}"></div>
+                        </div>
                        
                         <div class="row align-items-start m-b-20">
                           <div class="d-flex justify-content-between align-items-start m-t-10">
@@ -74,9 +81,8 @@
                             <span class="text c-ttl c-ttl__04">打席番号</span>
                           </div>
                           <div>
-                            <th:block th:each="batnumber : *{chkBatNumbers}">
-                            <span th:text="${batnumber}">　</span><input type="hidden" name="chkBatNumbers" th:value="${batnumber}"/>
-                            </th:block>
+                            <p class="badge badge-primary c-ttl c-ttl__04" th:each="item : *{chkBatNumbers}" th:text="${item}"></p>
+                            <th:block th:each="item : *{chkBatNumbers}"><input type="hidden" name="chkBatNumbers" th:value="${item}"/></th:block>
                           </div>
                         </div>
                     </div>

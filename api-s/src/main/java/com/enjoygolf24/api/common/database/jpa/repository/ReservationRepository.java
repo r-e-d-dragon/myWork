@@ -34,4 +34,17 @@ public interface ReservationRepository extends JpaRepository<TblReservation, Str
 	 * @return 予約情報リスト
 	 */
 	List<TblReservation> findByReservationDate(Date reservationDate);
+
+	/**
+	 * 予約検索
+	 * 
+	 * @param aspCode         店舗
+	 * @param reservationDate 予約日
+	 * @param reservationTime 予約時間
+	 * @param batNumber       打席番号
+	 * @param status          ステータス
+	 * @return
+	 */
+	TblReservation findByAspCodeAndReservationDateAndReservationTimeAndBatNumberAndStatus(String aspCode,
+			Date reservationDate, String reservationTime, String batNumber, String status);
 }

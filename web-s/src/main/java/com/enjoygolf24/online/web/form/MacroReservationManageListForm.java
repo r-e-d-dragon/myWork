@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 
 import org.modelmapper.ModelMapper;
 
@@ -42,8 +43,12 @@ public class MacroReservationManageListForm implements Serializable {
 	@SjisSafe(groups = Search0.class)
 	String aspName;
 
+	private String batNumber;
 	private String memberName;
 	private String loginUserCd;
+
+	@NotBlank(groups = Insert0.class)
+	private String macroName;
 
 	@NotBlank(groups = Insert0.class)
 	private String fromReservationDate;
@@ -63,6 +68,7 @@ public class MacroReservationManageListForm implements Serializable {
 	private String selectedReservationId;
 	private String reservationId;
 
+	@NotEmpty(groups = Insert0.class)
 	private List<String> chkBatNumbers;
 
 	@PageSize

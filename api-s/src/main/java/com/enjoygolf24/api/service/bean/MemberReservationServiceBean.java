@@ -38,6 +38,7 @@ public class MemberReservationServiceBean {
 	private String pointCategoryCode;
 	private String pointGrade;
 
+	private String macroName;
 	private String fromReservationDate;
 	private String fromReservationTime;
 	private String toReservationDate;

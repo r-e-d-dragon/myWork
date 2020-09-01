@@ -34,6 +34,7 @@
     	})();      
     });
     </script>
+
 </head>
 <body>
 
@@ -52,10 +53,19 @@
                           </div>
                           <div><p th:text="${aspName}"></p><input type="hidden" th:field="*{aspCode}"><input type="hidden" th:field="*{loginUserCd}"></div>
                         </div>
+                        
+                        <div class="row align-items-start m-b-20">
+                          <div class="d-flex justify-content-between align-items-start m-t-10">
+                            <span class="text c-ttl c-ttl__04">一括予約名</span>
+                            <span class="tag-icon tag-red m-t-5">必須</span>
+                          </div>
+                          <div><input class="c-input" type="text" placeholder="夜間不要打席" th:field="*{macroName}" th:errorclass="fieldError"></div>
+                        </div>
                        
                         <div class="row align-items-start m-b-20">
                           <div class="d-flex justify-content-between align-items-start m-t-10">
                             <span class="text c-ttl c-ttl__04">予約期間</span>
+                            <span class="tag-icon tag-red m-t-5">必須</span>
                           </div>
                           <div>
                           <table>
@@ -71,7 +81,7 @@
                             <tr>
                               <td><span>FROM:</span></td>
                               <td>
-	                            <input class="c-input" type="text" readonly th:field="*{fromReservationDate}" id="fromDatepicker"/>
+	                            <input class="c-input" type="text" readonly th:field="*{fromReservationDate}" id="fromDatepicker" th:errorclass="fieldError"/>
                               </td>
                               <td>　</td>
                               <td>
@@ -107,7 +117,7 @@
                             <tr>
                               <td><span>TO:</span></td>
                               <td>
-                                <input class="c-input" type="text" readonly th:field="*{toReservationDate}" id="toDatepicker"/>
+                                <input class="c-input" type="text" readonly th:field="*{toReservationDate}" id="toDatepicker" th:errorclass="fieldError"/>
                               </td>
                               <td>　</td>
                               <td>
@@ -147,11 +157,13 @@
                         <div class="row align-items-start m-b-20">
                           <div class="d-flex justify-content-between align-items-start m-t-10">
                             <span class="text c-ttl c-ttl__04">打席番号</span>
+                            <span class="tag-icon tag-red m-t-5">必須</span>
                           </div>
                           <div>
-						    <th:block th:each="batnumber : ${batNumbers}">
-						    <input class="custom-checkbox" type="checkbox" th:field="*{chkBatNumbers}" name="chkBatNumbers" th:value="${batnumber}" th:text="${batnumber}"/>
-						    </th:block>
+		                    <div class="custom-control custom-checkbox" th:each="item : ${batNumbers}">
+		                        <input type="checkbox" class="custom-control-input" th:value="${item}" th:field="*{chkBatNumbers}">
+		                        <label class="custom-control-label c-ttl c-ttl__03" th:for="${#ids.prev('chkBatNumbers')}" th:text="${item}"></label>
+		                    </div>
                           </div>
                         </div>
                     </div>
@@ -164,42 +176,53 @@
                   </section>
                 </div>
 
-<!-- 
                 <section class="reservation_dialog">
                 <p class="text-warning" id="reservation_message"></p>
                 <span class="m-b-50">一括予約一覧</span>
-                <div>
                 <table class="table-search m-b-20" >
                 <tr>
                     <th class="text-center" width="10%">店舗名</th>
+                    <th class="text-center" width="15%">一括予約名</th>
                     <th class="text-center" width="20%">予約番号</th>
-                    <th class="text-center" width="50%">予約期間</th>
+                    <th class="text-center" width="25%">予約期間</th>
                     <th class="text-center" width="20%">打線番号</th>
                     <th class="text-center" width="10%">取消</th>
                 </tr>
-                <tr>
-                    <td class="text-center">本社</td>
-                    <td class="text-center">20200830-999-9999</td>
-                    <td class="text-center">2020/08/29　22:00-22:59　～　2020/09/01　23:00-23:59</td>
-                    <td class="text-center">101, 102, 103</td>
-                    <td class="text-center">取消</td>
-                </tr>
-                <tr>
-                    <td class="text-center">本社</td>
-                    <td class="text-center">20200821-999-9999</td>
-                    <td class="text-center">2020/08/22　22:00-22:59　～　2020/08/28　23:00-23:59</td>
-                    <td class="text-center">101, 102, 103</td>
-                    <td class="text-center"> - </td>
-                </tr>
+                
+                <div th:if="${pageInfo != null}" >
+                <tbody>
+                     <tr th:each="data , itemStat : ${pageInfo.list}" th:class="${itemStat.odd}? 'odd' : 'even'">
+                        <td class="text-left"><span th:text="${data.aspName}"></span></td>
+                        <td class="text-left"><span th:text="${data.macroName}"></span></td>
+                        <td class="text-left"><span th:text="${data.reservationNumber}"></span></td>
+                        <td class="text-left"><span th:text="${data.fromReservationDate}"></span>　<span th:text="${data.fromReservationTime}"></span><br>
+                                                        ～<span th:text="${data.fromReservationDate}"></span>　<span th:text="${data.toReservationTime}"></span></td>
+                        <td class="text-left"><span th:text="${data.batNumber}"></span></td>
+                        <td class="text-center">
+                          <a id="searchBtn" class="box-btn__1col .btn-col" href="#" th:url="@{/admin/booking/search}" th:value="${data.reservationNumber}" target="reservationNumber">予約検索</a><br>
+                          <a href="#">取消</a>
+                        </td>
+                    </tr>
+                </tbody>
+                </div>
                 </table>
+                <div class="m-b-40" th:if="${pageInfo != null}" >
+                    <div class="text-center">
+                        <span class="text m-r-20" th:if="${pageInfo.isIsFirstPage()}">&lt;前へ</span>
+                        <a class="c-link-text m-r-20" th:unless="${pageInfo.isIsFirstPage()}" href="#" th:url="" id="list_prev">&lt;前へ</a>
+                        &nbsp;<span th:text="${pageInfo.pageNum}"></span>&nbsp;
+                        <span class="text m-l-20" th:if="${pageInfo.isIsLastPage()}">次へ&gt;</span>
+                        <a class="c-link-text m-l-20" th:unless="${pageInfo.isIsLastPage()}" href="#" th:url="" id="list_next">次へ&gt;</a>
+                    </div>
+                    <input type="hidden" th:field="*{pageNo}" th:value="${pageInfo.pageNum}" />
                 </div>
                 </section>                
- -->            
-                
+                <input type="hidden" th:field="*{reservationNumber}" />
           　　　　　　　</section>
         </div>
         
     </form>
+    
 </div> <!-- /** layout contents finish */ -->
 </body>
 </html>

@@ -57,6 +57,12 @@ public class MemberReservationManage implements Serializable {
 	private int limitEventReservationCount;
 	private int limitMonthlyReservationCount;
 
+	private String fromReservationDate;
+	private String fromReservationTime;
+	private String toReservationDate;
+	private String toReservationTime;
+	private String macroName;
+
 	TblUser tblUser;
 	List<MemberReservationManage> reservationList;
 }
