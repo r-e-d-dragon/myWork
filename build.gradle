@@ -100,7 +100,9 @@ project(':api-s') {
         
         // https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
 		compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.11'
-        
+        // https://mvnrepository.com/artifact/org.apache.commons/commons-email
+        compile group: 'org.apache.commons', name: 'commons-email', version: '1.5'
+       
         compile('org.webjars:jquery:3.5.1')
         compile('org.webjars:jquery-ui:1.12.1')
         compile('org.webjars:bootstrap:4.5.0')
