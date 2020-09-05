@@ -28,6 +28,7 @@ $(function(){
         $("#limitReservationCount").val(0);
         $("#limitMonthlyReservationCount").val(0);
         $("#limitEventReservationCount").val(0);
+        $("#limitReservationPoint").val(0);
                 
 		if( memberCode == '') {
 			alert("会員コードに値を入力してください。");
@@ -71,7 +72,7 @@ $(function(){
                 if (data['validated']) {
                     
                     if (data.reservation.tblUser != null) {
-                        $("#memberName").val(data.reservation.tblUser['lastName'] + data.reservation.tblUser['firstName']);
+                        $("#memberName").val(data.reservation.tblUser['lastName'] + ' ' + data.reservation.tblUser['firstName']);
                         $("#validMonthlyPoint").val(data.reservation['validMonthlyPoint']);
                         $("#validEventPoint").val(data.reservation['validEventPoint']);
                         $("#monthlyPoint").val(data.reservation['totalMonthlyPoint']);
@@ -80,6 +81,7 @@ $(function(){
                         $("#limitReservationCount").val(data.reservation['limitReservationCount']);
                         $("#limitEventReservationCount").val(data.reservation['limitEventReservationCount']);
                         $("#limitMonthlyReservationCount").val(data.reservation['limitMonthlyReservationCount']);
+                        $("#limitReservationPoint").val(data.reservation['limitReservationPoint']);
                         
                         $('tbody').find("tr:gt(0)").remove();
                         if(data['hasReservation']){

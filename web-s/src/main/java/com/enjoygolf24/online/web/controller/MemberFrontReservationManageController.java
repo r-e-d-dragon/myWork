@@ -18,12 +18,15 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.enjoygolf24.api.common.code.DateTypeCd;
+import com.enjoygolf24.api.common.code.CodeTypeCd;
 import com.enjoygolf24.api.common.database.bean.TblAsp;
 import com.enjoygolf24.api.common.database.bean.TblPointConsumeMaster;
 import com.enjoygolf24.api.common.database.bean.TblUser;
+import com.enjoygolf24.api.common.database.bean.ViewTimeGradeCalendar;
 import com.enjoygolf24.api.common.database.jpa.repository.CodeMasterRepository;
 import com.enjoygolf24.api.common.database.jpa.repository.TblPointConsumeMasterRepository;
+import com.enjoygolf24.api.common.database.jpa.repository.ViewCalendarRepository;
+import com.enjoygolf24.api.common.database.jpa.repository.ViewTimeGradeCalendarRepository;
 import com.enjoygolf24.api.common.database.mybatis.bean.MemberReservationManage;
 import com.enjoygolf24.api.common.utility.DateUtility;
 import com.enjoygolf24.api.common.utility.DefaultPageSizeUtility;
@@ -61,12 +64,18 @@ public class MemberFrontReservationManageController {
 
 	@Autowired
 	TblPointConsumeMasterRepository tblPointConsumeMasterRepository;
-	
+
+	@Autowired
+	ViewCalendarRepository viewCalendarRepository;
+	@Autowired
+	ViewTimeGradeCalendarRepository viewTimeGradeCalendarRepository;
+
 	@RequestMapping(value = "")
 	public String memberReservationList(
 			@ModelAttribute("memberReservationManageListForm") MemberReservationManageListForm form,
 			@ModelAttribute("memberReservationRegisterForm") MemberReservationRegisterForm registerForm,
-			@ModelAttribute("memberInfoManageListForm") MemberInfoManageListForm memberForm, Model model) {
+			@ModelAttribute("memberInfoManageListForm") MemberInfoManageListForm memberForm, BindingResult result,
+			Model model) {
 		logger.info("Start memberReservationList Controller");
 
 
@@ -86,22 +95,20 @@ public class MemberFrontReservationManageController {
 		form.setMonthlyPoint("150");
 		form.setEventPoint("50");
 
-		// 予約日 - 初期表示：当日
-		if (StringUtil.isEmpty(form.getReservationDate())) {
-			form.setReservationDate(DateUtility.getCurrentDateTime(DateUtility.DATE_FORMAT));
-		}
+		// タイム表取得
+		List<ViewTimeGradeCalendar> timeGradeCalendar = viewTimeGradeCalendarRepository
+				.findByDateTimeOrderByTimeTableCode(DateUtility.getDate(form.getReservationDate()));
+		model.addAttribute("timeGradeCalendar", timeGradeCalendar);
 
-		// TODO 休日種別、祝日マスタ
-		String dateCode = "010";
-		if (DateUtility.isWeekend(form.getReservationDate())) {
-			form.setDateKind(DateTypeCd.HOLIDAY);
-			model.addAttribute("dateType", codeMasterRepository.findByCodeTypeAndCd(dateCode, DateTypeCd.HOLIDAY)
-					.getName());
-		} else {
-			form.setDateKind(DateTypeCd.WEEKDAY);
+		// 休日、祝日判定
+		if (timeGradeCalendar.isEmpty()) {
+			form.setDateKind(timeGradeCalendar.get(0).getDateTypeCd());
 			model.addAttribute("dateType",
-					codeMasterRepository.findByCodeTypeAndCd(dateCode, DateTypeCd.WEEKDAY)
-					.getName());
+					codeMasterRepository.findByCodeTypeAndCd(CodeTypeCd.HOLIDAY_TYPE_CD, form.getDateKind()).getName());
+		} else {
+			result.rejectValue("reservationDate", "error.reservationDate", "{0} : 予約カレンダー取得に失敗しました。");
+			logger.info("End memberReservationList Controller");
+			return "/admin/booking/top/index";
 		}
 
 		List<MemberReservationManage> memberReservationList = memberReservationManageService

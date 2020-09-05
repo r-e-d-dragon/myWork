@@ -81,7 +81,7 @@
                             <span class="text c-ttl c-ttl__04">打席番号</span>
                           </div>
                           <div>
-                            <p class="badge badge-primary c-ttl c-ttl__04" th:each="item : *{chkBatNumbers}" th:text="${item}"></p>
+                            <p class="badge badge-pill badge-primary c-ttl c-ttl__04" th:each="item : *{chkBatNumbers}" th:text="${item}"></p>
                             <th:block th:each="item : *{chkBatNumbers}"><input type="hidden" name="chkBatNumbers" th:value="${item}"/></th:block>
                           </div>
                         </div>

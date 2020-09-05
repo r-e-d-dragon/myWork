@@ -14,7 +14,6 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.enjoygolf24.api.common.code.DateTypeCd;
 import com.enjoygolf24.api.common.code.PointCategoryCd;
 import com.enjoygolf24.api.common.code.ReservationStatusCd;
 import com.enjoygolf24.api.common.database.bean.TblMacroReservationManage;
@@ -64,11 +63,17 @@ public class MacroReservationManageServiceImpl implements MacroReservationManage
 
 	@Override
 	@Transactional
+	public List<TblPointConsumeMaster> getTblPointConsumeMaster(String dataKind) {
+		return pointConsumeMasterRepository.findByIdDateKindOrderByIdTimeSlot(dataKind);
+	}
+
+	@Override
+	@Transactional
 	public TblMacroReservationManage MacroReservationRegister(MemberReservationServiceBean serviceBean) {
 
 		// TODO
 		List<TblPointConsumeMaster> tblPointConsumeMaster = pointConsumeMasterRepository
-				.findByIdDateKindOrderByIdTimeSlot(DateTypeCd.WEEKDAY);
+				.findByIdDateKindOrderByIdTimeSlot("01");
 
 		TblMacroReservationManage manager = insertMacroReservationManage(serviceBean);
 

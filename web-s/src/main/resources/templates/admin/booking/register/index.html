@@ -5,7 +5,7 @@
 <head>
     <title>予約登録</title>
     <link rel="stylesheet" th:href="@{/css/admin/mypage.css}"></link>
-    <script type="text/javascript" th:src="@{/scripts/admin/booking/register.js?ver=0.9}"></script>
+    <script type="text/javascript" th:src="@{/scripts/admin/booking/register.js?ver=0.01}"></script>
 </head>
 <body>
 <div layout:fragment="content"><!-- /** layout contents start */ -->
@@ -130,11 +130,12 @@
                   <a id="returnBtn" class="btn-continue c-btn btn-primary width-210 swap text-center" href="#" th:url="@{/admin/booking/top}">戻る</a>
                 </div>
                 </div>
-                <input type="hidden" th:field="*{reservationId}" value="">
-                <input type="hidden" th:field="*{valid}">
-                <input type="hidden" th:field="*{limitReservationCount}">
-                <input type="hidden" th:field="*{limitMonthlyReservationCount}">
-                <input type="hidden" th:field="*{limitEventReservationCount}">
+                <input type="text" th:field="*{reservationId}" value="">
+                <input type="text" th:field="*{valid}">
+                <input type="text" th:field="*{limitReservationCount}">
+                <input type="text" th:field="*{limitMonthlyReservationCount}">
+                <input type="text" th:field="*{limitEventReservationCount}">
+                <input type="text" th:field="*{limitReservationPoint}">
           　　　　　　　</section>
             
         </div>

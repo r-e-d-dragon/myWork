@@ -56,6 +56,7 @@ public class MemberReservationManage implements Serializable {
 	private int limitReservationCount;
 	private int limitEventReservationCount;
 	private int limitMonthlyReservationCount;
+	private int limitReservationPoint;
 
 	private String fromReservationDate;
 	private String fromReservationTime;

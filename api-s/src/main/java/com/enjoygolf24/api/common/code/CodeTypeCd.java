@@ -18,6 +18,8 @@ public interface CodeTypeCd {
 
 	public static final String PONT_EXPIRATION_TERM_CD = "008";
 
+	public static final String HOLIDAY_TYPE_CD = "010";
+
 	public static final String JOB_CD = "011";
 
 	public static final String MEMBER_GRADE_TIME_CD = "012";

@@ -1,0 +1,43 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.enjoygolf24.api.common.database.mybatis.repository.PointMapper">
+
+    <select id="getMonthlyPointBalance" resultType="java.lang.Integer">
+    	SELECT COALESCE(sum(point_variation), 0)
+		from tbl_point_monthly
+		where EXTRACT(MONTH FROM register_date) = #{month}
+		and member_code = #{memberCode}       
+    </select>
+    
+    <select id="getCarriablePointBalance" resultType="java.lang.Integer">
+       SELECT COALESCE(sum(point_variation), 0)
+		from tbl_point_carriable
+		where 
+		<![CDATA[
+		term_start_date <= #{currentDate}
+		]]>
+		and member_code = #{memberCode}
+    </select>
+    
+     <select id="getHistoryMonthly" resultType="com.enjoygolf24.api.common.database.mybatis.bean.PointHistoryManage">
+    	select *
+		from 
+			(
+			 select * 
+		        	, cast(register_date as date) as registerDateFormatted
+		     from tbl_point_monthly
+		     where member_code = #{memberCode}
+		     )p
+		     inner join
+			 	(select
+					cd
+					,name AS pointTypeName
+				 from code_master
+				 where code_type='007'
+				) cdm
+				on p.point_type_cd = cdm.cd  
+    </select>
+
+
+</mapper>

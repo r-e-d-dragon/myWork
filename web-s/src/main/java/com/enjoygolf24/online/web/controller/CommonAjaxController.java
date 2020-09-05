@@ -11,13 +11,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.enjoygolf24.api.common.code.CodeTypeCd;
 import com.enjoygolf24.api.common.code.PointCategoryCd;
 import com.enjoygolf24.api.common.code.ReservationStatusCd;
-import com.enjoygolf24.api.common.database.bean.TblReservationLimitMaster;
+import com.enjoygolf24.api.common.database.bean.MstReservationLimit;
 import com.enjoygolf24.api.common.database.bean.TblUser;
 import com.enjoygolf24.api.common.database.bean.ZipMaster;
 import com.enjoygolf24.api.common.database.mybatis.bean.MemberReservationManage;
+import com.enjoygolf24.api.common.utility.DateUtility;
 import com.enjoygolf24.api.service.MemberInfoManageService;
 import com.enjoygolf24.api.service.MemberReservationManageService;
 import com.enjoygolf24.api.service.ZipMasterService;
@@ -90,16 +90,19 @@ public class CommonAjaxController {
 				reservationList.stream().filter(p -> p.getPointCategoryCode().equals(PointCategoryCd.EVENT_POINT))
 						.collect(Collectors.toList()).size());
 
-		TblReservationLimitMaster tblReservationLimitMaster = memberReservationManageService
-				.getMemberReservationLimit(CodeTypeCd.MEMBER_GRADE_CD, member.getMemberGradeCode());
-		if (tblReservationLimitMaster != null) {
-			reservation.setLimitReservationCount(tblReservationLimitMaster.getReservationLimit());
-			reservation.setLimitEventReservationCount(tblReservationLimitMaster.getEventLimit());
-			reservation.setLimitMonthlyReservationCount(tblReservationLimitMaster.getMonthlyLimit());
+		// 予約制限情報取得
+		MstReservationLimit master = memberReservationManageService.getMemberReservationLimit(member.getMemberTypeCd(),
+				DateUtility.getDate(reservationDate));
+		if (master != null) {
+			reservation.setLimitReservationCount(master.getReservationLimit());
+			reservation.setLimitEventReservationCount(master.getEventLimit());
+			reservation.setLimitMonthlyReservationCount(master.getMonthlyLimit());
+			reservation.setLimitReservationPoint(master.getMaxReservationPoint());
 		} else {
 			reservation.setLimitReservationCount(0);
 			reservation.setLimitEventReservationCount(0);
 			reservation.setLimitMonthlyReservationCount(0);
+			reservation.setLimitReservationPoint(0);
 		}
 
 		response.setData(reservation);

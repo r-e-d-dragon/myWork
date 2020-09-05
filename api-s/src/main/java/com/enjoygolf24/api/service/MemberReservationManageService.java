@@ -1,15 +1,17 @@
 package com.enjoygolf24.api.service;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Date;
 import java.util.List;
 
 import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
 
+import com.enjoygolf24.api.common.database.bean.MstReservationLimit;
 import com.enjoygolf24.api.common.database.bean.TblReservation;
-import com.enjoygolf24.api.common.database.bean.TblReservationLimitMaster;
 import com.enjoygolf24.api.common.database.mybatis.bean.MemberReservationManage;
+import com.enjoygolf24.api.common.database.mybatis.bean.ReservationPointTimeTableInfo;
 import com.enjoygolf24.api.service.bean.MemberReservationServiceBean;
 
 @Service
@@ -35,9 +37,12 @@ public interface MemberReservationManageService {
 	public List<MemberReservationManage> getMemberPointManageList(String memberCode, String categoryCode,
 			String reservationDate);
 
-	public TblReservationLimitMaster getMemberReservationLimit(String memberGrade, String gradeCode);
+	public MstReservationLimit getMemberReservationLimit(String memberTypeCode, Date reservationDate);
 
 	public List<MemberReservationManage> getMemberReservationAllList(String reservationNumber, String memberCode,
 			String aspCode, String batNumber, String reservationDate, String reservationTime, String status,
 			boolean valide);
+
+	public List<ReservationPointTimeTableInfo> getViewReservationPonitTimeTableInfo(Date dateTime,
+			Date validateStartTerm);
 }

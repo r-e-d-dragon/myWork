@@ -68,6 +68,7 @@ public class MemberReservationRegisterForm implements Serializable {
 	private int limitReservationCount;
 	private int limitEventReservationCount;
 	private int limitMonthlyReservationCount;
+	private int limitReservationPoint;
 
 	TblReservation reservation;
 

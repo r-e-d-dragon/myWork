@@ -1,6 +1,7 @@
 
 package com.enjoygolf24.api.common.utility;
 
+import java.sql.Time;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -34,6 +35,9 @@ public class DateUtility {
 
 	/** 日付フォーマット */
 	public static final String PLAIN_DATE_FORMAT = "yyyyMMdd";
+
+	/** 日付フォーマット */
+	public static final String TIME_FORMAT = "HH:mm";
 
 	/** 日時フォーマット */
 	public static final String SLASH_TIMESTAMP_PATTERN_WITH_SECOND = "yyyy/MM/dd HH:mm:ss";
@@ -164,6 +168,28 @@ public class DateUtility {
 	 */
 	private static String toDateString(String pattern, Timestamp timestamp) {
 		return new SimpleDateFormat(pattern).format(timestamp);
+	}
+
+	/**
+	 * フォーマット
+	 *
+	 * @param pattern   パターン
+	 * @param timestamp 日時
+	 * @return フォーマット日時
+	 */
+	public static String toTimeString(String pattern, Time time) {
+		return new SimpleDateFormat(pattern).format(time);
+	}
+
+	/**
+	 * フォーマット
+	 *
+	 * @param pattern   パターン
+	 * @param timestamp 日時
+	 * @return フォーマット日時
+	 */
+	public static String toTimeString(Time time) {
+		return toTimeString(TIME_FORMAT, time);
 	}
 
 	/**

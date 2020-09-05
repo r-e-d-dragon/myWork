@@ -86,30 +86,7 @@
                               <td>　</td>
                               <td>
                                 <select class="selectBoxCss select-option width-180"　id="fromReservationTime" name="fromReservationTime">
-                                  <option>00:00～01:00</option> 
-                                  <option>01:00～02:00</option> 
-                                  <option>02:00～03:00</option> 
-                                  <option>03:00～04:00</option> 
-                                  <option>04:00～05:00</option> 
-                                  <option>05:00～06:00</option> 
-                                  <option>06:00～07:00</option> 
-                                  <option>07:00～08:00</option>
-                                  <option>08:00～09:00</option> 
-                                  <option>09:00～10:00</option> 
-                                  <option>10:00～11:00</option> 
-                                  <option>11:00～12:00</option>
-                                  <option>12:00～13:00</option>
-                                  <option>13:00～14:00</option> 
-                                  <option>14:00～15:00</option> 
-                                  <option>15:00～16:00</option> 
-                                  <option>16:00～17:00</option> 
-                                  <option>17:00～18:00</option> 
-                                  <option>18:00～19:00</option> 
-                                  <option>19:00～20:00</option> 
-                                  <option>20:00～21:00</option> 
-                                  <option>21:00～22:00</option> 
-                                  <option>22:00～23:00</option> 
-                                  <option>23:00～24:00</option>
+                                  <option th:each="data, iter : ${timeTableList}" th:text="${data.timeSlotName}">
                                 </select>
                               </td>
                             </tr>
@@ -122,30 +99,7 @@
                               <td>　</td>
                               <td>
 	                            <select class="selectBoxCss select-option width-180" id="toReservationTime" name="toReservationTime">
-	                              <option>00:00～01:00</option> 
-	                              <option>01:00～02:00</option> 
-	                              <option>02:00～03:00</option> 
-	                              <option>03:00～04:00</option> 
-	                              <option>04:00～05:00</option> 
-	                              <option>05:00～06:00</option> 
-	                              <option>06:00～07:00</option> 
-	                              <option>07:00～08:00</option>
-	                              <option>08:00～09:00</option> 
-	                              <option>09:00～10:00</option> 
-	                              <option>10:00～11:00</option> 
-	                              <option>11:00～12:00</option>
-	                              <option>12:00～13:00</option> 
-	                              <option>13:00～14:00</option> 
-	                              <option>14:00～15:00</option> 
-	                              <option>15:00～16:00</option> 
-	                              <option>16:00～17:00</option> 
-	                              <option>17:00～18:00</option> 
-	                              <option>18:00～19:00</option> 
-	                              <option>19:00～20:00</option> 
-	                              <option>20:00～21:00</option> 
-	                              <option>21:00～22:00</option> 
-	                              <option>22:00～23:00</option> 
-	                              <option>23:00～24:00</option> 
+                                  <option th:each="data, iter : ${timeTableList}" th:text="${data.timeSlotName}">
 	                            </select>
                               </td>
                             </tr>
@@ -176,6 +130,9 @@
                   </section>
                 </div>
 
+    <select class="form-control" id="exampleFormControlSelect1">
+    </select>
+    
                 <section class="reservation_dialog">
                 <p class="text-warning" id="reservation_message"></p>
                 <span class="m-b-50">一括予約一覧</span>
@@ -199,8 +156,8 @@
                                                         ～<span th:text="${data.fromReservationDate}"></span>　<span th:text="${data.toReservationTime}"></span></td>
                         <td class="text-left"><span th:text="${data.batNumber}"></span></td>
                         <td class="text-center">
-                          <a id="searchBtn" class="box-btn__1col .btn-col" href="#" th:url="@{/admin/booking/search}" th:value="${data.reservationNumber}" target="reservationNumber">予約検索</a><br>
-                          <a href="#">取消</a>
+                          <a id="searchBtn" class="badge badge-info" href="#" th:url="@{/admin/booking/search}" th:value="${data.reservationNumber}" target="reservationNumber">予約検索</a><br>
+                          <a href="#" class="badge badge-warning">取消</a>
                         </td>
                     </tr>
                 </tbody>

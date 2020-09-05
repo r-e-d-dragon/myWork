@@ -18,8 +18,10 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.enjoygolf24.api.common.code.CodeTypeCd;
 import com.enjoygolf24.api.common.code.ReservationStatusCd;
 import com.enjoygolf24.api.common.database.bean.TblAsp;
+import com.enjoygolf24.api.common.database.bean.TblPointConsumeMaster;
 import com.enjoygolf24.api.common.database.jpa.repository.CodeMasterRepository;
 import com.enjoygolf24.api.common.database.jpa.repository.TblPointConsumeMasterRepository;
 import com.enjoygolf24.api.common.database.mybatis.bean.MemberReservationManage;
@@ -63,6 +65,11 @@ public class MacroReservationController {
 		logger.info("Start macrosReservationInfo Controller");
 
 		initListForm(form, model);
+
+		// タイムテーブル
+		List<TblPointConsumeMaster> pointConsumeMaster = macroReservationManageService
+				.getTblPointConsumeMaster(CodeTypeCd.HOLIDAY_TYPE_CD);
+		model.addAttribute("timeTableList", pointConsumeMaster);
 
 		// TODO 打席番号 － コードマスタ
 		List<String> batNumbers = codeMasterRepository.findByCodeTypeOrderByCd("990").stream().map(p -> p.getName())

@@ -1,12 +1,14 @@
 
 package com.enjoygolf24.api.common.database.mybatis.repository;
 
+import java.util.Date;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import com.enjoygolf24.api.common.database.mybatis.bean.MemberReservationManage;
+import com.enjoygolf24.api.common.database.mybatis.bean.ReservationPointTimeTableInfo;
 
 @Mapper
 public interface ReservationMapper {
@@ -23,4 +25,7 @@ public interface ReservationMapper {
 			@Param("categoryCode") String categoryCode, @Param("reservationDate") String reservationDate);
 
 	public List<MemberReservationManage> getMacroReservationList(@Param("aspCode") String aspCode);
+
+	public List<ReservationPointTimeTableInfo> getViewReservationPoitTimeTableInfo(@Param("dateTime") Date dateTime,
+			@Param("validateStartTerm") Date validateStartTerm);
 }

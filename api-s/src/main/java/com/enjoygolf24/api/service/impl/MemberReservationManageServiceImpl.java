@@ -2,6 +2,7 @@ package com.enjoygolf24.api.service.impl;
 
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -13,17 +14,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.enjoygolf24.api.common.code.PointCategoryCd;
+import com.enjoygolf24.api.common.database.bean.MstReservationLimit;
 import com.enjoygolf24.api.common.database.bean.TblPointHistory;
 import com.enjoygolf24.api.common.database.bean.TblPointManage;
 import com.enjoygolf24.api.common.database.bean.TblPointManagePK;
 import com.enjoygolf24.api.common.database.bean.TblReservation;
-import com.enjoygolf24.api.common.database.bean.TblReservationLimitMaster;
 import com.enjoygolf24.api.common.database.jpa.repository.MemberRepository;
+import com.enjoygolf24.api.common.database.jpa.repository.MstReservationLimitRepository;
 import com.enjoygolf24.api.common.database.jpa.repository.PointHistoryRepository;
 import com.enjoygolf24.api.common.database.jpa.repository.PointManageRepository;
 import com.enjoygolf24.api.common.database.jpa.repository.ReservationRepository;
-import com.enjoygolf24.api.common.database.jpa.repository.TblReservationLimitMasterRepository;
 import com.enjoygolf24.api.common.database.mybatis.bean.MemberReservationManage;
+import com.enjoygolf24.api.common.database.mybatis.bean.ReservationPointTimeTableInfo;
 import com.enjoygolf24.api.common.database.mybatis.repository.ReservationMapper;
 import com.enjoygolf24.api.common.utility.DateUtility;
 import com.enjoygolf24.api.service.MemberReservationManageService;
@@ -51,8 +53,17 @@ public class MemberReservationManageServiceImpl implements MemberReservationMana
 	@Autowired
 	PointManageRepository pointManageRepository;
 
+//	@Autowired
+//	TblReservationLimitMasterRepository tblReservationLimitMasterRepository;
+
 	@Autowired
-	TblReservationLimitMasterRepository tblReservationLimitMasterRepository;
+	MstReservationLimitRepository mstReservationLimitRepository;
+
+	@Override
+	public List<ReservationPointTimeTableInfo> getViewReservationPonitTimeTableInfo(Date dateTime,
+			Date validateStartTerm) {
+		return reservationMapper.getViewReservationPoitTimeTableInfo(dateTime, validateStartTerm);
+	}
 
 	@Override
 	public List<MemberReservationManage> getMemberReservationList(String reservationNumber, String memberCode,
@@ -340,8 +351,9 @@ public class MemberReservationManageServiceImpl implements MemberReservationMana
 	}
 
 	@Override
-	public TblReservationLimitMaster getMemberReservationLimit(String memberGrade, String gradeCode) {
-		return tblReservationLimitMasterRepository.findByIdMemberGradeAndIdGradeCode(memberGrade, gradeCode);
+	public MstReservationLimit getMemberReservationLimit(String memberTypeCode, Date reservationDate) {
+		return mstReservationLimitRepository.findByMemberTypeCdAndValidateStartTermLessThanEqual(memberTypeCode,
+				reservationDate);
 	}
 
 	@Override

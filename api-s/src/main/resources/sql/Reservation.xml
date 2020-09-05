@@ -126,18 +126,6 @@
         order by pm.end_date, pm.start_date
     </select>
 
-<!-- 
-  , reservation_number text not null
-  , macro_name text not null
-  , status text default 0 not null
-  , asp_code text not null
-  , from_reservation_date date not null
-  , from_reservation_time text not null
-  , to_reservation_date date not null
-  , to_reservation_time text not null
-  , bat_number text not null
-
- -->
     <select id="getMacroReservationList" resultType="com.enjoygolf24.api.common.database.mybatis.bean.MemberReservationManage">
         select
             rev.reservation_number     as reservation_number
@@ -163,6 +151,17 @@
             and rev.asp_code = #{aspCode}
         </where>
         order by to_reservation_date desc, to_reservation_time desc
+    </select>
+
+    <select id="getViewReservationPoitTimeTableInfo" resultType="com.enjoygolf24.api.common.database.mybatis.bean.ReservationPointTimeTableInfo">
+        select v.*
+        from
+            view_reservation_point_time_table v 
+        where
+            v.date_time = #{dateTime}
+            <![CDATA[ 
+            and v.validate_start_term <= #{validateStartTerm}
+            ]]>            
     </select>
 
 </mapper>

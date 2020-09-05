@@ -98,16 +98,16 @@
 				        <td class="text-center"><span th:text="${data.consumedPoint}"></span></td>
                         <td class="text-center">
                           <span>
-                          <img th:if="${data.pointCategoryCode == '002'}" th:src="@{/images/common/ico_e.png}" alt="イベントポイント"/>
-                          <img th:if="${data.pointCategoryCode == '001'}" th:src="@{/images/common/ico_m.png}" alt="月ポイント"/>
-                          <img th:if="${data.pointCategoryCode == '999'}" th:src="@{/images/common/ico_a.png}" alt="管理者"/>
+                          <img th:if="${data.pointCategoryCode == '002'}" th:src="@{/images/common/ico_e.png}" height="30" alt="イベントポイント"/>
+                          <img th:if="${data.pointCategoryCode == '001'}" th:src="@{/images/common/ico_m.png}" height="30" alt="月ポイント"/>
+                          <img th:if="${data.pointCategoryCode == '999'}" th:src="@{/images/common/ico_a.png}" height="30" alt="管理者"/>
                           </span>
                         </td>
 				        <td th:if="${data.expireFlag=='1'}" class="text-center">
 		                  -
 		                </td>
 		                <td th:if="${data.expireFlag=='0'}" class="text-center">
-			              <a id="searchBtn" class="box-btn__1col .btn-col" href="#" th:url="@{/admin/booking/cancle}" th:value="${data.reservationId}" target="selectedReservationId">キャンセル</a>
+			              <a id="registerBtn" class="badge badge-warning" href="#" th:url="@{/admin/booking/cancle}" th:value="${data.reservationId}" target="selectedReservationId">キャンセル</a>
 		                </td>
 				    </tr>
 			    </div>
