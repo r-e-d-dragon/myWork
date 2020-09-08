@@ -33,7 +33,7 @@ public interface MemberInfoManageService {
 	public List<TblUserPre> getPreMemberListAll(String aspCode, int pageNo, int pageSize);
 
 	public List<TblUserPre> getPreMemberList(String memberCode, String name, String phone, String email, String aspCode,
-			int pageNo, int pageSize);
+			String useFlagCd, int pageNo, int pageSize);
 
 	public String getAspName(String LoginUserAspCode);
 
@@ -52,6 +52,9 @@ public interface MemberInfoManageService {
 
 	@Transactional
 	public void convert(PreMemberConvertServiceBean serviceBean);
+
+	@Transactional
+	public void confirm(String preMemberCode, String loginUserCode);
 
 	@Transactional
 	public void sendAuthKeyMail(String memberCode, String memberTypeCode);

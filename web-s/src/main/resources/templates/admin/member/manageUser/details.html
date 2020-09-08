@@ -53,29 +53,6 @@
 		               </div>
 		               
 		               <div class="forNormalmember">
-			               <div class="row align-items-start m-b-20">
-			                <div class="d-flex justify-content-between align-items-start m-t-10">
-			                  <span class="text c-ttl c-ttl__04">会員レベル</span>
-			                  <span class="tag-icon tag-red m-t-5">必須</span>
-			                </div>
-			                <div>
-			                  <select th:field="*{memberGradeCode}" class="selectBoxCss select-option width-240" th:errorclass="fieldError">
-			                    <option th:each="memberGradeCdItem : ${memberGradeCdMap}" th:value="${memberGradeCdItem.key}" th:text="${memberGradeCdItem.value}" th:errorclass="fieldError"></option>
-			                  </select>
-			                </div>
-			               </div>
-			               
-			               <div class="row align-items-start m-b-20">
-			                <div class="d-flex justify-content-between align-items-start m-t-10">
-			                  <span class="text c-ttl c-ttl__04">利用時間</span>
-			                  <span class="tag-icon tag-red m-t-5">必須</span>
-			                </div>
-			                <div>
-			                  <select th:field="*{memberGradeTimeCode}" class="selectBoxCss select-option width-240" th:errorclass="fieldError">
-			                    <option th:each="memberGradeTimeCdItem : ${memberGradeTimeCdMap}" th:value="${memberGradeTimeCdItem.key}" th:text="${memberGradeTimeCdItem.value}" th:errorclass="fieldError"></option>
-			                  </select>
-			                </div>
-			               </div>
 			               
 			               <div class="row align-items-start m-b-20">
 			                <div class="d-flex justify-content-between align-items-start m-t-10">

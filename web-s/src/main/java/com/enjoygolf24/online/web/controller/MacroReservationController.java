@@ -2,11 +2,13 @@ package com.enjoygolf24.online.web.controller;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,13 +20,13 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.enjoygolf24.api.common.code.CodeTypeCd;
 import com.enjoygolf24.api.common.code.ReservationStatusCd;
+import com.enjoygolf24.api.common.database.bean.MstTimeTable;
 import com.enjoygolf24.api.common.database.bean.TblAsp;
-import com.enjoygolf24.api.common.database.bean.TblPointConsumeMaster;
 import com.enjoygolf24.api.common.database.jpa.repository.CodeMasterRepository;
-import com.enjoygolf24.api.common.database.jpa.repository.TblPointConsumeMasterRepository;
+import com.enjoygolf24.api.common.database.jpa.repository.MstTimeTableRepository;
 import com.enjoygolf24.api.common.database.mybatis.bean.MemberReservationManage;
+import com.enjoygolf24.api.common.database.mybatis.bean.ReservationPointTimeTableInfo;
 import com.enjoygolf24.api.common.utility.DateUtility;
 import com.enjoygolf24.api.common.utility.LoginUtility;
 import com.enjoygolf24.api.common.validator.groups.All;
@@ -57,7 +59,7 @@ public class MacroReservationController {
 	CodeMasterRepository codeMasterRepository;
 
 	@Autowired
-	TblPointConsumeMasterRepository tblPointConsumeMasterRepository;
+	MstTimeTableRepository mstTimeTableRepository;
 	
 	@RequestMapping(value = "")
 	public String macrosReservationInfo(
@@ -67,9 +69,21 @@ public class MacroReservationController {
 		initListForm(form, model);
 
 		// タイムテーブル
-		List<TblPointConsumeMaster> pointConsumeMaster = macroReservationManageService
-				.getTblPointConsumeMaster(CodeTypeCd.HOLIDAY_TYPE_CD);
-		model.addAttribute("timeTableList", pointConsumeMaster);
+		List<MstTimeTable> timeTable = macroReservationManageService.getMstTimeTable(form.getAspCode());
+		List<ReservationPointTimeTableInfo> timeTableList = new ArrayList<ReservationPointTimeTableInfo>();
+		timeTable.forEach(p -> {
+			ReservationPointTimeTableInfo table = new ReservationPointTimeTableInfo();
+			try {
+				BeanUtils.copyProperties(table, p);
+			} catch (Exception e) {
+				logger.error("予約時間表取得に失敗しました。", e);
+			}
+			String timeSlotName = DateUtility.toTimeString(p.getStartTime()) + "~"
+					+ DateUtility.toTimeString(p.getEndTime());
+			table.setTimeSlotName(timeSlotName);
+			timeTableList.add(table);
+		});
+		model.addAttribute("timeTableList", timeTableList);
 
 		// TODO 打席番号 － コードマスタ
 		List<String> batNumbers = codeMasterRepository.findByCodeTypeOrderByCd("990").stream().map(p -> p.getName())

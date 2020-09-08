@@ -42,6 +42,15 @@ public class TblUser implements Serializable {
 	@Column(name = "bank_kana")
 	private String bankKana;
 
+	@Column(name = "bank_code")
+	private String bankCode;
+
+	@Column(name = "bank_branch_code")
+	private String bankBranchCode;
+
+	@Column(name = "bank_account_number")
+	private String bankAccountNumber;
+
 	@Temporal(TemporalType.DATE)
 	private Date birthday;
 
@@ -155,6 +164,30 @@ public class TblUser implements Serializable {
 
 	public void setBankKana(String bankKana) {
 		this.bankKana = bankKana;
+	}
+
+	public String getBankCode() {
+		return this.bankCode;
+	}
+
+	public void setBankCode(String bankCode) {
+		this.bankCode = bankCode;
+	}
+
+	public String getBankBranchCode() {
+		return this.bankBranchCode;
+	}
+
+	public void setBankBranchCode(String bankBranchCode) {
+		this.bankBranchCode = bankBranchCode;
+	}
+
+	public String getBankAccountNumber() {
+		return this.bankKana;
+	}
+
+	public void setBankAccountNumber(String bankAccountNumber) {
+		this.bankAccountNumber = bankAccountNumber;
 	}
 
 	public Date getBirthday() {
@@ -326,7 +359,7 @@ public class TblUser implements Serializable {
 	}
 
 	public String getUserName() {
-		return this.firstName + " " + this.lastName;
+		return this.lastName + " " + this.firstName;
 	}
 
 }

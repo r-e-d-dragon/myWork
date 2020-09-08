@@ -6,8 +6,8 @@ import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
 
+import com.enjoygolf24.api.common.database.bean.MstTimeTable;
 import com.enjoygolf24.api.common.database.bean.TblMacroReservationManage;
-import com.enjoygolf24.api.common.database.bean.TblPointConsumeMaster;
 import com.enjoygolf24.api.common.database.mybatis.bean.MemberReservationManage;
 import com.enjoygolf24.api.service.bean.MemberReservationServiceBean;
 
@@ -19,6 +19,6 @@ public interface MacroReservationManageService {
 
 	public List<MemberReservationManage> getMacroReservationList(String aspCode, int pageNo, int pageSize);
 
-	public List<TblPointConsumeMaster> getTblPointConsumeMaster(String dataKind);
+	public List<MstTimeTable> getMstTimeTable(String aspCode);
 
 }

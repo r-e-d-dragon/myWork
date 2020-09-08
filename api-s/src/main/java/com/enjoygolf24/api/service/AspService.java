@@ -1,5 +1,6 @@
 package com.enjoygolf24.api.service;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -20,4 +21,6 @@ public interface AspService {
 	public TblAsp getAspByName(String aspName);
 
 	public TblAsp modify(TblAsp aspBean);
+
+	public LinkedHashMap<String, String> createAspMap();
 }

@@ -39,10 +39,14 @@
 							<th class="text-letf" width="20%">打席番号</th>
 							<td class="text-letf"><p th:text="${batNumber}"></p></td>
 						</tr>
-						<tr>
-							<th class="text-letf" width="20%">戻しポイント</th>
-							<td class="text-letf"><span th:text="${consumedPoint}"></span> <span th:text="Point"></span></td>
-						</tr>
+                        <tr>
+                            <th class="text-letf" width="20%">戻しポイント</th>
+                            <td class="text-letf"><span th:text="${consumedPoint}"></span> <span th:text="Point"></span></td>
+                        </tr>
+                        <tr>
+                            <th class="text-letf" width="20%">ペナルティーポイント</th>
+                            <td class="text-letf"><span th:text="${penaltyPoint}"></span> <span th:text="Point"></span></td>
+                        </tr>
 						<tr>
 							<th class="text-letf" width="20%">月ポイント</th>
 							<td class="text-letf"><span th:text="${monthlyPoint}"></span> <span th:text="Point"></span></td>

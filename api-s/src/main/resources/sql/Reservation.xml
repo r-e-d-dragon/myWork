@@ -15,7 +15,7 @@
             , rev.reservation_time     as reservation_time
             , rev.consumed_point       as consumed_point
             , rev.point_category_code  as point_category_code
-            , rev.point_grade          as point_grade
+            , rev.grade_type_cd        as grade_type_cd
             , rev.register_user        as register_user
             , rev.register_date        as register_date
             , rev.update_user          as update_user
@@ -30,7 +30,7 @@
                 on rev.asp_code = asp.asp_code
         left outer join tbl_user usr 
                 on rev.member_code = usr.member_code
-       	<where>
+           <where>
         <if test="reservationNumber != null and reservationNumber != ''">
             and rev.reservation_number like CONCAT('%',REPLACE(#{reservationNumber},'%','¥%'),'%') ESCAPE '¥'
         </if>
@@ -53,12 +53,12 @@
             and rev.status = #{status}
         </if>
         <if test="status == null or status == ''">
-       	    and (rev.status = '1' or (rev.status = '0' and rev.register_date > current_timestamp + '-3 minute' )) 
+               and (rev.status = '1' or (rev.status = '0' and rev.register_date > current_timestamp + '-3 minute' )) 
         </if>
         <if test="valide == true">
             and to_timestamp(to_char(rev.reservation_date, 'YYYY/MM/DD')||' '||substring(rev.reservation_time, 0, 3), 'YYYY/MM/DD HH24') > current_timestamp
         </if>        
-       	</where>
+           </where>
         order by reservation_date desc, reservation_time desc
     </select>
 
@@ -66,23 +66,22 @@
         select
             cdm.cd                      as bat_number_cd
             , cdm.name                  as bat_number
-            , pcm.time_slot             as time_slot
-            , pcm.time_slot_name        as time_slot_name
-            , pcm.consume_point         as consumed_point
+            , mtime.start_time          as start_time
+            , mtime.end_time            as end_time
+            , to_char(mtime.start_time, 'HH24:MI')||'~'|| to_char(mtime.end_time, 'HH24:MI') as time_slot_name
             , rslt.member_code          as member_code
             , rslt.status               as status
             , rslt.asp_code             as asp_code
             , rslt.reservation_id       as reservation_id
-   			<![CDATA[ 
-            , case when to_timestamp(coalesce(to_char(rslt.reservation_date, 'YYYY/MM/DD)'), #{reservationDate})|| ' ' ||pcm.time_slot, 'YYYY/MM/DD HH24') < current_timestamp then 1 else 0 end as expire_flag 
-       		]]>            
+               <![CDATA[ 
+            , case when to_timestamp(coalesce(to_char(rslt.reservation_date, 'YYYY/MM/DD)'), #{reservationDate})|| ' ' ||mtime.start_time, 'YYYY/MM/DD HH24:MI') < current_timestamp then 1 else 0 end as expire_flag 
+               ]]>            
             , case 
               when rslt.status = '0' then 0 
               when coalesce(rslt.member_code, '') = '' then 1 else 0 end as empty_flag
         from 
             code_master cdm
-        left outer join tbl_point_consume_master pcm 
-                     on pcm.date_kind = #{dateKind}
+        left outer join mst_time_table mtime on mtime.asp_code = '0' 
         left outer join (
              select rev.* from tbl_reservation rev
               inner join tbl_asp asp on rev.asp_code = asp.asp_code
@@ -95,11 +94,10 @@
             </if>
             and (rev.status = '1' or (rev.status = '0' and rev.register_date > current_timestamp + '-3 minute' ))
             </where>
-        ) rslt on rslt.reservation_time = pcm.time_slot_name and rslt.bat_number = cdm.name 
-        <where>
+        ) rslt on (to_char(mtime.start_time, 'HH24:MI')||'~'|| to_char(mtime.end_time, 'HH24:MI')) = rslt.reservation_time and rslt.bat_number = cdm.name 
+        where
             cdm.code_type='990'
-		</where>
-        order by pcm.time_slot, cdm.cd
+        order by mtime.time_table_code, cdm.cd
     </select>
 
     <select id="getMemberPointManageList" resultType="com.enjoygolf24.api.common.database.mybatis.bean.MemberReservationManage">
@@ -146,10 +144,9 @@
             tbl_macro_reservation_manage rev 
         inner join tbl_asp asp 
                 on rev.asp_code = asp.asp_code
-        <where>
+        where
             rev.status = '1'
             and rev.asp_code = #{aspCode}
-        </where>
         order by to_reservation_date desc, to_reservation_time desc
     </select>
 

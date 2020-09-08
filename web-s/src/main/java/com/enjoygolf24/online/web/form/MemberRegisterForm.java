@@ -12,6 +12,9 @@ import org.thymeleaf.util.StringUtils;
 import com.enjoygolf24.api.common.code.CodeTypeCd;
 import com.enjoygolf24.api.common.code.MemberTypeCd;
 import com.enjoygolf24.api.common.code.MemberUseFlagCd;
+import com.enjoygolf24.api.common.validator.annotation.BankAccountNumber;
+import com.enjoygolf24.api.common.validator.annotation.BankBranchCode;
+import com.enjoygolf24.api.common.validator.annotation.BankCode;
 import com.enjoygolf24.api.common.validator.annotation.CodeMaster;
 import com.enjoygolf24.api.common.validator.annotation.Email;
 import com.enjoygolf24.api.common.validator.annotation.Hankaku;
@@ -48,6 +51,18 @@ public class MemberRegisterForm implements Serializable {
 	@Zenkaku(groups = Insert0.class, max = 100)
 	@SjisSafe(groups = Insert0.class)
 	private String bankKana;
+
+	@Size(groups = Insert0.class, max = 4)
+	@BankCode(groups = Insert0.class)
+	private String bankCode;
+
+	@Size(groups = Insert0.class, max = 3)
+	@BankBranchCode(groups = Insert0.class)
+	private String bankBranchCode;
+
+	@Size(groups = Insert0.class, max = 7)
+	@BankAccountNumber(groups = Insert0.class)
+	private String bankAccountNumber;
 
 	@NotBlank(groups = Insert0.class)
 	@Size(groups = Insert0.class, max = 80)
@@ -110,16 +125,8 @@ public class MemberRegisterForm implements Serializable {
 	private String birthday;
 
 	@Size(groups = Insert0.class, max = 2)
-	@CodeMaster(groups = Insert0.class, code = CodeTypeCd.MEMBER_GRADE_CD)
-	private String memberGradeCode;
-
-	@Size(groups = Insert0.class, max = 2)
 	@CodeMaster(groups = Insert0.class, code = CodeTypeCd.JOB_CD)
 	private String jobCode;
-
-	@Size(groups = Insert0.class, max = 2)
-	@CodeMaster(groups = Insert0.class, code = CodeTypeCd.MEMBER_GRADE_TIME_CD)
-	private String memberGradeTimeCode;
 
 	@Size(groups = Insert0.class, max = 2)
 	@CodeMaster(groups = Insert0.class, code = CodeTypeCd.ADDITIONAL_LESSON_CD)
@@ -142,30 +149,10 @@ public class MemberRegisterForm implements Serializable {
 	}
 
 	@AssertTrue(groups = Insert0.class, message = "{application.combination.validation.needNotBlankWhenNormalMember}")
-	public boolean isFilledMemberGradeCode() {
-
-		if (isNormalMember()) {
-			return !StringUtils.isEmptyOrWhitespace(memberGradeCode);
-		} else {
-			return true;
-		}
-	}
-
-	@AssertTrue(groups = Insert0.class, message = "{application.combination.validation.needNotBlankWhenNormalMember}")
 	public boolean isFilledAdditionalLessonCd() {
 
 		if (isNormalMember()) {
 			return !StringUtils.isEmptyOrWhitespace(additionalLessonCd);
-		} else {
-			return true;
-		}
-	}
-	
-	@AssertTrue(groups = Insert0.class, message = "{application.combination.validation.needNotBlankWhenNormalMember}")
-	public boolean isFilledMemberGradeTimeCode() {
-
-		if (isNormalMember()) {
-			return !StringUtils.isEmptyOrWhitespace(memberGradeTimeCode);
 		} else {
 			return true;
 		}

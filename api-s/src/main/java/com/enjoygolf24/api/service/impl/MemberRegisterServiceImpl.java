@@ -14,9 +14,12 @@ import org.springframework.util.StringUtils;
 
 import com.enjoygolf24.api.common.code.AuthStatusCd;
 import com.enjoygolf24.api.common.code.MailSectionCd;
+import com.enjoygolf24.api.common.code.MemberGradeCd;
+import com.enjoygolf24.api.common.code.MemberGradeTimeCd;
 import com.enjoygolf24.api.common.code.MemberTypeCd;
 import com.enjoygolf24.api.common.code.MemberUseFlagCd;
 import com.enjoygolf24.api.common.code.OnOffCd;
+import com.enjoygolf24.api.common.code.PreMemberUseFlagCd;
 import com.enjoygolf24.api.common.code.ProcessingCd;
 import com.enjoygolf24.api.common.database.bean.TblAsp;
 import com.enjoygolf24.api.common.database.bean.TblAuthKeyManage;
@@ -137,7 +140,7 @@ public class MemberRegisterServiceImpl implements MemberRegisterService {
 		member.setUpdateDate(current);
 		member.setUpdateUser(serviceBean.getLoginUserCd());
 		member.setUseFlag(serviceBean.getUseFlag());
-		member.setMemberGradeCode(serviceBean.getMemberGradeCode());
+		member.setMemberGradeCode(MemberGradeCd.FULL_MEMBER);
 		member.setGender(serviceBean.getGender());
 		if (serviceBean.getBirthday() != null) {
 			member.setBirthday(DateUtility.getDate(serviceBean.getBirthday()));
@@ -151,10 +154,9 @@ public class MemberRegisterServiceImpl implements MemberRegisterService {
 			member.setZip2(serviceBean.getZip2());
 		}
 
-		member.setMemberGradeCode(serviceBean.getMemberGradeCode());
 		member.setAdditionalLessonCd(serviceBean.getAdditionalLessonCd());
 		member.setJobCd(serviceBean.getJobCode());
-		member.setMemberGradeTimeCode(serviceBean.getMemberGradeTimeCode());
+		member.setMemberGradeTimeCode(MemberGradeTimeCd.USUAL);
 
 		memberRepository.save(member);
 
@@ -238,6 +240,31 @@ public class MemberRegisterServiceImpl implements MemberRegisterService {
 
 	@Override
 	@Transactional
+	public void sendPreRequestMail(String memberCode, String memo) {
+
+		EmailSendServiceBean emailSendServiceBean = createPreRequestEmailSendServiceBean(memberCode, memo);
+
+		// TODO: AWS email send
+		emailSendService.send(emailSendServiceBean);
+
+		String txt = emailSendServiceBean.getSenderName() + "\n" + emailSendServiceBean.getSenderEmailAddress() + "\n"
+				+ emailSendServiceBean.getTargetName() + "\n" + emailSendServiceBean.getTargetEmailAddress() + "\n"
+				+ emailSendServiceBean.getBccEmailAddress() + "\n" + emailSendServiceBean.getSubject() + "\n"
+				+ emailSendServiceBean.getBody();
+
+		logger.info(txt);
+	}
+
+	private EmailSendServiceBean createPreRequestEmailSendServiceBean(String memberCode, String memo) {
+		TblUserPre member = preMemberRepository.findByPreMemberCode(memberCode);
+		TblAsp asp = aspRepository.findByAspCode(member.getAspCode());
+		EmailSendServiceBean mailSendServiceBean = new EmailSendServiceBean(MailSectionCd.PRE_MEMBER_REGESTERED, member,
+				asp, memo);
+		return mailSendServiceBean;
+	}
+
+	@Override
+	@Transactional
 	public void sendAuthKeyMail(String memberCode, String memberTypeCode) {
 
 		TblAuthKeyManage AuthKeyManage = insertWaitingTblAuthKeyManage(memberCode);
@@ -292,9 +319,9 @@ public class MemberRegisterServiceImpl implements MemberRegisterService {
 	private String generateAuthUrl(TblAuthKeyManage AuthKeyManage, String memberTypeCode) {
 
 		if (MemberTypeCd.MANAGER.equals(memberTypeCode)) {
-			return String.format(ASP_AUTH_URL, "http://localhost:80", AuthKeyManage.getAuthKey());
+			return String.format(ASP_AUTH_URL, "http://enjoygolf24.com", AuthKeyManage.getAuthKey());
 		} else {
-			return String.format(MEMBER_AUTH_URL, "http://localhost:80", AuthKeyManage.getAuthKey());
+			return String.format(MEMBER_AUTH_URL, "http://enjoygolf24.com", AuthKeyManage.getAuthKey());
 		}
 
 	}
@@ -303,6 +330,10 @@ public class MemberRegisterServiceImpl implements MemberRegisterService {
 	@Transactional
 	public String PreMemberRegister(PreMemberRegisterServiceBean serviceBean) {
 		TblUserPre member = insertPreMember(serviceBean);
+
+		if (serviceBean.getLoginUserCd() == null) {
+			sendPreRequestMail(member.getPreMemberCode(), serviceBean.getMemo());
+		}
 
 		return member.getPreMemberCode();
 	}
@@ -324,10 +355,6 @@ public class MemberRegisterServiceImpl implements MemberRegisterService {
 		member.setLastName(serviceBean.getLastName());
 		member.setLastNameKana(serviceBean.getLastNameKana());
 
-		if (!StringUtils.isEmpty(serviceBean.getMemo())) {
-			member.setMemo(serviceBean.getMemo());
-		}
-
 		// TODO: how to set password for preMember?
 		member.setPassword(new BCryptPasswordEncoder().encode("Passw0rd"));
 
@@ -336,10 +363,20 @@ public class MemberRegisterServiceImpl implements MemberRegisterService {
 		}
 
 		member.setRegisterDate(current);
-		member.setRegisterUser(serviceBean.getLoginUserCd());
 		member.setUpdateDate(current);
-		member.setUpdateUser(serviceBean.getLoginUserCd());
-		member.setUseFlag(OnOffCd.ON);
+
+		if (serviceBean.getLoginUserCd() != null) {
+			member.setRegisterUser(serviceBean.getLoginUserCd());
+			member.setUpdateUser(serviceBean.getLoginUserCd());
+			member.setUseFlag(PreMemberUseFlagCd.PRE_MEMBER_USE_FLAG_NORMAL);
+			if (!StringUtils.isEmpty(serviceBean.getMemo())) {
+				member.setMemo(serviceBean.getMemo());
+			}
+		} else {
+			member.setRegisterUser("FrontUser");
+			member.setUpdateUser("FrontUser");
+			member.setUseFlag(PreMemberUseFlagCd.PRE_MEMBER_USE_FLAG_PRE);
+		}
 
 		preMemberRepository.save(member);
 

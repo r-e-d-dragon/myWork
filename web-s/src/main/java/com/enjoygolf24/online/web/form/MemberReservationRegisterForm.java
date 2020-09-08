@@ -50,7 +50,7 @@ public class MemberReservationRegisterForm implements Serializable {
 	private String consumedPoint;
 	@NotBlank(groups = Insert0.class)
 	private String pointCategoryCode;
-	private String pointGrade;
+	private String gradeTypeCd;
 
 	private String memberName;
 	private String penaltyPoint;

@@ -20,14 +20,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.enjoygolf24.api.common.code.CodeTypeCd;
 import com.enjoygolf24.api.common.database.bean.TblAsp;
-import com.enjoygolf24.api.common.database.bean.TblPointConsumeMaster;
 import com.enjoygolf24.api.common.database.bean.TblUser;
-import com.enjoygolf24.api.common.database.bean.ViewTimeGradeCalendar;
 import com.enjoygolf24.api.common.database.jpa.repository.CodeMasterRepository;
-import com.enjoygolf24.api.common.database.jpa.repository.TblPointConsumeMasterRepository;
-import com.enjoygolf24.api.common.database.jpa.repository.ViewCalendarRepository;
-import com.enjoygolf24.api.common.database.jpa.repository.ViewTimeGradeCalendarRepository;
+import com.enjoygolf24.api.common.database.jpa.repository.ViewReservationPointTimeTableRepository;
 import com.enjoygolf24.api.common.database.mybatis.bean.MemberReservationManage;
+import com.enjoygolf24.api.common.database.mybatis.bean.ReservationPointTimeTableInfo;
 import com.enjoygolf24.api.common.utility.DateUtility;
 import com.enjoygolf24.api.common.utility.DefaultPageSizeUtility;
 import com.enjoygolf24.api.common.utility.LoginUtility;
@@ -62,13 +59,9 @@ public class MemberFrontReservationManageController {
 	@Autowired
 	CodeMasterRepository codeMasterRepository;
 
-	@Autowired
-	TblPointConsumeMasterRepository tblPointConsumeMasterRepository;
 
 	@Autowired
-	ViewCalendarRepository viewCalendarRepository;
-	@Autowired
-	ViewTimeGradeCalendarRepository viewTimeGradeCalendarRepository;
+	ViewReservationPointTimeTableRepository viewReservationPointTimeTableRepository;
 
 	@RequestMapping(value = "")
 	public String memberReservationList(
@@ -79,7 +72,7 @@ public class MemberFrontReservationManageController {
 		logger.info("Start memberReservationList Controller");
 
 
-		// memberForm.setSelectedMemberCode("user1@user.com");
+		// TODO - ログインユーザ
 		memberForm.setSelectedMemberCode("admin2@user.com");
 
 		// 会員コード
@@ -95,48 +88,44 @@ public class MemberFrontReservationManageController {
 		form.setMonthlyPoint("150");
 		form.setEventPoint("50");
 
-		// タイム表取得
-		List<ViewTimeGradeCalendar> timeGradeCalendar = viewTimeGradeCalendarRepository
-				.findByDateTimeOrderByTimeTableCode(DateUtility.getDate(form.getReservationDate()));
-		model.addAttribute("timeGradeCalendar", timeGradeCalendar);
-
-		// 休日、祝日判定
-		if (timeGradeCalendar.isEmpty()) {
-			form.setDateKind(timeGradeCalendar.get(0).getDateTypeCd());
-			model.addAttribute("dateType",
-					codeMasterRepository.findByCodeTypeAndCd(CodeTypeCd.HOLIDAY_TYPE_CD, form.getDateKind()).getName());
-		} else {
-			result.rejectValue("reservationDate", "error.reservationDate", "{0} : 予約カレンダー取得に失敗しました。");
-			logger.info("End memberReservationList Controller");
-			return "/admin/booking/top/index";
+		// 予約日 - 初期表示：当日
+		if (StringUtil.isEmpty(form.getReservationDate())) {
+			form.setReservationDate(DateUtility.getCurrentDateTime(DateUtility.DATE_FORMAT));
 		}
 
-		List<MemberReservationManage> memberReservationList = memberReservationManageService
-				.getReservationList(LoginUtility.getLoginUser().getAspCode(), form.getReservationDate(),
-						form.getDateKind());
-		form.setReservationList(memberReservationList);
-		model.addAttribute("modelMemberReservationList", memberReservationList);
+		// タイム表取得
+		List<ReservationPointTimeTableInfo> reservationPointTimeTable = memberReservationManageService
+				.getViewReservationPonitTimeTableInfo(DateUtility.getDate(form.getReservationDate()),
+						DateUtility.getDate(form.getReservationDate()));
+		model.addAttribute("reservationPointTimeTable", reservationPointTimeTable);
+		// 休日、祝日判定
+		form.setDateKind(reservationPointTimeTable.get(0).getHolydayTypeCd());
+		model.addAttribute("dateType",
+				codeMasterRepository.findByCodeTypeAndCd(CodeTypeCd.HOLIDAY_TYPE_CD, form.getDateKind()).getName());
+
+		// 予約情報取得
+		List<MemberReservationManage> memberReservationList = memberReservationManageService.getReservationList(
+				LoginUtility.getLoginUser().getAspCode(), form.getReservationDate(), form.getDateKind());
 
 		// TODO 打席番号 － コードマスタ
 		List<String> batNumbers = codeMasterRepository.findByCodeTypeOrderByCd("990").stream().map(p -> p.getName())
 				.collect(Collectors.toList());
 		model.addAttribute("batNumbers", batNumbers);
 
-		List<MemberReservationManageListForm> timeSchedule = new ArrayList<MemberReservationManageListForm>();
-		List<TblPointConsumeMaster> timeTables = tblPointConsumeMasterRepository
-				.findByIdDateKindOrderByIdTimeSlot(form.getDateKind());
-		for (TblPointConsumeMaster master : timeTables) {
-			MemberReservationManageListForm reservation = new MemberReservationManageListForm();
-			reservation.setTimeSlotName(master.getTimeSlotName());
-			reservation.setConsumedPoint(String.valueOf(master.getConsumePoint()));
+		for (ReservationPointTimeTableInfo table : reservationPointTimeTable) {
+			List<MemberReservationManage> reservationList = new ArrayList<MemberReservationManage>();
 
+			String timeSlotName = DateUtility.toTimeString(table.getStartTime()) + "~"
+					+ DateUtility.toTimeString(table.getEndTime());
+			table.setTimeSlotName(timeSlotName);
+
+			// 打席数分
 			for (String batNo : batNumbers) {
 				MemberReservationManage rev = new MemberReservationManage();
 				rev.setBatNumber(batNo);
-
 				Optional<MemberReservationManage> manage = memberReservationList.stream()
 						.filter(p -> p.getBatNumber().equals(batNo)
-								&& p.getTimeSlotName().contentEquals(master.getTimeSlotName()))
+								&& p.getTimeSlotName().equals(timeSlotName))
 						.findFirst();
 				if (manage.isPresent()) {
 					rev.setBatNumberCd(manage.get().getBatNumberCd());
@@ -146,11 +135,10 @@ public class MemberFrontReservationManageController {
 					rev.setExpireFlag(manage.get().getExpireFlag());
 					rev.setReservationNumber(manage.get().getReservationNumber());
 				}
-				reservation.getReservationList().add(rev);
+				reservationList.add(rev);
 			}
-			timeSchedule.add(reservation);
+			table.setReservationList(reservationList);
 		}
-		model.addAttribute("timeSchedule", timeSchedule);
 
 		model.addAttribute("monthlyPoint", form.getMonthlyPoint());
 		model.addAttribute("eventPoint", form.getEventPoint());

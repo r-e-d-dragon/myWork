@@ -152,7 +152,7 @@ public class DateUtility {
 	 * @param date    日付
 	 * @return フォーマット日付
 	 */
-	private static String toDateString(String pattern, Date date) {
+	public static String toDateString(String pattern, Date date) {
 		if (date == null) {
 			return null;
 		}
@@ -166,7 +166,7 @@ public class DateUtility {
 	 * @param timestamp 日時
 	 * @return フォーマット日時
 	 */
-	private static String toDateString(String pattern, Timestamp timestamp) {
+	public static String toDateString(String pattern, Timestamp timestamp) {
 		return new SimpleDateFormat(pattern).format(timestamp);
 	}
 

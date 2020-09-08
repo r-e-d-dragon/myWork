@@ -66,6 +66,14 @@ public class TblPointManage implements Serializable {
 		this.id = id;
 	}
 
+	public void setCategoryCode(String categoryCode) {
+		this.categoryCode = categoryCode;
+	}
+
+	public String getCategoryCode() {
+		return this.categoryCode;
+	}
+
 	public Integer getConsumedPoint() {
 		return this.consumedPoint;
 	}

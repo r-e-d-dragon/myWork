@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{front/layout/layout-front-main}">
+<head>
+	<title>無料体験のお申し込み｜エンジョイゴルフ24</title>
+	<meta name="Keywords" content="">
+	<meta name="Description" content="">
+	<meta property="og:image" content="http://">
+	<link th:href="@{/css/admin/base.css}" rel="stylesheet" />
+	<script type="text/javascript" th:src="@{/scripts/common.js}"></script>
+</head>
+<div layout:fragment="content"><!-- /** layout contents start */ -->
+
+<div class="pagetitle _news">  
+  <h1>無料体験のお申し込み</h1>
+</div>  
+
+<main id="local">
+  <div class="inner">
+    
+  <section class="bread">
+    <ol vocab="https://schema.org/" typeof="BreadcrumbList">
+      <li property="itemListElement" typeof="ListItem">
+        <a property="item" typeof="WebPage" href="/">
+          <span property="name">ホーム</span></a>
+        <meta property="position" content="1">
+      </li>
+      <li property="itemListElement" typeof="ListItem">
+        <span property="name">無料体験のお申し込み</span>
+        <meta property="position" content="2">
+      </li>
+    </ol>    
+  </section>
+  <div layout:replace="~{layout/common-error :: errors}"></div>
+  
+    
+  <div class="column_wrap" id="register">  
+    
+    <form id="form"  method="post" th:action="@{/public/register/finish}" th:object="${publicRegisterForm}">
+        <div class="wrapper mypage-custom-index" id="body-index">
+            <section>
+                <h1 class="c-ttl c-ttl__01 m-b-50">無料体験のお申し込み</h1>
+                <div class="form-register">
+		          <section class="m-b-55">
+					<div class="c-box-account m-b-20">
+		              <h2 class="c-ttl c-ttl__03 m-b-20">お客様情報を入力してください</h2>
+		               
+		               <div class="row align-items-start m-b-20">
+			                <div class="d-flex justify-content-between align-items-start m-t-10">
+			                  <span class="text c-ttl c-ttl__04">店舗</span>
+			                  <span class="tag-icon tag-red m-t-5">必須</span>
+			                </div>
+			                <div>
+			                  <select th:field="*{aspCode}" class="selectBoxCss select-option width-240" th:errorclass="fieldError">
+			                    <option th:each="aspItem : ${aspMap}" th:value="${aspItem.key}" th:text="${aspItem.value}" th:errorclass="fieldError"></option>
+			                  </select>
+			                </div>
+			               </div>
+		               
+		               <div class="row align-items-start m-b-20">
+		                 <div class="d-flex justify-content-between align-items-start m-t-10">
+		                   <span id="nameKanji" class="text c-ttl c-ttl__04">お名前</span>
+		                   <span class="tag-icon tag-red m-t-5">必須</span>
+		                 </div>
+		                 <div>
+		                   <div class="width-500 c-box-name d-flex justify-content-between align-items-center">
+		                    <input class="c-input" type="text" maxlength="20" placeholder="山田" style="width: 240px;" th:field="*{lastName}" th:errorclass="fieldError">
+		                    <input class="c-input" type="text" maxlength="20" placeholder="花子" style="width: 240px;" th:field="*{firstName}" th:errorclass="fieldError">
+				           </div>
+		                  </div>
+		                </div>
+		                
+		                <div class="row align-items-start m-b-20">
+		                 <div class="d-flex justify-content-between align-items-start m-t-10">
+		                   <span id="nameKanji" class="text c-ttl c-ttl__04">フリガナ</span>
+		                   <span class="tag-icon tag-red m-t-5">必須</span>
+		                 </div>
+		                 <div>
+		                   <div class="width-500 c-box-name d-flex justify-content-between align-items-center">
+		                    <input class="c-input" type="text" maxlength="20" placeholder="ヤマダ" style="width: 240px;" th:field="*{lastNameKana}" th:errorclass="fieldError">
+		                    <input class="c-input" type="text" maxlength="20" placeholder="ハナコ"  style="width: 240px;" th:field="*{firstNameKana}" th:errorclass="fieldError">
+				           </div>
+		                  </div>
+		                </div>
+			            <div class="row align-items-start m-b-20">
+			              <div class="d-flex justify-content-between align-items-start m-t-10"><span class="text c-ttl c-ttl__04">メールアドレス</span>
+			                <span class="tag-icon tag-red m-t-5">必須</span>
+			              </div>
+			              <div>
+			                <input class="c-input" type="text" maxlength="256" placeholder="〇〇〇@〇〇〇.com" th:field="*{email}" value="" th:errorclass="fieldError">
+			              </div>
+			            </div>
+			            
+			            <div class="row align-items-start m-b-20">
+			              <div class="d-flex justify-content-between align-items-start m-t-10"><span class="text c-ttl c-ttl__04">メールアドレス（確認用）</span>
+			                <span class="tag-icon tag-red m-t-5">必須</span>
+			              </div>
+			              <div>
+			                <input class="c-input" type="text" maxlength="256" placeholder="〇〇〇@〇〇〇.com" th:field="*{emailConfirm}" value="" th:errorclass="fieldError">
+			              </div>
+			            </div>
+			            
+			            <div class="row align-items-start m-b-20">
+			              <div class="d-flex justify-content-between align-items-start m-t-10"><span class="text c-ttl c-ttl__04">電話番号</span><span class="tag-icon tag-red m-t-5">必須</span></div>
+			              <div>
+			                <input class="c-input" type="text" th:field="*{phone}" th:errorclass="fieldError" maxlength="20" placeholder="00-0000-0000">
+			              </div>
+			            </div>
+			            
+			            <div class="row align-items-start m-b-80">
+			              <div class="d-flex justify-content-between align-items-start m-t-10"><span class="text c-ttl c-ttl__04">お問い合わせ内容</span>
+			                <span class="tag-icon tag-gray m-t-5">任意</span>
+			              </div>
+			              <div>
+			                <textarea class="c-textarea" cols="4" rows="80" maxlength="1200" th:field="*{memo}" th:errorclass="fieldError" placeholder="ご希望の日付やご質問の内容などをご記入ください。"></textarea>
+			              </div>
+			            </div>			        
+		            </div>
+		            </section>
+		            </div>
+            
+            <div class="c-box-confirm text-center m-b-70">
+            <div class="m-b-55">
+              <div style="color:red;"><small>※個人情報の扱いについての文言については受領必要</small></div>
+              <a id="registerBtn" class="c-btn btn-primary btn-confirm m-b-15" href="#" th:url="@{/public/register/finish}">登録</a>
+            </div>
+          </div>
+             
+            </section>
+            
+        </div>
+    </form>
+  </div>
+    
+    
+
+  </div>
+</main>
+
+</div>
+
+</body>
+</html>

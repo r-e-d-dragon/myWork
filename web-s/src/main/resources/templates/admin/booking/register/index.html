@@ -130,12 +130,12 @@
                   <a id="returnBtn" class="btn-continue c-btn btn-primary width-210 swap text-center" href="#" th:url="@{/admin/booking/top}">戻る</a>
                 </div>
                 </div>
-                <input type="text" th:field="*{reservationId}" value="">
-                <input type="text" th:field="*{valid}">
-                <input type="text" th:field="*{limitReservationCount}">
-                <input type="text" th:field="*{limitMonthlyReservationCount}">
-                <input type="text" th:field="*{limitEventReservationCount}">
-                <input type="text" th:field="*{limitReservationPoint}">
+                <input type="hidden" th:field="*{reservationId}" value="">
+                <input type="hidden" th:field="*{valid}">
+                <input type="hidden" th:field="*{limitReservationCount}">
+                <input type="hidden" th:field="*{limitMonthlyReservationCount}">
+                <input type="hidden" th:field="*{limitEventReservationCount}">
+                <input type="hidden" th:field="*{limitReservationPoint}">
           　　　　　　　</section>
             
         </div>

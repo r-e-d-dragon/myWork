@@ -53,29 +53,6 @@
 		               </div>
 		               
 		               <div class="forNormalmember">
-			               <div class="row align-items-start m-b-20">
-			                <div class="d-flex justify-content-between align-items-start m-t-10">
-			                  <span class="text c-ttl c-ttl__04">会員レベル</span>
-			                  <span class="tag-icon tag-red m-t-5">必須</span>
-			                </div>
-			                <div>
-			                  <select th:field="*{memberGradeCode}" class="selectBoxCss select-option width-240" th:errorclass="fieldError">
-			                    <option th:each="memberGradeCdItem : ${memberGradeCdMap}" th:value="${memberGradeCdItem.key}" th:text="${memberGradeCdItem.value}" th:errorclass="fieldError"></option>
-			                  </select>
-			                </div>
-			               </div>
-			               
-			               <div class="row align-items-start m-b-20">
-			                <div class="d-flex justify-content-between align-items-start m-t-10">
-			                  <span class="text c-ttl c-ttl__04">利用時間</span>
-			                  <span class="tag-icon tag-red m-t-5">必須</span>
-			                </div>
-			                <div>
-			                  <select th:field="*{memberGradeTimeCode}" class="selectBoxCss select-option width-240" th:errorclass="fieldError">
-			                    <option th:each="memberGradeTimeCdItem : ${memberGradeTimeCdMap}" th:value="${memberGradeTimeCdItem.key}" th:text="${memberGradeTimeCdItem.value}" th:errorclass="fieldError"></option>
-			                  </select>
-			                </div>
-			               </div>
 			               
 			               <div class="row align-items-start m-b-20">
 			                <div class="d-flex justify-content-between align-items-start m-t-10">
@@ -199,11 +176,38 @@
 			            </div>
 			            
 			            <div class="row align-items-start m-b-20">
-			              <div class="d-flex justify-content-between align-items-start m-t-10"><span class="text c-ttl c-ttl__04">口座番号？？？</span>
+			              <div class="d-flex justify-content-between align-items-start m-t-10"><span class="text c-ttl c-ttl__04">金融機関名</span>
 			                <span class="tag-icon tag-gray m-t-5">任意</span>
 			              </div>
 			              <div>
-			                <input class="c-input" type="text" maxlength="256" placeholder="" th:field="*{bankKana}" value="" th:errorclass="fieldError">
+			                <input class="c-input" type="text" maxlength="20" placeholder="" th:field="*{bankKana}" value="" th:errorclass="fieldError">
+			              </div>
+			            </div>
+			            
+			            <div class="row align-items-start m-b-20">
+			              <div class="d-flex justify-content-between align-items-start m-t-10"><span class="text c-ttl c-ttl__04">金融機関コード</span>
+			                <span class="tag-icon tag-gray m-t-5">任意</span>
+			              </div>
+			              <div>
+			                <input class="c-input" type="text" maxlength="4" placeholder="" th:field="*{bankCode}" value="" th:errorclass="fieldError">
+			              </div>
+			            </div>
+			            
+			            <div class="row align-items-start m-b-20">
+			              <div class="d-flex justify-content-between align-items-start m-t-10"><span class="text c-ttl c-ttl__04">支店コード</span>
+			                <span class="tag-icon tag-gray m-t-5">任意</span>
+			              </div>
+			              <div>
+			                <input class="c-input" type="text" maxlength="3" placeholder="" th:field="*{bankBranchCode}" value="" th:errorclass="fieldError">
+			              </div>
+			            </div>
+			            
+			            <div class="row align-items-start m-b-20">
+			              <div class="d-flex justify-content-between align-items-start m-t-10"><span class="text c-ttl c-ttl__04">口座番号</span>
+			                <span class="tag-icon tag-gray m-t-5">任意</span>
+			              </div>
+			              <div>
+			                <input class="c-input" type="text" maxlength="7" placeholder="" th:field="*{bankAccountNumber}" value="" th:errorclass="fieldError">
 			              </div>
 			            </div>
 	
@@ -222,6 +226,7 @@
             
             <div class="c-box-confirm text-center m-b-70">
             <div class="m-b-55">
+            	<div style="color:red;"><small>※個人情報の扱いについての文言については受領必要</small></div>
               <a id="registerBtn" class="c-btn btn-primary btn-confirm m-b-15" href="#" th:url="@{/admin/member/managePreUser/convert/finish}">登録</a><br/>
               <a id="returnBtn" class="btn-continue c-btn btn-primary width-210 swap text-center" th:href="@{/admin/member/managePreUser}">一覧へ</a>
             </div>

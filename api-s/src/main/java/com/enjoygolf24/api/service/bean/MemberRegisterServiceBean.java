@@ -17,6 +17,12 @@ public class MemberRegisterServiceBean {
 
 	String bankKana;
 
+	String bankCode;
+
+	String bankBranchCode;
+
+	String bankAccountNumber;
+
 	String email;
 
 	String firstName;
@@ -40,10 +46,6 @@ public class MemberRegisterServiceBean {
 	String gender;
 
 	String birthday;
-
-	String memberGradeCode;
-
-	String memberGradeTimeCode;
 
 	String jobCode;
 

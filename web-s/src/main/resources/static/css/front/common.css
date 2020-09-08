@@ -2307,6 +2307,35 @@ main#booking ul.booking_list {
       border-width: 3px;
       background: #fef138;
       cursor: pointer; }
+      
+main#booking .circle { 
+	top: 15px;
+    right: 15px;
+    width: 40px;
+    height: 40px;
+    display: block;
+    position: absolute;
+    background: navy; 
+   -moz-border-radius: 70px; 
+   -webkit-border-radius: 70px; 
+   border-radius: 70px;
+}
+main#booking .circle p{ 
+	line-height: 2px;
+	font-size:20px;
+	color:white;
+	font-weight: bold;
+	letter-spacing: -1px;
+	}
+	
+main#booking .circle.red{
+	background: red !important; 
+}
+
+main#booking .circle.green{
+	background: green !important; 
+}
+
 main#booking table.reserve_list {
   table-layout: fixed;
   text-align: center; }
@@ -2330,6 +2359,36 @@ main#booking table.reserve_list {
     min-width: 50px; }
     main#booking table.reserve_list tbody td img {
       width: 27px; }
+      
+      main#booking table.reserve_list tbody td .circle_min {
+      width: 27px;
+      height: 27px;
+      background: green;
+      -moz-border-radius: 70px; 
+	   -webkit-border-radius: 70px; 
+	   border-radius: 70px;     
+	   margin-left: auto;
+  	  margin-right: auto;
+      }
+      
+       main#booking table.reserve_list tbody td .circle_min p{
+      line-height: 30px;
+	font-size:12px;
+	color:white;
+	font-weight: bold;
+	letter-spacing: -1px;    
+	margin: 0 !important; 
+      }
+      
+	
+main#booking table.reserve_list tbody td .circle_min.red{
+	background: red !important; 
+}
+
+main#booking table.reserve_list tbody td .circle_min.navy{
+	background: navy !important; 
+}
+      
   main#booking table.reserve_list tbody th, main#booking table.reserve_list tbody td {
     background: #f7fff3;
     padding: 5px 10px; }

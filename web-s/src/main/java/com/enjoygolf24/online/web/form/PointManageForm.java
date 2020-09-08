@@ -14,7 +14,7 @@ import org.thymeleaf.util.StringUtils;
 import com.enjoygolf24.api.common.code.CodeTypeCd;
 import com.enjoygolf24.api.common.code.PointExpirationTermCd;
 import com.enjoygolf24.api.common.code.PointTypeCd;
-import com.enjoygolf24.api.common.database.bean.TblPointMonthly;
+import com.enjoygolf24.api.common.database.bean.TblPointHistory;
 import com.enjoygolf24.api.common.database.bean.TblUser;
 import com.enjoygolf24.api.common.utility.DateUtility;
 import com.enjoygolf24.api.common.utility.DefaultPageSizeUtility;
@@ -62,26 +62,31 @@ public class PointManageForm implements Serializable {
 
 	@NotBlank(groups = Insert0.class)
 	@Size(groups = Insert0.class, max = 2)
-	@CodeMaster(groups = Insert0.class, code = CodeTypeCd.PONT_EXPIRATION_TERM_CD)
+	@CodeMaster(groups = Insert0.class, code = CodeTypeCd.POINT_CATEGORY_TERM_CD)
 	private String pointExpirationTermCd;
 
 	@Size(groups = Insert0.class, max = 2)
-	@CodeMaster(groups = Insert0.class, code = CodeTypeCd.PONT_TYPE_CD, except = { PointTypeCd.USE,
+	@CodeMaster(groups = Insert0.class, code = CodeTypeCd.POINT_TYPE_CD, except = { PointTypeCd.USE,
 			PointTypeCd.OLDBIE })
 	private String monthlyPointTypeCd;
 
 	@Size(groups = Insert0.class, max = 2)
-	@CodeMaster(groups = Insert0.class, code = CodeTypeCd.PONT_TYPE_CD, except = { PointTypeCd.USE,
+	@CodeMaster(groups = Insert0.class, code = CodeTypeCd.POINT_TYPE_CD, except = { PointTypeCd.USE,
 			PointTypeCd.MONTLY_POINT, PointTypeCd.BIRHDAY, PointTypeCd.INTRODUCTION })
 	private String carriablePointTypeCd;
 
 	@Numeric(groups = Insert0.class)
 	private String pointVariation;
 
+	@NotBlank(groups = Insert0.class)
 	private String termStartDate;
 
 	@Size(groups = Insert0.class, max = 1200)
 	private String memo;
+
+	@Size(groups = Insert0.class, max = 2)
+	@CodeMaster(groups = Insert0.class, code = CodeTypeCd.POINT_CATEGORY_TERM_CD)
+	private String pointCategoryCd;
 
 	@PageSize
 	int pageSize = DefaultPageSizeUtility.DEFAULT_PAGE_SIZE;
@@ -89,7 +94,7 @@ public class PointManageForm implements Serializable {
 	/** 現在ページ */
 	int pageNo = DefaultPageSizeUtility.PAGE_FIRST;
 
-	List<TblPointMonthly> pointMonthlyList;
+	List<TblPointHistory> pointHistoryList;
 
 	@AssertTrue(groups = Insert0.class, message = "{application.combination.validation.needNotBlankWhenCustomPoint}")
 	public boolean isFilledCustomRequired() {
@@ -97,7 +102,7 @@ public class PointManageForm implements Serializable {
 				: carriablePointTypeCd;
 
 		if (PointTypeCd.CUSTOM.equals(pointTypeCd)) {
-			return !(StringUtils.isEmptyOrWhitespace(pointVariation) && StringUtils.isEmptyOrWhitespace(termStartDate)
+			return !(StringUtils.isEmptyOrWhitespace(pointVariation)
 					&& StringUtils.isEmptyOrWhitespace(memo));
 		} else {
 			return true;

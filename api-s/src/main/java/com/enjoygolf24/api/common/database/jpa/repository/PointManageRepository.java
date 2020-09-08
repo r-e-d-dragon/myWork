@@ -16,4 +16,6 @@ public interface PointManageRepository extends JpaRepository<TblPointManage, Str
 	TblPointManage findByIdMemberCodeAndPointTypeAndStartDateAndEndDate(String memberCode, String pointType,
 			Date startDate, Date endDate);
 
+	TblPointManage findByIdMemberCodeAndCategoryCode(String memberCode, String categoryCode);
+
 }

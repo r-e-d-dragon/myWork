@@ -121,9 +121,12 @@
 	            <if test="email != null and email != ''">
 	                 and email like CONCAT('%',REPLACE(#{email},'%','¥%'),'%') ESCAPE '¥'
 	            </if>
-	           	and use_flag = '1'
+	           	and use_flag != '03'
 	           	<if test="aspCode != null and aspCode != ''">
 	            and asp_code = #{aspCode}
+	            </if>
+	            <if test="useFlagCd != null and useFlagCd != ''">
+	            and use_flag = #{useFlagCd}
 	            </if>
       </where>
       order by pre_member_code

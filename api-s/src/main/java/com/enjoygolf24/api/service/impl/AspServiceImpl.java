@@ -1,6 +1,7 @@
 package com.enjoygolf24.api.service.impl;
 
 import java.sql.Timestamp;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -87,5 +88,13 @@ public class AspServiceImpl implements AspService {
 
 		aspRepository.save(aspBean);
 		return aspBean;
+	}
+
+	@Override
+	public LinkedHashMap<String, String> createAspMap() {
+		List<TblAsp> aspList = aspMapper.getAspList(null, null, null);
+		LinkedHashMap<String, String> map = new LinkedHashMap<>();
+		aspList.stream().filter(c -> true).forEach(e -> map.put(e.getAspCode(), e.getAspName()));
+		return map;
 	}
 }

@@ -6,4 +6,6 @@ public class MailSectionCd {
 
 	public static final String MEMBER_MODIFY_INITPASSWORD = "02";
 
+	public static final String PRE_MEMBER_REGESTERED = "03";
+
 }

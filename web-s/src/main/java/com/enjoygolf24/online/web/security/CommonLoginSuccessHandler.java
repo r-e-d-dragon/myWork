@@ -14,6 +14,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
+import com.enjoygolf24.api.common.code.MemberTypeCd;
+import com.enjoygolf24.api.common.utility.LoginUtility;
+
 @Component
 public class CommonLoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
 
@@ -24,7 +27,11 @@ public class CommonLoginSuccessHandler extends SavedRequestAwareAuthenticationSu
             throws IOException, ServletException {
 		String message = "";
 		logger.info(message);
-		getRedirectStrategy().sendRedirect(request, response, "/admin/main");
+		if (MemberTypeCd.MANAGER.equals(LoginUtility.getLoginUser().getMemberTypeCd())) {
+			getRedirectStrategy().sendRedirect(request, response, "/admin/main");
+		} else {
+			getRedirectStrategy().sendRedirect(request, response, "/user/reservation/info");
+		}
 
     }
 }

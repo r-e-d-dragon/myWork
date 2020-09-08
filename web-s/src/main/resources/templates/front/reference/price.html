@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{front/layout/layout-front-main}">
+<head>
+	<title>料金/ポイント｜エンジョイゴルフ24</title>
+	<meta name="Keywords" content="">
+	<meta name="Description" content="">
+	<meta property="og:image" content="http://">
+</head>
+<div layout:fragment="content"><!-- /** layout contents start */ -->
+
+<div class="pagetitle _price">  
+  <h1>料金/ポイント</h1>
+</div>  
+
+<main id="local">
+  <div class="inner">
+    
+  <section class="bread">
+    <ol vocab="https://schema.org/" typeof="BreadcrumbList">
+      <li property="itemListElement" typeof="ListItem">
+        <a property="item" typeof="WebPage" href="/">
+          <span property="name">ホーム</span></a>
+        <meta property="position" content="1">
+      </li>
+      <li property="itemListElement" typeof="ListItem">
+        <span property="item" typeof="WebPage">
+          <span property="name">User</span></span>
+        <meta property="position" content="2">
+      </li>
+      <li property="itemListElement" typeof="ListItem">
+        <span property="name">料金/ポイント</span>
+        <meta property="position" content="3">
+      </li>
+    </ol>    
+  </section>
+  
+  
+  <section id="price">
+    <h2>料金/ポイント</h2>
+    <p class="lead">テキストテキストテキストテキストテキストテキストテキストテキストテキスト<br>
+テキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキスト</p>
+    
+    <ul class="pricelist">
+      <li>
+        <h3>1ヶ月プラン <span class="sub">1 month plan</span></h3>
+        <div class="price"><strong>10,000</strong>円</div>
+        <ul class="check">
+          <li class="ok">ダミーダミー</li>
+          <li class="ok">ダミーダミーダミーダミー</li>
+          <li class="ok">ダミーダミーダミー</li>
+          <li class="ng">ダミーダミー</li>
+          <li class="ng">ダミーダミー</li>
+        </ul>
+      </li>
+      <li class="popular">
+        <h3>6ヶ月プラン <span class="sub">6 month plan</span></h3>
+        <em class="ribbon"><img th:src="@{/images/front/ribbon_price.png}" alt="人気のプラン"></em>
+        <div class="price"><strong>55,000</strong>円</div>
+        <ul class="check">
+          <li class="ok">ダミーダミー</li>
+          <li class="ok">ダミーダミーダミーダミー</li>
+          <li class="ok">ダミーダミーダミー</li>
+          <li class="ok">ダミーダミー</li>
+          <li class="ng">ダミーダミー</li>
+        </ul>
+      </li>
+      <li>
+        <h3>12ヶ月プラン <span class="sub">12 month plan</span></h3>
+        <div class="price"><strong>95,000</strong>円</div>
+        <ul class="check">
+          <li class="ok">ダミーダミー</li>
+          <li class="ok">ダミーダミーダミーダミー</li>
+          <li class="ok">ダミーダミーダミー</li>
+          <li class="ok">ダミーダミー</li>
+          <li class="ok">ダミーダミー</li>
+        </ul>
+      </li>
+    </ul>
+      
+  </section>
+    
+
+    
+  </div>
+</main>
+
+</div>
+
+</body>
+</html>

@@ -2,6 +2,8 @@ package com.enjoygolf24.api.service.impl;
 
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -14,12 +16,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.enjoygolf24.api.common.code.PointCategoryCd;
+import com.enjoygolf24.api.common.database.bean.MstPenaltyPoint;
 import com.enjoygolf24.api.common.database.bean.MstReservationLimit;
 import com.enjoygolf24.api.common.database.bean.TblPointHistory;
 import com.enjoygolf24.api.common.database.bean.TblPointManage;
 import com.enjoygolf24.api.common.database.bean.TblPointManagePK;
 import com.enjoygolf24.api.common.database.bean.TblReservation;
 import com.enjoygolf24.api.common.database.jpa.repository.MemberRepository;
+import com.enjoygolf24.api.common.database.jpa.repository.MstPenaltyPointRepository;
 import com.enjoygolf24.api.common.database.jpa.repository.MstReservationLimitRepository;
 import com.enjoygolf24.api.common.database.jpa.repository.PointHistoryRepository;
 import com.enjoygolf24.api.common.database.jpa.repository.PointManageRepository;
@@ -53,11 +57,11 @@ public class MemberReservationManageServiceImpl implements MemberReservationMana
 	@Autowired
 	PointManageRepository pointManageRepository;
 
-//	@Autowired
-//	TblReservationLimitMasterRepository tblReservationLimitMasterRepository;
-
 	@Autowired
 	MstReservationLimitRepository mstReservationLimitRepository;
+
+	@Autowired
+	MstPenaltyPointRepository mstPenaltyPointRepository;
 
 	@Override
 	public List<ReservationPointTimeTableInfo> getViewReservationPonitTimeTableInfo(Date dateTime,
@@ -116,7 +120,6 @@ public class MemberReservationManageServiceImpl implements MemberReservationMana
 
 			int consumedPoint = serviceBean.getConsumedPoint();
 			for (MemberReservationManage point : pointList) {
-				System.out.println("ConsumedPoint::::: " + point.getPointAmount());
 				if (point.getPointAmount() - consumedPoint >= 0) {
 					// ポイント履歴登録
 					insertPointHistory(serviceBean, point, reservation.getReservationId(), consumedPoint);
@@ -151,10 +154,12 @@ public class MemberReservationManageServiceImpl implements MemberReservationMana
 	public String MemberReservationCancle(MemberReservationServiceBean serviceBean) {
 
 		// 予約情報更新ー取消
-		updateReservationCancle(serviceBean);
+		TblReservation reservation = updateReservationCancle(serviceBean);
 
-		// 取消、ポイント戻し処理
-		updateMemberCanclePointManage(serviceBean);
+		if (!PointCategoryCd.ADMIN_POINT.equals(reservation.getPointCategoryCode())) {
+			// 取消、ポイント戻し処理
+			updateMemberCanclePointManage(serviceBean);
+		}
 
 		return serviceBean.getReservationId();
 	}
@@ -232,8 +237,15 @@ public class MemberReservationManageServiceImpl implements MemberReservationMana
 
 		// 予約履歴更新
 		List<TblPointHistory> list = pointHistoryRepository.findByReservationId(serviceBean.getReservationId());
+		int penaltyPoint = serviceBean.getPenaltyPoint();
+
 		for (TblPointHistory history : list) {
-			history.setConsumedPoint(-history.getConsumedPoint());
+			if (penaltyPoint > 0) {
+				history.setConsumedPoint(-history.getConsumedPoint() + penaltyPoint);
+				penaltyPoint = -history.getConsumedPoint() + penaltyPoint;
+			} else {
+				history.setConsumedPoint(-history.getConsumedPoint());
+			}
 			history.setUpdateUser(serviceBean.getLoginUserCd());
 			history.setUpdateDate(new Timestamp(System.currentTimeMillis()));
 			pointHistoryRepository.save(history);
@@ -251,7 +263,6 @@ public class MemberReservationManageServiceImpl implements MemberReservationMana
 				tblPointManage.setUpdateDate(new Timestamp(System.currentTimeMillis()));
 				pointManageRepository.save(tblPointManage);
 			}
-
 		}
 		return serviceBean.getReservationId();
 	}
@@ -281,7 +292,7 @@ public class MemberReservationManageServiceImpl implements MemberReservationMana
 		reservation.setReservationTime(serviceBean.getReservationTime());
 		reservation.setConsumedPoint(serviceBean.getConsumedPoint());
 		reservation.setPointCategoryCode(serviceBean.getPointCategoryCode());
-		reservation.setPointGrade(serviceBean.getPointGrade());
+		reservation.setGradeTypeCd(serviceBean.getGradeTypeCd());
 		reservation.setPenaltyPoint(serviceBean.getPenaltyPoint());
 
 		reservation.setRegisterUser(serviceBean.getLoginUserCd());
@@ -333,6 +344,33 @@ public class MemberReservationManageServiceImpl implements MemberReservationMana
 		reservation.setStatus(serviceBean.getStatus());
 		reservation.setUpdateUser(serviceBean.getLoginUserCd());
 		reservation.setUpdateDate(new Timestamp(System.currentTimeMillis()));
+
+		// 管理者一括予約
+		if (PointCategoryCd.ADMIN_POINT.equals(reservation.getPointCategoryCode())) {
+			reservationRepository.save(reservation);
+			return reservation;
+		}
+
+		// ペナルティー情報取得
+		MstPenaltyPoint penalty = mstPenaltyPointRepository.findByGradeCodeAndValidateStartTermLessThanEqual(
+				reservation.getGradeTypeCd(), DateUtility.getCurrentTimestamp());
+		if (penalty != null) {
+			int reservationTime = Integer.valueOf(reservation.getReservationTime().substring(0, 2));
+			LocalDateTime reservationDateTime = reservation.getReservationDate().toInstant()
+					.atZone(ZoneId.systemDefault()).toLocalDateTime().plusHours(reservationTime)
+					.minusHours(penalty.getLimitTime());
+			LocalDateTime limitDateTime = DateUtility.getCurrentTimestamp().toInstant().atZone(ZoneId.systemDefault())
+					.toLocalDateTime();
+			// ペナルティー発生
+			if (reservationDateTime.compareTo(limitDateTime) < 0) {
+				reservation
+						.setConsumedPoint(reservation.getConsumedPoint() - penalty.getPenaltyPointAmount().intValue());
+				reservation.setPenaltyPoint(penalty.getPenaltyPointAmount().intValue());
+
+				// ペナルティー設定
+				serviceBean.setPenaltyPoint(penalty.getPenaltyPointAmount().intValue());
+			}
+		}
 
 		reservationRepository.save(reservation);
 

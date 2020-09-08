@@ -10,11 +10,13 @@ public class PointHistoryManage implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private String pointTypeCd;
+	private String categoryCode;
 
-	private String pointVariation;
+	private String pointCode;
 
-	private String reservationNumber;
+	private String consumedPoint;
+
+	private String reservationId;
 
 	private String registerUser;
 
@@ -22,7 +24,7 @@ public class PointHistoryManage implements Serializable {
 
 	private String memo;
 
-	private String termStartDate;
+	private String startDate;
 
 	private String registerDateFormatted;
 

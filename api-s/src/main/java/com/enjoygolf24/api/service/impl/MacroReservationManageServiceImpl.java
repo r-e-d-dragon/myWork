@@ -16,17 +16,17 @@ import org.springframework.stereotype.Service;
 
 import com.enjoygolf24.api.common.code.PointCategoryCd;
 import com.enjoygolf24.api.common.code.ReservationStatusCd;
+import com.enjoygolf24.api.common.database.bean.MstTimeTable;
 import com.enjoygolf24.api.common.database.bean.TblMacroReservationManage;
-import com.enjoygolf24.api.common.database.bean.TblPointConsumeMaster;
 import com.enjoygolf24.api.common.database.bean.TblPointHistory;
 import com.enjoygolf24.api.common.database.bean.TblPointManage;
 import com.enjoygolf24.api.common.database.bean.TblReservation;
 import com.enjoygolf24.api.common.database.jpa.repository.MemberRepository;
+import com.enjoygolf24.api.common.database.jpa.repository.MstTimeTableRepository;
 import com.enjoygolf24.api.common.database.jpa.repository.PointHistoryRepository;
 import com.enjoygolf24.api.common.database.jpa.repository.PointManageRepository;
 import com.enjoygolf24.api.common.database.jpa.repository.ReservationRepository;
 import com.enjoygolf24.api.common.database.jpa.repository.TblMacroReservationManageRepository;
-import com.enjoygolf24.api.common.database.jpa.repository.TblPointConsumeMasterRepository;
 import com.enjoygolf24.api.common.database.mybatis.bean.MemberReservationManage;
 import com.enjoygolf24.api.common.database.mybatis.repository.ReservationMapper;
 import com.enjoygolf24.api.common.utility.DateUtility;
@@ -53,28 +53,25 @@ public class MacroReservationManageServiceImpl implements MacroReservationManage
 	TblMacroReservationManageRepository macroReservationManageRepository;
 
 	@Autowired
-	TblPointConsumeMasterRepository pointConsumeMasterRepository;
-
-	@Autowired
 	PointHistoryRepository pointHistoryRepository;
 
 	@Autowired
 	PointManageRepository pointManageRepository;
 
+	@Autowired
+	MstTimeTableRepository mstTimeTableRepository;
+
 	@Override
-	@Transactional
-	public List<TblPointConsumeMaster> getTblPointConsumeMaster(String dataKind) {
-		return pointConsumeMasterRepository.findByIdDateKindOrderByIdTimeSlot(dataKind);
+	public List<MstTimeTable> getMstTimeTable(String aspCode) {
+		// TODO マスタデータにあわっせて固定
+		return mstTimeTableRepository.findByAspCodeAndDayTypeCdOrderByTimeTableCode("0", "02");
 	}
 
 	@Override
 	@Transactional
 	public TblMacroReservationManage MacroReservationRegister(MemberReservationServiceBean serviceBean) {
 
-		// TODO
-		List<TblPointConsumeMaster> tblPointConsumeMaster = pointConsumeMasterRepository
-				.findByIdDateKindOrderByIdTimeSlot("01");
-
+		List<MstTimeTable> timeTable = getMstTimeTable(serviceBean.getAspCode());
 		TblMacroReservationManage manager = insertMacroReservationManage(serviceBean);
 
 		// TODO
@@ -89,8 +86,10 @@ public class MacroReservationManageServiceImpl implements MacroReservationManage
 		DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy/MM/dd");
 
 		for (LocalDateTime current = start; !current.isAfter(end); current = current.plusHours(1)) {
+			String timeSlotName = DateUtility.toTimeString(timeTable.get(current.getHour()).getStartTime()) + "~"
+					+ DateUtility.toTimeString(timeTable.get(current.getHour()).getEndTime());
 			serviceBean.setReservationDate(current.format(format));
-			serviceBean.setReservationTime(tblPointConsumeMaster.get(current.getHour()).getTimeSlotName());
+			serviceBean.setReservationTime(timeSlotName);
 			// 打席数分
 			for (String batNumber : serviceBean.getChkBatNumbers()) {
 
@@ -174,7 +173,7 @@ public class MacroReservationManageServiceImpl implements MacroReservationManage
 		reservation.setReservationTime(serviceBean.getReservationTime());
 		reservation.setConsumedPoint(0);
 		reservation.setPointCategoryCode(PointCategoryCd.ADMIN_POINT);
-		reservation.setPointGrade("");
+		reservation.setGradeTypeCd("");
 		reservation.setPenaltyPoint(0);
 
 		reservation.setRegisterUser(serviceBean.getLoginUserCd());

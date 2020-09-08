@@ -23,11 +23,9 @@ import com.enjoygolf24.api.common.code.CodeTypeCd;
 import com.enjoygolf24.api.common.code.PointCategoryCd;
 import com.enjoygolf24.api.common.code.ReservationStatusCd;
 import com.enjoygolf24.api.common.database.bean.TblAsp;
-import com.enjoygolf24.api.common.database.bean.TblPointConsumeMaster;
 import com.enjoygolf24.api.common.database.bean.TblReservation;
 import com.enjoygolf24.api.common.database.bean.TblUser;
 import com.enjoygolf24.api.common.database.jpa.repository.CodeMasterRepository;
-import com.enjoygolf24.api.common.database.jpa.repository.TblPointConsumeMasterRepository;
 import com.enjoygolf24.api.common.database.jpa.repository.ViewReservationPointTimeTableRepository;
 import com.enjoygolf24.api.common.database.mybatis.bean.MemberReservationManage;
 import com.enjoygolf24.api.common.database.mybatis.bean.ReservationPointTimeTableInfo;
@@ -67,9 +65,6 @@ public class MemberReservationManageController {
 	CodeMasterRepository codeMasterRepository;
 
 	@Autowired
-	TblPointConsumeMasterRepository tblPointConsumeMasterRepository;
-
-	@Autowired
 	ViewReservationPointTimeTableRepository viewReservationPointTimeTableRepository;
 	
 	@RequestMapping(value = "/top")
@@ -96,52 +91,15 @@ public class MemberReservationManageController {
 		model.addAttribute("dateType",
 				codeMasterRepository.findByCodeTypeAndCd(CodeTypeCd.HOLIDAY_TYPE_CD, form.getDateKind()).getName());
 
+		// 予約情報取得
+		List<MemberReservationManage> memberReservationList = memberReservationManageService.getReservationList(
+				LoginUtility.getLoginUser().getAspCode(), form.getReservationDate(), form.getDateKind());
+
 		// TODO 打席番号 － コードマスタ
 		List<String> batNumbers = codeMasterRepository.findByCodeTypeOrderByCd("990").stream().map(p -> p.getName())
 				.collect(Collectors.toList());
 		model.addAttribute("batNumbers", batNumbers);
 
-		// 予約情報取得
-		List<MemberReservationManage> memberReservationList = memberReservationManageService.getReservationList(
-				LoginUtility.getLoginUser().getAspCode(), form.getReservationDate(), form.getDateKind());
-
-		// TODO【2020/09/05】 View使用により、削除予定 ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
-		// TODO【2020/09/05】 View使用により、削除予定 ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
-		// TODO【2020/09/05】 View使用により、削除予定 ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
-		List<MemberReservationManageListForm> timeSchedule = new ArrayList<MemberReservationManageListForm>();
-		List<TblPointConsumeMaster> timeTables = tblPointConsumeMasterRepository
-				.findByIdDateKindOrderByIdTimeSlot(form.getDateKind());
-		for (TblPointConsumeMaster master : timeTables) {
-			MemberReservationManageListForm reservation = new MemberReservationManageListForm();
-			reservation.setTimeSlotName(master.getTimeSlotName());
-			reservation.setConsumedPoint(String.valueOf(master.getConsumePoint()));
-
-			for (String batNo : batNumbers) {
-				MemberReservationManage rev = new MemberReservationManage();
-				rev.setBatNumber(batNo);
-
-				Optional<MemberReservationManage> manage = memberReservationList.stream()
-						.filter(p -> p.getBatNumber().equals(batNo)
-								&& p.getTimeSlotName().equals(master.getTimeSlotName()))
-						.findFirst();
-				if (manage.isPresent()) {
-					rev.setBatNumberCd(manage.get().getBatNumberCd());
-					rev.setConsumedPoint(manage.get().getConsumedPoint());
-					rev.setMemberCode(manage.get().getMemberCode());
-					rev.setEmptyFlag(manage.get().getEmptyFlag());
-					rev.setExpireFlag(manage.get().getExpireFlag());
-					rev.setReservationNumber(manage.get().getReservationNumber());
-				}
-				reservation.getReservationList().add(rev);
-			}
-			timeSchedule.add(reservation);
-		}
-		model.addAttribute("timeSchedule", timeSchedule);
-		// TODO【2020/09/05】 View使用により、削除予定 ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
-		// TODO【2020/09/05】 View使用により、削除予定 ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
-		// TODO【2020/09/05】 View使用により、削除予定 ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
-
-		// TODO【2020/09/05】View使用----------------
 		for (ReservationPointTimeTableInfo table : reservationPointTimeTable) {
 			List<MemberReservationManage> reservationList = new ArrayList<MemberReservationManage>();
 
@@ -149,6 +107,7 @@ public class MemberReservationManageController {
 					+ DateUtility.toTimeString(table.getEndTime());
 			table.setTimeSlotName(timeSlotName);
 
+			// 打席数分
 			for (String batNo : batNumbers) {
 				MemberReservationManage rev = new MemberReservationManage();
 				rev.setBatNumber(batNo);
@@ -191,7 +150,7 @@ public class MemberReservationManageController {
 			// 仮登録ユーザ
 			form.setMemberCode("");
 			form.setPointCategoryCode("");
-			form.setPointGrade("");
+			form.setGradeTypeCd(form.getGradeTypeCd());
 
 			try {
 				String reservationId = memberReservationManageService
@@ -230,8 +189,7 @@ public class MemberReservationManageController {
 				ReservationStatusCd.STATUS_FIXED, false);
 		if (!checkRev.isEmpty()) {
 			model.addAttribute("memberReservationRegisterForm", form);
-			result.rejectValue("memberCode", "error.memberCode",
-					"{0} : 時間超過のため、既に予約されています。。");
+			result.rejectValue("memberCode", "error.memberCode", "{0} : 時間超過のため、既に予約されています。");
 			return registerReservation(form, model);
 		}
 		
@@ -244,6 +202,7 @@ public class MemberReservationManageController {
 		int consumedPoint = Integer.valueOf(form.getConsumedPoint());
 		if (PointCategoryCd.MONTLY_POINT.equals(form.getPointCategoryCode())) {
 			if (consumedPoint > form.getValidMonthlyPoint()) {
+				model.addAttribute("memberReservationRegisterForm", form);
 				result.rejectValue("validMonthlyPoint", "error.validMonthlyPoint", "{0} : 月ポイントが足りないため、予約出来ません。");
 				return registerReservation(form, model);
 			}
@@ -251,12 +210,14 @@ public class MemberReservationManageController {
 			List<MemberReservationManage> validMonPointList = memberReservationManageService.getMemberPointManageList(
 					form.getMemberCode(), PointCategoryCd.MONTLY_POINT, form.getReservationDate());
 			if (consumedPoint > validMonPointList.stream().mapToInt(x -> x.getPointAmount()).sum()) {
+				model.addAttribute("memberReservationRegisterForm", form);
 				result.rejectValue("validMonthlyPoint", "error.validMonthlyPoint", "{0} : 月ポイントが足りないため、予約出来ません。");
 				return registerReservation(form, model);
 			}
 		}
 		if (PointCategoryCd.EVENT_POINT.equals(form.getPointCategoryCode())) {
 			if (consumedPoint > form.getValidEventPoint()) {
+				model.addAttribute("memberReservationRegisterForm", form);
 				result.rejectValue("pointCategoryCode", "error.pointCategoryCode", "{0} : イベントポイントが足りないため、予約出来ません。");
 				return registerReservation(form, model);
 			}
@@ -264,6 +225,7 @@ public class MemberReservationManageController {
 			List<MemberReservationManage> validEvtPointList = memberReservationManageService.getMemberPointManageList(
 					form.getMemberCode(), PointCategoryCd.EVENT_POINT, form.getReservationDate());
 			if (consumedPoint > validEvtPointList.stream().mapToInt(x -> x.getPointAmount()).sum()) {
+				model.addAttribute("memberReservationRegisterForm", form);
 				result.rejectValue("pointCategoryCode", "error.pointCategoryCode", "{0} : イベントポイントが足りないため、予約出来ません。");
 				return registerReservation(form, model);
 			}
@@ -376,6 +338,7 @@ public class MemberReservationManageController {
 		model.addAttribute("monthlyPoint", form.getMonthlyPoint());
 		model.addAttribute("eventPoint", form.getEventPoint());
 		model.addAttribute("memberName", member.getLastName() + " " + member.getFirstName());
+		model.addAttribute("penaltyPoint", form.getPenaltyPoint());
 
 		logger.info("End cancleFinish Controller");
 		return "/admin/booking/cancle/finish";

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<body>
+<header id="front-header" class="header header-logged-in" layout:fragment="header">
+  <div class="line">
+    <div class="inner">
+      <div class="lead">日本のゴルフを、もっと豊かに、もっと上質に。</div>
+      <nav class="member">
+        <a th:href="@{/logout}" class="login">ログアウト</a>
+      </nav>
+    </div>
+  </div>
+  <div class="inner">
+    <div class="logo"><a th:href="@{/}"><img th:src="@{/images/front/logo.svg}" alt="Enjoy Golf24" width="300"></a><span>予約管理システム</span></div>
+    <div class="menu_btn sp_only"><div class="sp_menubtn"><span></span><span></span><span></span></div></div>
+    <nav id="gnavi">
+      <div class="gnavi_inner">
+      <ul>
+        <li><a th:href="@{/public/reservation/make}" class="booking1"><span>新規予約</span></a></li>
+        <li><a th:href="@{/public/reservation/info}" class="booking2"><span>予約情報</span></a></li>
+      </ul>
+      </div>
+    </nav>
+    
+  </div>
+</header>
+</body>
+</html>

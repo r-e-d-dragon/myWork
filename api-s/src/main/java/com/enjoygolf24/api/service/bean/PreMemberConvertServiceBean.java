@@ -13,6 +13,12 @@ public class PreMemberConvertServiceBean {
 
 	String bankKana;
 
+	String bankCode;
+
+	String bankBranchCode;
+
+	String bankAccountNumber;
+
 	String preMemberCode;
 
 	String aspCode;
@@ -42,10 +48,6 @@ public class PreMemberConvertServiceBean {
 	String gender;
 
 	Date birthday;
-
-	String memberGradeCode;
-
-	String memberGradeTimeCode;
 
 	String jobCode;
 

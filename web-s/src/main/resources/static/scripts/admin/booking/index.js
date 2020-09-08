@@ -3,6 +3,7 @@ $(function(){
 		var reservationDate = $('#reservationDate').val();
 		var reservationTime = $(this).closest('tr').data('timeslotname');
 		var consumedPoint = $(this).closest('tr').data('consumedpoint');
+        var gradeTypeCd = $(this).closest('tr').data('gradetypecd');
 		var batNumberCd = $(this).closest('td').data('batnumbercd');
 		var batNumber = $(this).closest('td').data('batnumber');
 
@@ -10,7 +11,8 @@ $(function(){
 		$('#registerForm #reservationTime').val(reservationTime);
 		$('#registerForm #batNumberCd').val(batNumberCd);
 		$('#registerForm #batNumber').val(batNumber);
-		$('#registerForm #consumedPoint').val(consumedPoint);
+        $('#registerForm #consumedPoint').val(consumedPoint);
+        $('#registerForm #gradeTypeCd').val(gradeTypeCd);
 
 		$('#registerForm').submit();
 		return;

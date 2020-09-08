@@ -29,4 +29,7 @@ public interface MemberRegisterService {
 
 	public boolean isUniqueEmailForPreMember(String email);
 
+	@Transactional
+	public void sendPreRequestMail(String memberCode, String memo);
+
 }

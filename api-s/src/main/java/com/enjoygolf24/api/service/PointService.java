@@ -6,7 +6,7 @@ import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
 
-import com.enjoygolf24.api.common.database.bean.TblPointMonthly;
+import com.enjoygolf24.api.common.database.bean.TblPointHistory;
 import com.enjoygolf24.api.common.database.bean.TblUser;
 import com.enjoygolf24.api.service.bean.PointManageServiceBean;
 
@@ -29,6 +29,6 @@ public interface PointService {
 
 	public int getMonthlyPointBalance(String memberCode);
 
-	public List<TblPointMonthly> getHistoryMonthly(String memberCode, int pageNo, int pageSize);
+	public List<TblPointHistory> getHistory(String memberCode, String categoryCode, int pageNo, int pageSize);
 
 }

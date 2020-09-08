@@ -31,6 +31,13 @@
 									<th>メールアドレス</th>
 									<td><input class="c-input" type="text" maxlength="256" placeholder="〇〇〇@〇〇〇.com" th:field="*{email}" value="" th:errorclass="fieldError"></td>
 								</tr>
+								<tr>
+									<th>状態</th>
+									<td colspan="3">
+										<select th:field="*{useFlagCd}" class="selectBoxCss select-option width-240" th:errorclass="fieldError">
+						                   <option th:each="useFlagCdItem : ${useFlagCdMap}" th:value="${useFlagCdItem.key}" th:text="${useFlagCdItem.value}" th:errorclass="fieldError"></option>
+						                </select>
+									</td>
 							</tbody>
 						</table>
 
@@ -65,7 +72,8 @@
 				        <td th:text="${data.email}"></td>
 				        <td>
 				          <a id="linkShowDetail" href="#" th:url="@{/admin/member/managePreUser/details}" th:value="${data.preMemberCode}" target="selectedMemberCode" th:text="情報変更"/></a>
-				          <a id="linkConvert" href="#" th:url="@{/admin/member/managePreUser/convert}" th:value="${data.preMemberCode}" target="selectedMemberCode" th:text="正会員転換"/></a>
+				          <a id="linkConfirm" th:if="${data.useFlag == '01'}" href="#" th:url="@{/admin/member/managePreUser/confirm}" th:value="${data.preMemberCode}" target="selectedMemberCode" th:text="承認"/></a>
+				          <a id="linkConvert" th:if="${data.useFlag == '02'}" href="#" th:url="@{/admin/member/managePreUser/convert}" th:value="${data.preMemberCode}" target="selectedMemberCode" th:text="正会員転換"/></a>
 				        </td>
 				    </tr>
 			    </div>

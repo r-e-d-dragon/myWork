@@ -24,7 +24,8 @@ public interface MemberMapper {
 			@Param("email") String email);
 
 	public List<TblUserPre> getPreMemberList(@Param("memberCode") String memberCode, @Param("name") String name,
-			@Param("phone") String phone, @Param("email") String email, @Param("aspCode") String aspCode);
+			@Param("phone") String phone, @Param("email") String email, @Param("aspCode") String aspCode,
+			@Param("useFlagCd") String useFlagCd);
 
 	public List<TblUser> getMemberListForPointManage(@Param("memberCode") String memberCode, @Param("name") String name,
 			@Param("phone") String phone, @Param("email") String email, @Param("aspCode") String aspCode);

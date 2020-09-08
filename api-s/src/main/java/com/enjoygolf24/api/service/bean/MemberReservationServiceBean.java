@@ -36,7 +36,7 @@ public class MemberReservationServiceBean {
 	private Integer penaltyPoint;
 
 	private String pointCategoryCode;
-	private String pointGrade;
+	private String gradeTypeCd;
 
 	private String macroName;
 	private String fromReservationDate;

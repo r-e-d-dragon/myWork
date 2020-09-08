@@ -68,6 +68,9 @@ public class MacroReservationManageListForm implements Serializable {
 	private String selectedReservationId;
 	private String reservationId;
 
+	private String startTime;
+	private String endTime;
+
 	@NotEmpty(groups = Insert0.class)
 	private List<String> chkBatNumbers;
 

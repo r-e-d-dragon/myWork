@@ -102,6 +102,8 @@ project(':api-s') {
 		compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.11'
         // https://mvnrepository.com/artifact/org.apache.commons/commons-email
         compile group: 'org.apache.commons', name: 'commons-email', version: '1.5'
+        // https://mvnrepository.com/artifact/com.univocity/univocity-parsers
+        compile group: 'com.univocity', name: 'univocity-parsers', version: '2.9.0'
        
         compile('org.webjars:jquery:3.5.1')
         compile('org.webjars:jquery-ui:1.12.1')

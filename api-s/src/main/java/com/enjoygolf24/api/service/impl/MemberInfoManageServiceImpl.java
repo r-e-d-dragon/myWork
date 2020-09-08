@@ -14,8 +14,11 @@ import org.springframework.util.StringUtils;
 
 import com.enjoygolf24.api.common.code.AuthStatusCd;
 import com.enjoygolf24.api.common.code.MailSectionCd;
+import com.enjoygolf24.api.common.code.MemberGradeCd;
+import com.enjoygolf24.api.common.code.MemberGradeTimeCd;
 import com.enjoygolf24.api.common.code.MemberTypeCd;
 import com.enjoygolf24.api.common.code.OnOffCd;
+import com.enjoygolf24.api.common.code.PreMemberUseFlagCd;
 import com.enjoygolf24.api.common.code.ProcessingCd;
 import com.enjoygolf24.api.common.constants.MemberContants;
 import com.enjoygolf24.api.common.database.bean.TblAsp;
@@ -138,14 +141,14 @@ public class MemberInfoManageServiceImpl implements MemberInfoManageService {
 	public List<TblUserPre> getPreMemberListAll(String aspCode, int pageNo, int pageSize) {
 
 		PageHelper.startPage(pageNo, pageSize);
-		return memberMapper.getPreMemberList(null, null, null, null, aspCode);
+		return memberMapper.getPreMemberList(null, null, null, null, aspCode, null);
 	}
 
 	@Override
 	public List<TblUserPre> getPreMemberList(String memberCode, String name, String phone, String email, String aspCode,
-			int pageNo, int pageSize) {
+			String useFlagCd, int pageNo, int pageSize) {
 		PageHelper.startPage(pageNo, pageSize);
-		return memberMapper.getPreMemberList(memberCode, name, phone, email, aspCode);
+		return memberMapper.getPreMemberList(memberCode, name, phone, email, aspCode, useFlagCd);
 	}
 
 	@Override
@@ -295,7 +298,7 @@ public class MemberInfoManageServiceImpl implements MemberInfoManageService {
 		member.setUpdateDate(current);
 		member.setUpdateUser(serviceBean.getLoginUserCd());
 		member.setUseFlag(serviceBean.getUseFlag());
-		member.setMemberGradeCode(serviceBean.getMemberGradeCode());
+		member.setMemberGradeCode(MemberGradeCd.FULL_MEMBER);
 		member.setGender(serviceBean.getGender());
 		member.setBirthday(serviceBean.getBirthday());
 
@@ -307,10 +310,9 @@ public class MemberInfoManageServiceImpl implements MemberInfoManageService {
 			member.setZip2(serviceBean.getZip2());
 		}
 
-		member.setMemberGradeCode(serviceBean.getMemberGradeCode());
 		member.setAdditionalLessonCd(serviceBean.getAdditionalLessonCd());
 		member.setJobCd(serviceBean.getJobCode());
-		member.setMemberGradeTimeCode(serviceBean.getMemberGradeTimeCode());
+		member.setMemberGradeTimeCode(MemberGradeTimeCd.USUAL);
 
 		memberRepository.save(member);
 
@@ -349,6 +351,20 @@ public class MemberInfoManageServiceImpl implements MemberInfoManageService {
 		updateManagerRole(member);
 
 		memberRepository.save(member);
+	}
+
+	@Override
+	@Transactional
+	public void confirm(String preMemberCode, String loginUserCode) {
+		TblUserPre member = selectPreMember(preMemberCode);
+		Timestamp current = new Timestamp(System.currentTimeMillis());
+
+		member.setUseFlag(PreMemberUseFlagCd.PRE_MEMBER_USE_FLAG_NORMAL);
+		member.setUpdateDate(current);
+		member.setUpdateUser(loginUserCode);
+
+		preMemberRepository.save(member);
+
 	}
 
 	@Override
@@ -407,9 +423,9 @@ public class MemberInfoManageServiceImpl implements MemberInfoManageService {
 	private String generateAuthUrl(TblAuthKeyManage AuthKeyManage, String memberTypeCode) {
 
 		if (MemberTypeCd.MANAGER.equals(memberTypeCode)) {
-			return String.format(ASP_AUTH_URL, "http://localhost:80", AuthKeyManage.getAuthKey());
+			return String.format(ASP_AUTH_URL, "http://enjoygolf24.com", AuthKeyManage.getAuthKey());
 		} else {
-			return String.format(MEMBER_AUTH_URL, "http://localhost:80", AuthKeyManage.getAuthKey());
+			return String.format(MEMBER_AUTH_URL, "http://enjoygolf24.com", AuthKeyManage.getAuthKey());
 		}
 
 	}

@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{front/layout/layout-front-reservation}">
+<head>
+	<title>エンジョイゴルフ24とは｜エンジョイゴルフ24</title>
+	<meta name="Keywords" content="">
+	<meta name="Description" content="">
+	<meta property="og:image" content="http://">
+</head>
+<div layout:fragment="content"><!-- /** layout contents start */ -->
+
+	<h1>部屋予約（新規）</h1>
+    <form action="#" class="booking_search">
+      <dl class="reserve">
+        <dt>店舗</dt>
+        <dd><div class="shop">
+          <select>
+            <option>曙橋店</option>
+          </select>
+          </div>
+        </dd>
+        <dt>予約日</dt>
+        <dd>
+          <div class="date"><input type="text" readonly="" name="" id="datepicker" class="hasDatepicker"></div>
+          <div class="time">
+          <select>
+            <optgroup label="AM">
+              <option>00:00～01:00</option>
+              <option>01:00～02:00</option>
+              <option>02:00～03:00</option>
+              <option>03:00～04:00</option>
+              <option>04:00～05:00</option>
+              <option>05:00～06:00</option>
+              <option>06:00～07:00</option>
+              <option>07:00～08:00</option>
+              <option>08:00～09:00</option>
+              <option>09:00～10:00</option>
+              <option>10:00～11:00</option>
+              <option>11:00～12:00</option>
+            </optgroup>
+            <optgroup label="PM">
+              <option>12:00～13:00</option>
+              <option>13:00～14:00</option>
+              <option>14:00～15:00</option>
+              <option>15:00～16:00</option>
+              <option>16:00～17:00</option>
+              <option>17:00～18:00</option>
+              <option>18:00～19:00</option>
+              <option>19:00～20:00</option>
+              <option>20:00～21:00</option>
+              <option>21:00～22:00</option>
+              <option>22:00～23:00</option>
+              <option>23:00～24:00</option>
+            </optgroup>
+          </select>
+          </div>
+        </dd>
+      </dl>
+      <button type="submit">検索</button>
+    </form>
+    <div class="frame">
+      <div class="sp_only mb10 tac"><small>一覧は横にスクロールできます。</small></div>
+      <div class="sp_scroll_table">
+        <table class="reserve_list">
+          <thead>
+            <tr>
+              <th>時間</th>
+              <th>ポイント</th>
+              <th>B101</th>
+              <th>B102</th>
+              <th>101</th>
+              <th>201</th>
+              <th>202</th>
+              <th>301</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th>00:00～01:00</th>
+              <td><div class="circle_min"><p>3P</p></div></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td>×</td>
+            </tr>
+            <tr>
+              <th>01:00～02:00</th>
+              <td><div class="circle_min"><p>3P</p></div></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td>×</td>
+            </tr>
+            <tr>
+              <th>02:00～03:00</th>
+              <td><div class="circle_min"><p>3P</p></div></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td>×</td>
+            </tr>
+            <tr>
+              <th>03:00～04:00</th>
+              <td><div class="circle_min"><p>3P</p></div></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td>×</td>
+            </tr>
+            <tr>
+              <th>04:00～05:00</th>
+              <td><div class="circle_min"><p>3P</p></div></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td>×</td>
+            </tr>
+            <tr>
+              <th>05:00～06:00</th>
+              <td><div class="circle_min"><p>3P</p></div></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td>×</td>
+            </tr>
+            <tr>
+              <th>06:00～07:00</th>
+              <td><div class="circle_min"><p>3P</p></div></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td>×</td>
+            </tr>
+            <tr>
+              <th>07:00～08:00</th>
+              <td><div class="circle_min"><p>3P</p></div></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td>×</td>
+            </tr>
+            <tr>
+              <th>08:00～09:00</th>
+              <td><div class="circle_min"><p>3P</p></div></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td>×</td>
+            </tr>
+            <tr>
+              <th>09:00～10:00</th>
+              <td><div class="circle_min navy"><p>5P</p></div></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td>×</td>
+            </tr>
+            <tr>
+              <th>10:00～:1100</th>
+              <td><div class="circle_min navy"><p>5P</p></div></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td>×</td>
+            </tr>
+            <tr>
+              <th>11:00～12:00</th>
+              <td><div class="circle_min navy"><p>5P</p></div></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td>×</td>
+            </tr>
+            <tr>
+              <th>12:00～13:00</th>
+              <td><div class="circle_min navy"><p>5P</p></div></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td>×</td>
+            </tr>
+            <tr>
+              <th>13:00～14:00</th>
+              <td><div class="circle_min red"><p>10P</p></div></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td>×</td>
+            </tr>
+            <tr>
+              <th>14:00～15:00</th>
+              <td><div class="circle_min red"><p>10P</p></div></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td>×</td>
+            </tr>
+            <tr>
+              <th>15:00～16:00</th>
+              <td><div class="circle_min red"><p>10P</p></div></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td>×</td>
+            </tr>
+            <tr>
+              <th>16:00～17:00</th>
+              <td><div class="circle_min red"><p>10P</p></div></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td>×</td>
+            </tr>
+            <tr>
+              <th>17:00～18:00</th>
+              <td><div class="circle_min red"><p>10P</p></div></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td>×</td>
+            </tr>
+            <tr>
+              <th>18:00～19:00</th>
+              <td><div class="circle_min red"><p>10P</p></div></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td>×</td>
+            </tr>
+            <tr>
+              <th>19:00～20:00</th>
+              <td><div class="circle_min red"><p>10P</p></div></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td>×</td>
+            </tr>
+            <tr>
+              <th>20:00～21:00</th>
+              <td><div class="circle_min red"><p>10P</p></div></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td>×</td>
+            </tr>
+            <tr>
+              <th>21:00～22:00</th>
+              <td><div class="circle_min red"><p>10P</p></div></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td>×</td>
+            </tr>
+            <tr>
+              <th>22:00～23:00</th>
+              <td><div class="circle_min red"><p>10P</p></div></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td>×</td>
+            </tr>
+            <tr>
+              <th>23:00～24:00</th>
+              <td><div class="circle_min red"><p>10P</p></div></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td><a href="#">○</a></td>
+              <td>×</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+</div>
+
+</body>
+</html>

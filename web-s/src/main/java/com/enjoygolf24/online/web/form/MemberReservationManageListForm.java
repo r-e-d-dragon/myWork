@@ -75,7 +75,7 @@ public class MemberReservationManageListForm implements Serializable {
 	private String monthlyPoint;
 
 	private String pointCategoryCode;
-	private String pointGrade;
+	private String gradeTypeCd;
 	private String timeSlotName;
 
 	private String status;

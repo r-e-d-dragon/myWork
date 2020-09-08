@@ -9,8 +9,6 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 /**
  * The persistent class for the tbl_reservation database table.
@@ -35,6 +33,9 @@ public class TblReservation implements Serializable {
 	@Column(name = "consumed_point")
 	private Integer consumedPoint;
 
+	@Column(name = "grade_type_cd")
+	private String gradeTypeCd;
+
 	@Column(name = "member_code")
 	private String memberCode;
 
@@ -44,16 +45,12 @@ public class TblReservation implements Serializable {
 	@Column(name = "point_category_code")
 	private String pointCategoryCode;
 
-	@Column(name = "point_grade")
-	private String pointGrade;
-
 	@Column(name = "register_date")
 	private Timestamp registerDate;
 
 	@Column(name = "register_user")
 	private String registerUser;
 
-	@Temporal(TemporalType.DATE)
 	@Column(name = "reservation_date")
 	private Date reservationDate;
 
@@ -110,6 +107,14 @@ public class TblReservation implements Serializable {
 		return this.memberCode;
 	}
 
+	public String getGradeTypeCd() {
+		return this.gradeTypeCd;
+	}
+
+	public void setGradeTypeCd(String gradeTypeCd) {
+		this.gradeTypeCd = gradeTypeCd;
+	}
+
 	public void setMemberCode(String memberCode) {
 		this.memberCode = memberCode;
 	}
@@ -132,14 +137,6 @@ public class TblReservation implements Serializable {
 
 	public void setPointCategoryCode(String pointCategoryCode) {
 		this.pointCategoryCode = pointCategoryCode;
-	}
-
-	public String getPointGrade() {
-		return this.pointGrade;
-	}
-
-	public void setPointGrade(String pointGrade) {
-		this.pointGrade = pointGrade;
 	}
 
 	public void setRegisterDate(Timestamp registerDate) {

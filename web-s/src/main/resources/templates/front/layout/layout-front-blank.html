@@ -1,0 +1,51 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html lang="ja" xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+<script type="text/javascript">
+	if((navigator.userAgent.indexOf('iPhone') > 0) || navigator.userAgent.indexOf('iPod') > 0 || (navigator.userAgent.indexOf('Android') > 0 && navigator.userAgent.indexOf('Mobile') > 0)){
+	        document.write('<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">');
+	    }else{
+	        document.write('<meta name="viewport" content="width=1200,user-scalable=yes">');
+	    }
+	</script>
+
+
+<noscript><meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"></noscript>
+    <title>エンジョイゴルフ24</title>
+	<meta name="Keywords" content="" />
+	<meta name="Description" content="" />
+	<meta property="og:image" content="http://">
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Language" content="ja">
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <link rel="stylesheet" th:href="@{/css/front/normalize.css}" media="all" />
+	<link rel="stylesheet" th:href="@{/scripts/slick/slick.css}" media="all" />
+	<link rel="stylesheet" th:href="@{/scripts/slick/slick-theme.css}" media="all" />
+	<link rel="stylesheet" th:href="@{/css/front/modal-video.min.css}" media="all" />
+	<link rel="stylesheet" th:href="@{/css/front/common.css}" media="all" />
+	<script type="text/javascript" th:src="@{http://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js}"></script>
+	<script type="text/javascript" th:src="@{/scripts/slick/slick.min.js}"></script>
+	<script type="text/javascript" th:src="@{/scripts/front/jquery-modal-video.min.js}"></script>
+	<script type="text/javascript" th:src="@{/scripts/front/common.js}"></script>
+	<script type="text/javascript" th:src="@{/scripts/common.js}"></script>
+</head>
+
+<body id="top" >
+	        <div id="content" class="clearfix">
+	        	<div id="login">
+				  <section>
+				    <div class="logo"><a th:href="@{/public}"><img th:src="@{/images/front/logo3.svg}" alt="enjoy golf24"></a></div>
+				    <div layout:replace="~{layout/common-error :: errors}"></div>
+	            	<div layout:fragment="content" th:remove="tag"></div>
+				    
+			
+				  </section>
+				</div>
+	        	
+	        </div>
+</body>
+</html>

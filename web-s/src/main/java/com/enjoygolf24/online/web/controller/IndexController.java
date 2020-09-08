@@ -21,19 +21,11 @@ public class IndexController {
         return "/front/index";
     }
 
-	@RequestMapping(value = "/public/login")
-	public String memberLogin(HttpServletRequest request, Model model) {
-		logger.info("Start memberLogin Controller");
-
-		logger.info("End memberLogin Controller");
-		return "/front/login";
-	}
-
 	@RequestMapping(value = "/login")
 	public String login(HttpServletRequest request, Model model) {
 		logger.info("Start login Controller");
 
 		logger.info("End login Controller");
-		return "/index";
+		return "/front/login";
 	}
 }
