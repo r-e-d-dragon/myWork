@@ -6,9 +6,7 @@
     <title>会員情報変更</title>
     <link rel="stylesheet" th:href="@{/css/admin/mypage.css}"></link>
     <link rel="stylesheet" th:href="@{/css/admin/memberInfoManage/index.css}"></link>
-    <script type="text/javascript" th:src="@{/scripts/datepicker-ja.js}"></script>
     <script type="text/javascript" th:src="@{/scripts/admin/point/details.js}"></script>
-    <script type="text/javascript" th:src="@{/scripts/calendar_upcoming.js}"></script>
 </head>
 <body>
 <div layout:fragment="content"><!-- /** layout contents start */ -->
@@ -30,14 +28,8 @@
 									<td><p th:text="*{memberName}"></p></td>
 								</tr>
 								<tr>
-									<th>会員レベル</th>
-									<td><p th:text="*{memberGradeName}"></p></td>
 									<th>メールアドレス</th>
 									<td><p th:text="*{email}"></p></td>
-								</tr>
-								<tr>
-									<th>生年月日</th>
-									<td><p th:text="*{birthday}"></p></td>
 									<th>登録日</th>
 									<td><p th:text="*{registerDate}"></p></td>
 								</tr>
@@ -61,65 +53,43 @@
 		          <section class="m-b-55">
 					<div class="c-box-account m-b-20">
 		              <h2 class="c-ttl c-ttl__03 m-b-20">ポイント情報を入力してください</h2>
-   
-		                <div class="row align-items-start m-b-20">
-		                <div class="d-flex justify-content-between align-items-start m-t-10">
-		                  <span class="text c-ttl c-ttl__04">ポイント有効期限区分</span>
-		                  <span class="tag-icon tag-red m-t-5">必須</span>
-		                </div>
-		                <div>
-		                  <select th:field="*{pointExpirationTermCd}" class="selectBoxCss select-option width-240" th:errorclass="fieldError">
-		                    <option th:each="pointExpirationTermCdItem : ${pointExpirationTermCdMap}" th:value="${pointExpirationTermCdItem.key}" th:text="${pointExpirationTermCdItem.value}" th:errorclass="fieldError"></option>
-		                  </select>
-		                </div>
-		               </div>
-		               
-		               <div class="row align-items-start m-b-20">
-		                <div class="d-flex justify-content-between align-items-start m-t-10">
-		                  <span class="text c-ttl c-ttl__04">ポイント区分</span>
-		                  <span class="tag-icon tag-red m-t-5">必須</span>
-		                </div>
-		                <div>
-		                  <select th:field="*{monthlyPointTypeCd}" class="monthlyPointTypeCd selectBoxCss select-option width-240" th:errorclass="fieldError">
-		                    <option th:each="monthlyPointTypeCdItem : ${monthlyPointTypeCdMap}" th:value="${monthlyPointTypeCdItem.key}" th:text="${monthlyPointTypeCdItem.value}" th:errorclass="fieldError"></option>
-		                  </select>
-		                  
-		                  <select th:field="*{carriablePointTypeCd}" class="carriablePointTypeCd selectBoxCss select-option width-240" th:errorclass="fieldError">
-		                    <option th:each="carriablePointTypeCdItem : ${carriablePointTypeCdMap}" th:value="${carriablePointTypeCdItem.key}" th:text="${carriablePointTypeCdItem.value}" th:errorclass="fieldError"></option>
-		                  </select>
-		                </div>
-		               </div>
-	
-						<div class="forCustomPoint">
-						
-				            <div class="row align-items-start m-b-20">
-				              <div class="d-flex justify-content-between align-items-start m-t-10"><span class="text c-ttl c-ttl__04">タイトル</span>
-				                <span class="tag-icon tag-red m-t-5">必須</span>
-				              </div>
-				              <div>
-				                <input class="c-input" type="text" maxlength="1200" placeholder="イベント" style="width: 240px;" th:field="*{memo}" th:errorclass="fieldError">
-				              </div>
-				            </div>
-				            
-				            <div class="row align-items-start m-b-20">
+   					            
+					            <div class="row align-items-start m-b-20">
+				                <div class="d-flex justify-content-between align-items-start m-t-10">
+				                  <span class="text c-ttl c-ttl__04">適用月</span>
+				                  <span class="tag-icon tag-red m-t-5">必須</span>
+				                </div>
+				                <div>
+				                  <div class="box-register d-flex">
+					              <div class="item" th:each="pointAppliedMonthCdItem, item : ${pointAppliedMonthCdMap}">
+					                <label class="c-radio" th:for="${'pointAppliedMonthCd'+(item.index+1)}">
+					                  <input type="radio" th:field="*{pointAppliedMonthCd}" th:value="${pointAppliedMonthCdItem.key}" />
+					                  <div class="box flex-column">
+					                    <div th:text="${pointAppliedMonthCdItem.value}"></div>
+					                    <div class="circle">&nbsp;</div>
+					                  </div>
+					                </label>
+					              </div>
+					            </div>
+				                </div>
+				               </div>
+				               
+				               <div class="row align-items-start m-b-20">
 				              <div class="d-flex justify-content-between align-items-start m-t-10"><span class="text c-ttl c-ttl__04">ポイント値</span>
 				                <span class="tag-icon tag-red m-t-5">必須</span>
 				              </div>
 				              <div>
-				                <input class="c-input number" type="text" maxlength="10" placeholder="50" style="width: 240px; text-align: right; padding-right: 18px;" th:field="*{pointVariation}" th:errorclass="fieldError"><span style="line-height:3;">　pt</span>
-				              </div>
-				            </div>	       
-			            </div>
-			            
+				                <input class="c-input number" type="text" maxlength="10" placeholder="50" style="width: 240px; text-align: right; padding-right: 18px;" th:field="*{pointVariation}" th:errorclass="fieldError">
+				                <div style="display:inline; line-height:3;">
+				                	<i class="fas fa-plus-square m-r-5 m-l-5"></i><i class="fas fa-minus-square"></i>
+				                	<p class="m-t-10"><small>※<span th:text="*{pointVariationMin}"></span>から<span th:text="*{pointVariationMax}"></span>まで入力して下さい。</small></p>
+				                	<input type="hidden" th:field="*{pointVariationDefault}"><input type="hidden" th:field="*{pointVariationMin}"><input type="hidden" th:field="*{pointVariationMax}"><input type="hidden" th:field="*{pointVariationSize}">
+				                </div>
 
-					            <div class="row align-items-start m-b-20">
-					              <div class="d-flex justify-content-between align-items-start m-t-10"><span class="text c-ttl c-ttl__04">有効期限開始日</span><span class="tag-icon tag-red m-t-5">必須</span></div>
-					              <div>
-					              	<input class="c-input calInput" type="text" th:field="*{termStartDate}" th:errorclass="fieldError" placeholder="" style="width: 240px;">
-					              </div>
-					            </div>
-				     
-			      
+				              </div>
+				            </div>
+				                              
+				    
 			            		        
 		            </div>
 		            </section>     
