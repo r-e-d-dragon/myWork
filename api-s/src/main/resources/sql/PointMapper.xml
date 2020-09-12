@@ -43,6 +43,48 @@
                 ) cdm
                 on p.point_code = cdm.cd   
     </select>
+    
+    <select id="getHistoryList" resultType="com.enjoygolf24.api.common.database.mybatis.bean.PointHistoryListManage">
+    	select *
+        from 
+            (
+             select * 
+                    , cast(start_date as date) as registerDateFormatted
+             from tbl_point_history
+             <if test="memberCode != null and memberCode != ''">
+             where member_code = #{memberCode}
+             </if>
+             )p
+             inner join 
+                (select
+                  *
+                 from tbl_user
+                 <where>
+	                 <if test="aspCode != null and aspCode != ''">
+	                 and asp_code = #{aspCode}
+	                 </if>
+	                 <if test="name != null and name != ''">
+		                and CONCAT(last_name,first_name) like CONCAT('%',REPLACE(#{name},'%','¥%'),'%') ESCAPE '¥'
+		                or CONCAT(last_name_kana,first_name_kana) like CONCAT('%',REPLACE(#{name},'%','¥%'),'%') ESCAPE '¥'
+		            </if>            
+		            <if test="phone != null and phone != ''">
+		                 and phone like CONCAT('%',REPLACE(#{phone},'%','¥%'),'%') ESCAPE '¥'
+		            </if>
+		            <if test="email != null and email != ''">
+		                 and email like CONCAT('%',REPLACE(#{email},'%','¥%'),'%') ESCAPE '¥'
+		            </if>
+                 </where>
+                )u
+             on p.member_code = u.member_code
+             inner join
+                 (select
+                    cd
+                    ,name AS pointTypeName
+                 from code_master
+                 where code_type='007'
+                ) cdm
+                on p.point_code = cdm.cd   
+    </select>
 
 
 </mapper>

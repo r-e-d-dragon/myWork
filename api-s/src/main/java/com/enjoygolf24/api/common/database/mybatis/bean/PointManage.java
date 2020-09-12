@@ -10,6 +10,8 @@ public class PointManage implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
+	private Long pointManageId;
+
 	private String aspCode;
 
 	private String aspName;
@@ -31,4 +33,11 @@ public class PointManage implements Serializable {
 	private String email;
 
 	private String phone;
+
+	private String categoryCode;
+	private String pointType;
+	private Integer consumedPoint;
+	private Integer pointAmount;
+	private String startDate;
+	private String endDate;
 }

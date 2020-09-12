@@ -100,7 +100,7 @@
         order by mtime.time_table_code, cdm.cd
     </select>
 
-    <select id="getMemberPointManageList" resultType="com.enjoygolf24.api.common.database.mybatis.bean.MemberReservationManage">
+    <select id="getMemberPointManageList" resultType="com.enjoygolf24.api.common.database.mybatis.bean.PointManage">
         select 
             pm.id                   as point_manage_id
           , pm.member_code          as member_code
@@ -112,7 +112,7 @@
           , to_char(pm.end_date, 'YYYY/MM/DD')      as end_date
           , pm.category_code        as category_code
         from tbl_point_manage pm
-        <where>
+        where
             pm.member_code =  #{memberCode} 
             <if test="categoryCode != null and categoryCode != ''">
                 and pm.category_code = #{categoryCode}
@@ -120,7 +120,9 @@
             <if test="reservationDate != null and reservationDate != ''">
                 and to_date(#{reservationDate}, 'YYYY/MM/DD') between pm.start_date and pm.end_date
             </if>
-        </where>
+            <if test="categoryCode = '001'">
+                and pm.start_date > (DATE_TRUNC('month', now()) +'-1 Day')
+            </if>
         order by pm.end_date, pm.start_date
     </select>
 

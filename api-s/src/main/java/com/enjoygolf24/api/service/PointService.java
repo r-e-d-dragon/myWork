@@ -31,4 +31,9 @@ public interface PointService {
 
 	public List<TblPointHistory> getHistory(String memberCode, String categoryCode, int pageNo, int pageSize);
 
+	public List<TblPointHistory> getHistoryListAll(String aspCode, int pageNo, int pageSize);
+
+	public List<TblPointHistory> getHistoryList(String memberCode, String name, String phone, String aspCode,
+			String email, int pageNo, int pageSize);
+
 }

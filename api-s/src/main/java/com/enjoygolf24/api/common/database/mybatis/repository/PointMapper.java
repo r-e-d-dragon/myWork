@@ -17,4 +17,7 @@ public interface PointMapper {
 
 	public List<TblPointHistory> getHistory(@Param("memberCode") String memberCode,
 			@Param("categoryCode") String categoryCode);
+
+	public List<TblPointHistory> getHistoryList(@Param("memberCode") String memberCode, @Param("name") String name,
+			@Param("phone") String phone, @Param("email") String email, @Param("aspCode") String aspCode);
 }

@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
@@ -16,12 +17,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.enjoygolf24.api.common.code.PointCategoryCd;
+import com.enjoygolf24.api.common.code.ReservationStatusCd;
 import com.enjoygolf24.api.common.database.bean.MstPenaltyPoint;
 import com.enjoygolf24.api.common.database.bean.MstReservationLimit;
 import com.enjoygolf24.api.common.database.bean.TblPointHistory;
 import com.enjoygolf24.api.common.database.bean.TblPointManage;
 import com.enjoygolf24.api.common.database.bean.TblPointManagePK;
 import com.enjoygolf24.api.common.database.bean.TblReservation;
+import com.enjoygolf24.api.common.database.bean.TblUser;
 import com.enjoygolf24.api.common.database.jpa.repository.MemberRepository;
 import com.enjoygolf24.api.common.database.jpa.repository.MstPenaltyPointRepository;
 import com.enjoygolf24.api.common.database.jpa.repository.MstReservationLimitRepository;
@@ -29,6 +32,7 @@ import com.enjoygolf24.api.common.database.jpa.repository.PointHistoryRepository
 import com.enjoygolf24.api.common.database.jpa.repository.PointManageRepository;
 import com.enjoygolf24.api.common.database.jpa.repository.ReservationRepository;
 import com.enjoygolf24.api.common.database.mybatis.bean.MemberReservationManage;
+import com.enjoygolf24.api.common.database.mybatis.bean.PointManage;
 import com.enjoygolf24.api.common.database.mybatis.bean.ReservationPointTimeTableInfo;
 import com.enjoygolf24.api.common.database.mybatis.repository.ReservationMapper;
 import com.enjoygolf24.api.common.utility.DateUtility;
@@ -93,11 +97,11 @@ public class MemberReservationManageServiceImpl implements MemberReservationMana
 		String reservationDate = serviceBean.getReservationDate();
 		// 月ポイント情報取得
 		if (PointCategoryCd.MONTLY_POINT.equals(serviceBean.getPointCategoryCode())) {
-			List<MemberReservationManage> pointList = getMemberPointManageList(serviceBean.getMemberCode(),
+			List<PointManage> pointList = getMemberPointManageList(serviceBean.getMemberCode(),
 					PointCategoryCd.MONTLY_POINT, serviceBean.getReservationDate());
 			// TODO 当月分は当月のみ使用、ポイントがあっても開始日か過ぎてないと使えない。
 			// TODO 来月は、来月の使用ポイントから計算
-			Optional<MemberReservationManage> mPoint = pointList.stream()
+			Optional<PointManage> mPoint = pointList.stream()
 					.filter(p -> p.getStartDate().startsWith(reservationDate.substring(0, 7))).findFirst();
 			if (mPoint.isPresent()) {
 				System.out.println("getPointManageId > " + mPoint.get().getPointManageId());
@@ -115,11 +119,11 @@ public class MemberReservationManageServiceImpl implements MemberReservationMana
 
 		// イベントポイント情報取得
 		if (PointCategoryCd.EVENT_POINT.equals(serviceBean.getPointCategoryCode())) {
-			List<MemberReservationManage> pointList = getMemberPointManageList(serviceBean.getMemberCode(),
+			List<PointManage> pointList = getMemberPointManageList(serviceBean.getMemberCode(),
 					PointCategoryCd.EVENT_POINT, serviceBean.getReservationDate());
 
 			int consumedPoint = serviceBean.getConsumedPoint();
-			for (MemberReservationManage point : pointList) {
+			for (PointManage point : pointList) {
 				if (point.getPointAmount() - consumedPoint >= 0) {
 					// ポイント履歴登録
 					insertPointHistory(serviceBean, point, reservation.getReservationId(), consumedPoint);
@@ -171,8 +175,8 @@ public class MemberReservationManageServiceImpl implements MemberReservationMana
 	 * @return
 	 */
 	@Transactional
-	private TblPointHistory insertPointHistory(MemberReservationServiceBean serviceBean,
-			MemberReservationManage pointManage, String reservationId, int consomedPoint) {
+	private TblPointHistory insertPointHistory(MemberReservationServiceBean serviceBean, PointManage pointManage,
+			String reservationId, int consomedPoint) {
 
 		TblPointHistory pointHistory = new TblPointHistory();
 
@@ -204,8 +208,8 @@ public class MemberReservationManageServiceImpl implements MemberReservationMana
 	 * @throws InvocationTargetException
 	 */
 	@Transactional
-	private TblPointManage updateMemberPointManage(MemberReservationServiceBean serviceBean,
-			MemberReservationManage pointManage, int consomedPoint) {
+	private TblPointManage updateMemberPointManage(MemberReservationServiceBean serviceBean, PointManage pointManage,
+			int consomedPoint) {
 
 		TblPointManagePK pk = new TblPointManagePK();
 		pk.setId(pointManage.getPointManageId());
@@ -383,8 +387,7 @@ public class MemberReservationManageServiceImpl implements MemberReservationMana
 	}
 
 	@Override
-	public List<MemberReservationManage> getMemberPointManageList(String memberCode, String categoryCode,
-			String reservationDate) {
+	public List<PointManage> getMemberPointManageList(String memberCode, String categoryCode, String reservationDate) {
 		return reservationMapper.getMemberPointManageList(memberCode, categoryCode, reservationDate);
 	}
 
@@ -400,5 +403,57 @@ public class MemberReservationManageServiceImpl implements MemberReservationMana
 			boolean valide) {
 		return reservationMapper.getMemberReservationList(reservationNumber, memberCode, aspCode, batNumber,
 				reservationDate, reservationTime, status, valide);
+	}
+
+	@Override
+	public MemberReservationManage getMemberReservationInfo(String memberCode, String reservationDate) {
+
+		MemberReservationManage reservation = new MemberReservationManage();
+		// 会員情報取得
+		TblUser member = memberRepository.findByMemberCode(memberCode);
+		reservation.setTblUser(member);
+
+		// 月ポイント情報取得
+		List<PointManage> totMonPointList = getMemberPointManageList(memberCode, PointCategoryCd.MONTLY_POINT, null);
+		List<PointManage> validMonPointList = getMemberPointManageList(memberCode, PointCategoryCd.MONTLY_POINT,
+				reservationDate);
+		// イベントポイント情報取得
+		List<PointManage> totEvtPointList = getMemberPointManageList(memberCode, PointCategoryCd.EVENT_POINT, null);
+		List<PointManage> validEvtPointList = getMemberPointManageList(memberCode, PointCategoryCd.EVENT_POINT,
+				reservationDate);
+
+		reservation.setTotalMonthlyPoint(totMonPointList.stream().mapToInt(x -> x.getPointAmount()).sum());
+		reservation.setValidMonthlyPoint(validMonPointList.stream().mapToInt(x -> x.getPointAmount()).sum());
+
+		reservation.setTotalEventPoint(totEvtPointList.stream().mapToInt(x -> x.getPointAmount()).sum());
+		reservation.setValidEventPoint(validEvtPointList.stream().mapToInt(x -> x.getPointAmount()).sum());
+
+		List<MemberReservationManage> reservationList = getMemberReservationAllList(null, memberCode, null, null, null,
+				null, ReservationStatusCd.STATUS_FIXED, true);
+		reservation.setReservationList(reservationList);
+
+		reservation.setMonthlyReservationCount(
+				reservationList.stream().filter(p -> p.getPointCategoryCode().equals(PointCategoryCd.MONTLY_POINT))
+						.collect(Collectors.toList()).size());
+		reservation.setEventReservationCount(
+				reservationList.stream().filter(p -> p.getPointCategoryCode().equals(PointCategoryCd.EVENT_POINT))
+						.collect(Collectors.toList()).size());
+
+		// 予約制限情報取得
+		MstReservationLimit master = getMemberReservationLimit(member.getMemberTypeCd(),
+				DateUtility.getDate(reservationDate));
+		if (master != null) {
+			reservation.setLimitReservationCount(master.getReservationLimit());
+			reservation.setLimitEventReservationCount(master.getEventLimit());
+			reservation.setLimitMonthlyReservationCount(master.getMonthlyLimit());
+			reservation.setLimitReservationPoint(master.getMaxReservationPoint());
+		} else {
+			reservation.setLimitReservationCount(0);
+			reservation.setLimitEventReservationCount(0);
+			reservation.setLimitMonthlyReservationCount(0);
+			reservation.setLimitReservationPoint(0);
+		}
+
+		return reservation;
 	}
 }

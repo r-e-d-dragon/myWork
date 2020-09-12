@@ -3,6 +3,7 @@ package com.enjoygolf24.api.common.database.mybatis.bean;
 
 import java.io.Serializable;
 import java.sql.Time;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.enjoygolf24.api.common.database.bean.TblUser;
@@ -70,4 +71,5 @@ public class MemberReservationManage implements Serializable {
 
 	TblUser tblUser;
 	List<MemberReservationManage> reservationList;
+	List<PointManage> pointList = new ArrayList<PointManage>();
 }

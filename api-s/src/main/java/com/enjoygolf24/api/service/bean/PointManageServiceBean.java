@@ -9,14 +9,8 @@ public class PointManageServiceBean {
 
 	private String memberCode;
 
-	private String pointExpirationTermCd;
-
-	private String pointTypeCd;
-
 	private String pointVariation;
 
-	private String termStartDate;
-
-	private String memo;
+	private String pointAppliedMonthCd;
 
 }

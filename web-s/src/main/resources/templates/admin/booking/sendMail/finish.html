@@ -2,8 +2,8 @@
 <html lang="ja" xmlns="http://www.w3.org/1999/xhtml"
     xmlns:th="http://www.thymeleaf.org"
     xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout-main}">
-<head th:with="urlValue=${'5;URL='} + @{/}">
-    <title>パスワード初期化完了</title>
+<head>
+    <title>メール送信完了</title>
     <link rel="stylesheet" th:href="@{/css/admin/mypage.css}"></link>
 </head>
 <body>
@@ -11,20 +11,15 @@
 
         <div class="wrapper mypage-custom-index" id="body-index">
             <section>
-	        　　　　　　<h1 class="c-ttl c-ttl__01 m-b-50">パスワード初期化完了</h1>
-	        　　　　　　<p class="m-b-50">パスワード初期化完了しました。</p>
-	           
-	           <div class="c-box-confirm text-center m-b-70">
+            　　　　　　<h1 class="c-ttl c-ttl__01 m-b-50">メール送信完了</h1>
+            　　　　　　<p class="m-b-50">メール送信完了しました。</p>
+
             <div class="m-b-55">
-              <a class="c-btn btn-primary m-b-15" href="#" th:url="@{/}">ログインページへ</a>
+              <a class="c-btn btn-primary m-b-15" href="#" th:url="@{/admin/main}">管理者トップへ</a>
             </div>
-          </div>
-	        
-	       
-             
             </section>
-            
         </div>
+
 </div> <!-- /** layout contents finish */ -->
 </body>
 </html>

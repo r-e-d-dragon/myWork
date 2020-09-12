@@ -50,7 +50,7 @@ public class MemberInfoManageController {
 	AspService aspService;
 
 	@RequestMapping(value = "/index", method = RequestMethod.POST)
-	public String aspListIndex(@ModelAttribute("memberInfoManageListForm") MemberInfoManageListForm form,
+	public String index(@ModelAttribute("memberInfoManageListForm") MemberInfoManageListForm form,
 			HttpServletRequest request,
 	        Model model) {
 		logger.info("Start memberList Controller");

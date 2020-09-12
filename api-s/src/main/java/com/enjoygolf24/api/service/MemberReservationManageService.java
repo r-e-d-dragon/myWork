@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.enjoygolf24.api.common.database.bean.MstReservationLimit;
 import com.enjoygolf24.api.common.database.bean.TblReservation;
 import com.enjoygolf24.api.common.database.mybatis.bean.MemberReservationManage;
+import com.enjoygolf24.api.common.database.mybatis.bean.PointManage;
 import com.enjoygolf24.api.common.database.mybatis.bean.ReservationPointTimeTableInfo;
 import com.enjoygolf24.api.service.bean.MemberReservationServiceBean;
 
@@ -34,8 +35,7 @@ public interface MemberReservationManageService {
 
 	public TblReservation getReservation(String reservationId);
 
-	public List<MemberReservationManage> getMemberPointManageList(String memberCode, String categoryCode,
-			String reservationDate);
+	public List<PointManage> getMemberPointManageList(String memberCode, String categoryCode, String reservationDate);
 
 	public MstReservationLimit getMemberReservationLimit(String memberTypeCode, Date reservationDate);
 
@@ -45,4 +45,7 @@ public interface MemberReservationManageService {
 
 	public List<ReservationPointTimeTableInfo> getViewReservationPonitTimeTableInfo(Date dateTime,
 			Date validateStartTerm);
+
+	public MemberReservationManage getMemberReservationInfo(String memberCode, String reservationDate);
+
 }

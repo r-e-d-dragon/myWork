@@ -1,99 +1,35 @@
 $(function(){
+	var defaultVal = parseInt($('#pointVariationDefault').val(),10);
+	var min = parseInt($('#pointVariationMin').val(),10);
+	var max = parseInt($('#pointVariationMax').val(),10);
+	var size = parseInt($('#pointVariationSize').val(),10);
 	
-	if($('#pointExpirationTermCd').val() == '02'){
-		setCarriablePointType();
-		if($('#carriablePointTypeCd').val() == '06'){
-			setCustom();
-			setPointExpirationTerm();
-			}
-		}else{
-			setMonthlyPointType();
-			if($('#monthlyPointTypeCd').val() == '06'){
-				setCustom();
-				setPointExpirationTermNull();
-			}else{
-				setNotCustom();
-			}
-	}
+	$('#pointVariation').val(defaultVal);
 	
-	
-	$('#pointExpirationTermCd').change(function(e) {
-		if($('#pointExpirationTermCd').val() == '02'){
-			setCarriablePointType();
-			if($('#carriablePointTypeCd').val() == '06'){
-				setCustom();
-				setPointExpirationTerm();
-				}
-		}else{
-			setMonthlyPointType();
-			if($('#monthlyPointTypeCd').val() == '06'){
-				setCustom();
-				setPointExpirationTermNull();
-			}else{
-				setNotCustom();
-			}
-		}
-	});
-	
-	$('#carriablePointTypeCd').change(function(e) {
-		if($('#carriablePointTypeCd').val() == '06'){
-				setCustom();
-				setPointExpirationTerm();
-			}else{
-				setNotCustom();
-			}
-	});
-	
-	$('#monthlyPointTypeCd').change(function(e) {
-		if($('#monthlyPointTypeCd').val() == '06'){
-				setCustom();
-				setPointExpirationTermNull();
-			}else{
-				setNotCustom();
-			}
-	});
-
-	
-	function setCustom(){
-		$('.forCustomPoint').show();
-		$("#memo").attr("disabled", false);
-		$("#pointVariation").attr("disabled", false);
-	}
-	
-	function setNotCustom(){
-		$('.forCustomPoint').hide();
-		$("#memo").attr("disabled", true);
-		$("#pointVariation").attr("disabled", true);
-		setPointExpirationTermNull()
-	}
-	
-	function setCarriablePointType(){
-		$('.carriablePointTypeCd').show();
-		$("#carriablePointTypeCd").attr("disabled", false);
-		$('.monthlyPointTypeCd').hide();
-		$("#monthlyPointTypeCd").attr("disabled", true);
-	}
-	
-	function setMonthlyPointType(){
-		$('.carriablePointTypeCd').hide();
-		$("#carriablePointTypeCd").attr("disabled", true);
-		$('.monthlyPointTypeCd').show();
-		$("#monthlyPointTypeCd").attr("disabled", false);
-	}
-	
-	function setPointExpirationTerm(){
-		//$('.forCarriablePoint').show();
-		//$("#termStartDate").attr("disabled", false);
-		//$("#termEndDate").attr("disabled", false);
-	}
-	
-	function setPointExpirationTermNull(){		
-		//$('.forCarriablePoint').hide();
-		//$("#termStartDate").attr("disabled", true);
-		//$("#termEndDate").attr("disabled", true);
+	$(".fa-plus-square").click(function(){
 		
-	}
+		var pointVariation = parseInt($('#pointVariation').val(),10);
+		
+		if(pointVariation + size <= max){
+			$('#pointVariation').val(pointVariation + size);
+		}
+		
+	});
 	
+	$(".fa-minus-square").click(function(){
+		
+		var pointVariation = parseInt($('#pointVariation').val(),10);
+		
+		if(pointVariation - size >= min){
+			$('#pointVariation').val(pointVariation - size);
+		}
+		
+	});
+	
+	$('#pointVariation').keydown(function (e) {
+	    event.preventDefault();	
+       return false;
+	});
 	
 	
 });

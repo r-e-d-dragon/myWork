@@ -27,4 +27,13 @@ public interface PointContants {
 	// terms for event point
 	public static final int TERM_FOR_OLDBIE = 6;
 
+	// point Manage values
+	public static final int DEFAULT = 20;
+
+	public static final int MAX = 200;
+
+	public static final int MIN = 5;
+
+	public static final int SIZE = 5;
+
 }

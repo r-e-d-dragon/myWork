@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import com.enjoygolf24.api.common.code.PointCategoryCd;
 import com.enjoygolf24.api.common.database.bean.TblUser;
 import com.enjoygolf24.api.common.database.mybatis.bean.MemberReservationManage;
+import com.enjoygolf24.api.common.database.mybatis.bean.PointManage;
 import com.enjoygolf24.api.common.utility.LoginUtility;
 import com.enjoygolf24.api.service.MemberInfoManageService;
 import com.enjoygolf24.api.service.MemberReservationManageService;
@@ -78,15 +79,15 @@ public class ReservationController {
 		String stringDate = dateFormat.format(new Date());
 
 		// 月ポイント情報取得
-		List<MemberReservationManage> totMonPointList = memberReservationManageService
+		List<PointManage> totMonPointList = memberReservationManageService
 				.getMemberPointManageList(LoginUtility.getLoginUser().getMemberCode(), PointCategoryCd.MONTLY_POINT, null);
-		List<MemberReservationManage> validMonPointList = memberReservationManageService
+		List<PointManage> validMonPointList = memberReservationManageService
 				.getMemberPointManageList(LoginUtility.getLoginUser().getMemberCode(), PointCategoryCd.MONTLY_POINT, stringDate);
 
 		// 月ポイント情報取得
-		List<MemberReservationManage> totEvtPointList = memberReservationManageService
+		List<PointManage> totEvtPointList = memberReservationManageService
 				.getMemberPointManageList(LoginUtility.getLoginUser().getMemberCode(), PointCategoryCd.EVENT_POINT, null);
-		List<MemberReservationManage> validEvtPointList = memberReservationManageService
+		List<PointManage> validEvtPointList = memberReservationManageService
 				.getMemberPointManageList(LoginUtility.getLoginUser().getMemberCode(), PointCategoryCd.EVENT_POINT, stringDate);
 
 		reservation.setTotalMonthlyPoint(totMonPointList.stream().mapToInt(x -> x.getPointAmount()).sum());

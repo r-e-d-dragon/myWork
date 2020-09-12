@@ -28,6 +28,7 @@ import com.enjoygolf24.api.common.database.bean.TblUser;
 import com.enjoygolf24.api.common.database.jpa.repository.CodeMasterRepository;
 import com.enjoygolf24.api.common.database.jpa.repository.ViewReservationPointTimeTableRepository;
 import com.enjoygolf24.api.common.database.mybatis.bean.MemberReservationManage;
+import com.enjoygolf24.api.common.database.mybatis.bean.PointManage;
 import com.enjoygolf24.api.common.database.mybatis.bean.ReservationPointTimeTableInfo;
 import com.enjoygolf24.api.common.utility.DateUtility;
 import com.enjoygolf24.api.common.utility.DefaultPageSizeUtility;
@@ -207,7 +208,7 @@ public class MemberReservationManageController {
 				return registerReservation(form, model);
 			}
 			// 月ポイント情報取得
-			List<MemberReservationManage> validMonPointList = memberReservationManageService.getMemberPointManageList(
+			List<PointManage> validMonPointList = memberReservationManageService.getMemberPointManageList(
 					form.getMemberCode(), PointCategoryCd.MONTLY_POINT, form.getReservationDate());
 			if (consumedPoint > validMonPointList.stream().mapToInt(x -> x.getPointAmount()).sum()) {
 				model.addAttribute("memberReservationRegisterForm", form);
@@ -222,7 +223,7 @@ public class MemberReservationManageController {
 				return registerReservation(form, model);
 			}
 			// 月ポイント情報取得
-			List<MemberReservationManage> validEvtPointList = memberReservationManageService.getMemberPointManageList(
+			List<PointManage> validEvtPointList = memberReservationManageService.getMemberPointManageList(
 					form.getMemberCode(), PointCategoryCd.EVENT_POINT, form.getReservationDate());
 			if (consumedPoint > validEvtPointList.stream().mapToInt(x -> x.getPointAmount()).sum()) {
 				model.addAttribute("memberReservationRegisterForm", form);
@@ -492,13 +493,13 @@ public class MemberReservationManageController {
 	 */
 	private void setMemberPointInfoForm(MemberReservationRegisterForm form) {
 		// 月ポイント情報取得
-		List<MemberReservationManage> monthlyPointList = memberReservationManageService
+		List<PointManage> monthlyPointList = memberReservationManageService
 				.getMemberPointManageList(form.getMemberCode(), PointCategoryCd.MONTLY_POINT, null);
 		// 月ポイント合計
 		int totalMonthlyPoint = monthlyPointList.stream().mapToInt(x -> x.getPointAmount()).sum();
 
 		// イベントポイント情報取得
-		List<MemberReservationManage> eventPointList = memberReservationManageService
+		List<PointManage> eventPointList = memberReservationManageService
 				.getMemberPointManageList(form.getMemberCode(), PointCategoryCd.EVENT_POINT, null);
 		// イベントポイント合計
 		int totalEventPoint = eventPointList.stream().mapToInt(x -> x.getPointAmount()).sum();

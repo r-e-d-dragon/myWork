@@ -1,8 +1,6 @@
 package com.enjoygolf24.api.service.impl;
 
 import java.sql.Timestamp;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -16,10 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.enjoygolf24.api.common.code.CodeTypeCd;
-import com.enjoygolf24.api.common.code.MemberGradeCd;
+import com.enjoygolf24.api.common.code.PointAppliedMonthCd;
 import com.enjoygolf24.api.common.code.PointCategoryCd;
-import com.enjoygolf24.api.common.code.PointTypeCd;
-import com.enjoygolf24.api.common.constants.PointContants;
 import com.enjoygolf24.api.common.database.bean.TblPointHistory;
 import com.enjoygolf24.api.common.database.bean.TblPointManage;
 import com.enjoygolf24.api.common.database.bean.TblPointManagePK;
@@ -92,60 +88,41 @@ public class PointServiceImpl implements PointService {
 	@Transactional
 	public void insertPoint(PointManageServiceBean serviceBean) {
 		Timestamp current = new Timestamp(System.currentTimeMillis());
+		Date startDate;
 
-		String memo = null;
-		String pointTypeCd = serviceBean.getPointTypeCd();
-		Integer pointVariation = null;
-		Date endDateForMonthly = null;
-
-		if (PointTypeCd.BIRHDAY.equals(pointTypeCd)) {
-			pointVariation = PointContants.EVENT_POINT_FOR_BIRHDAY;
-		} else if (PointTypeCd.INTRODUCTION.equals(pointTypeCd)) {
-			pointVariation = PointContants.EVENT_POINT_FOR_INTRODUCTION;
-		} else if (PointTypeCd.MONTLY_POINT.equals(pointTypeCd)) {
-			TblUser member = memberRepository.findByMemberCode(serviceBean.getMemberCode());
-			pointVariation = (MemberGradeCd.FULL_MEMBER.equals(member.getMemberGradeCode()))
-					? PointContants.MONTLY_POINT_FOR_FULL_MENBER
-					: PointContants.MONTLY_POINT_FOR_HALF_MENBER;
-		} else if (PointTypeCd.OLDBIE.equals(pointTypeCd)) {
-			pointVariation = PointContants.EVENT_POINT_FOR_OLDBIE;
-		} else {
-			pointVariation = Integer.parseInt(serviceBean.getPointVariation());
-			memo = serviceBean.getMemo();
-		}
+		Integer pointVariation = Integer.parseInt(serviceBean.getPointVariation());
 
 		TblPointHistory pointHistory = new TblPointHistory();
 
-		// pointHistory.setCategoryCode(serviceBean.getPointExpirationTermCd());
 		pointHistory.setConsumedPoint(pointVariation);
 		pointHistory.setMemberCode(serviceBean.getMemberCode());
 
-		if (PointCategoryCd.MONTLY_POINT.equals(serviceBean.getPointExpirationTermCd())) {
-			pointHistory.setStartDate(DateUtility.getDate(serviceBean.getTermStartDate()));
-			LocalDate convertedDate = LocalDate.parse(serviceBean.getTermStartDate(),
-					DateTimeFormatter.ofPattern("yyyy/M/d"));
-			convertedDate = convertedDate.withDayOfMonth(convertedDate.getMonth().length(convertedDate.isLeapYear()));
+		Calendar c = Calendar.getInstance();
+		c.set(Calendar.DAY_OF_MONTH, 1);
 
-			endDateForMonthly = java.sql.Date.valueOf(convertedDate);
-			pointHistory.setExpireDate(endDateForMonthly);
-
-		} else {
-			pointHistory.setStartDate(DateUtility.getDate(serviceBean.getTermStartDate()));
-			pointHistory.setExpireDate(DateUtility.getDate("9999/12/31"));
+		if (PointAppliedMonthCd.NEXT_MONTH.equals(serviceBean.getPointAppliedMonthCd())) {
+			c.add(Calendar.MONTH, 1);
 		}
 
-		pointHistory.setPointCode(pointTypeCd);
+		startDate = c.getTime();
+
+		pointHistory.setStartDate(startDate);
+
+		pointHistory.setExpireDate(DateUtility.getDate("9999/12/31"));
+
+		// TODO:PointCode?
+		pointHistory.setPointCode("00");
 		pointHistory.setRegisterDate(current);
 		pointHistory.setRegisterUser(serviceBean.getLoginUserCd());
 		pointHistory.setUpdateDate(current);
 		pointHistory.setUpdateUser(serviceBean.getLoginUserCd());
-		// pointHistory.setMemo(memo);
 
 		pointHistoryRepository.save(pointHistory);
 
 		// set pointManage
-		TblPointManage tblPointManage = pointManageRepository
-				.findByIdMemberCodeAndCategoryCode(serviceBean.getMemberCode(), serviceBean.getPointExpirationTermCd());
+		// TblPointManage tblPointManage = pointManageRepository
+		// .findByIdMemberCodeAndCategoryCode(serviceBean.getMemberCode(),
+		// PointCategoryCd.EVENT_POINT);
 		/*
 		 * if (tblPointManage != null) {
 		 * tblPointManage.setConsumedPoint(pointVariation);
@@ -163,19 +140,13 @@ public class PointServiceImpl implements PointService {
 
 		TblPointManage newPointManage = new TblPointManage();
 		newPointManage.setId(pk);
-		newPointManage.setCategoryCode(serviceBean.getPointExpirationTermCd());
-		newPointManage
-				.setStartDate(DateUtility.toTimestampDayOfFirst(DateUtility.getDate(serviceBean.getTermStartDate())));
+		newPointManage.setStartDate(DateUtility.toTimestampDayOfFirst(startDate));
 
-		if (PointCategoryCd.MONTLY_POINT.equals(serviceBean.getPointExpirationTermCd())) {
-
-			newPointManage.setEndDate(DateUtility.toTimestampDayOfLast(endDateForMonthly));
-		} else {
-			newPointManage.setEndDate(DateUtility.toTimestampDayOfLast(DateUtility.getDate("9999/12/31")));
-		}
+		newPointManage.setEndDate(DateUtility.toTimestampDayOfLast(DateUtility.getDate("9999/12/31")));
+		newPointManage.setCategoryCode(PointCategoryCd.EVENT_POINT);
 
 		newPointManage.setPointAmount(pointVariation);
-		newPointManage.setPointType(pointTypeCd);
+		newPointManage.setPointType("00");
 		newPointManage.setRegisterDate(current);
 		newPointManage.setRegisterUser(serviceBean.getLoginUserCd());
 		newPointManage.setUpdateDate(current);
@@ -205,6 +176,20 @@ public class PointServiceImpl implements PointService {
 	public List<TblPointHistory> getHistory(String memberCode, String categoryCode, int pageNo, int pageSize) {
 		PageHelper.startPage(pageNo, pageSize);
 		return pointMapper.getHistory(memberCode, categoryCode);
+	}
+
+	@Override
+	public List<TblPointHistory> getHistoryListAll(String aspCode, int pageNo, int pageSize) {
+
+		PageHelper.startPage(pageNo, pageSize);
+		return pointMapper.getHistoryList(null, null, null, null, aspCode);
+	}
+
+	@Override
+	public List<TblPointHistory> getHistoryList(String memberCode, String name, String phone, String email,
+			String aspCode, int pageNo, int pageSize) {
+		PageHelper.startPage(pageNo, pageSize);
+		return pointMapper.getHistoryList(memberCode, name, phone, email, aspCode);
 	}
 
 }
