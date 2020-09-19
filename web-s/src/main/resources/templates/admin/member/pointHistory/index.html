@@ -24,15 +24,21 @@
 							<tbody>
 								<tr>
 									<th>会員番号</th>
-									<td><input class="c-input" type="text" maxlength="20" placeholder="" th:field="*{memberCode}" value="" th:errorclass="fieldError"><input type="hidden" th:field="*{aspCode}"></td>
-									<th>お名前</th>
+									<td><input class="c-input" type="text" maxlength="20" placeholder="" th:field="*{memberCode}" th:errorclass="fieldError"><input type="hidden" th:field="*{aspCode}"></td>
+									<th>会員名</th>
 									<td><input class="c-input" type="text" maxlength="20" placeholder="山田花子"  th:field="*{name}" th:errorclass="fieldError"></td>
 								</tr>
 								<tr>
-									<th>電話番号</th>
-									<td><input class="c-input" type="text" th:field="*{phone}" th:errorclass="fieldError" maxlength="20" placeholder="00-0000-0000"></td>
-									<th>メールアドレス</th>
-									<td><input class="c-input" type="text" maxlength="256" placeholder="〇〇〇@〇〇〇.com" th:field="*{email}" value="" th:errorclass="fieldError"></td>
+									<th>管理者番号</th>
+									<td><input class="c-input" type="text" maxlength="20" placeholder="" th:field="*{registerUserCode}" th:errorclass="fieldError"></td>
+									<th>管理者名</th>
+									<td><input class="c-input" type="text" maxlength="20" placeholder="山田花子"  th:field="*{registerUserName}" th:errorclass="fieldError"></td>
+								</tr>
+								<tr>
+									<th>登録年月</th>
+									<td><input type="month" class="c-input" th:field="*{registeredMonth}" min="2020-01"></td>
+									<th>適用年月</th>
+									<td><input type="month" class="c-input" th:field="*{startMonth}" min="2020-01"></td>
 								</tr>
 							</tbody>
 						</table>
@@ -53,29 +59,29 @@
                 </div>
                <table class="table-detail m-b-40" >
                  <tr>				        
-			        <th style="width: 10%;">履歴番号</th>
+			        <th style="width: 5%;">履歴番号</th>
 					<th>お名前</th>
 					<th>ポイント区分</th>
 					<th>ポイント数</th>
-					<th>予約番号</th>
+					<th>使用ポイント</th>
 					<th>開始日</th>  
 					<th>登録日</th>
 					<th>登録者</th>
-					<!-- <th>操作</th> -->
+					<th>各種管理</th>
 			    </tr>
 			    <div th:if="${pageInfo != null}" >
 			         <tr th:each="data , itemStat : ${pageInfo.list}" th:class="${itemStat.odd}? 'odd' : 'even' ">
-				        <td th:text="${data.pointHistoryId}"></td>
+				        <td th:text="${data.id}"></td>
 				        <td th:text="${data.lastName + ' ' + data.firstName}"></td>
-				        <td th:text="${data.pointCode}"></td>
+				        <td th:text="${data.pointTypeName}"></td>
+				        <td th:text="${data.pointAmount}"></td>
 				        <td th:text="${data.consumedPoint}"></td>
-				        <td th:text="${data.reservationId}"></td>
-				        <td th:text="${data.startDate}"></td>
+				        <td th:text="${data.startDateFormatted}"></td>
 				        <td th:text="${data.registerDateFormatted}"></td>
 				        <td th:text="${data.registerUser}"></td>
-				        <!-- <td>
-				          <a id="linkShowDetail" href="#" th:url="@{/admin/member/pointHistory/details}" th:value="${data.pointHistoryId}" target="selectedPointHistoryId" th:text="詳細"/></a>
-				        </td> -->
+				        <td>
+				          <a id="linkShowDetail" href="#" th:url="@{/admin/member/pointHistory/details}" th:value="${data.id + ',' + data.memberCode}" target="selectedId,selectedMemberCode" th:text="詳細"/></a>
+				        </td>
 				    </tr>
 			    </div>
                </table>
@@ -88,7 +94,8 @@
                         <a class="c-link-text m-l-20" th:unless="${pageInfo.isIsLastPage()}" href="#" th:url="@{/admin/member/pointHistory/list/next}">次へ&gt;</a>
                     </div>
 				    <input type="hidden" th:field="*{pageNo}" th:value="${pageInfo.pageNum}" />
-				    <input type="hidden" th:field="*{selectedPointHistoryId}" />
+				    <input type="hidden" th:field="*{selectedId}" />
+				    <input type="hidden" th:field="*{selectedMemberCode}" />
                </div>
             </section> 
         </div>

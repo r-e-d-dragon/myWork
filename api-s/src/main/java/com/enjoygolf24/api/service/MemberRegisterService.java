@@ -32,4 +32,7 @@ public interface MemberRegisterService {
 	@Transactional
 	public void sendPreRequestMail(String memberCode, String memo);
 
+	@Transactional
+	public void sendPreRequestMailToManager(String memberCode, String memo);
+
 }

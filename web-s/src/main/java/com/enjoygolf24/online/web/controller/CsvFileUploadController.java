@@ -53,6 +53,12 @@ public class CsvFileUploadController {
 
 		initForm(form, model);
 
+		// 翌月
+		String nextMonth = DateUtility.toDateString(DateUtility.SLASH_DATE_FORMAT_YEAR_MONTH,
+				DateUtility.addMonth(DateUtility.toDate(DateUtility.getCurrentTimestamp()), 1));
+
+		form.setTargetMonth(nextMonth);
+
 		logger.info("End fileUploadInfo Controller");
 		return "/admin/booking/fileUpload/index";
 	}
@@ -68,6 +74,8 @@ public class CsvFileUploadController {
 		}
 
 		initForm(form, model);
+
+		model.addAttribute("targetMonth", form.getTargetMonth());
 
 		String fileType = "CANDY-A";
 
@@ -86,7 +94,7 @@ public class CsvFileUploadController {
 
 			// 元ファイル名に日付をつける
 			String filename = form.getFilename().substring(0, form.getFilename().lastIndexOf('.')) + "-"
-					+ DateUtility.getCurrentDateTime("yyyyMMddHHmmssSSS")
+					+ DateUtility.getCurrentDateTime(DateUtility.PLAIN_DATE_FORMAT_FULL_WITH_MS)
 					+ form.getFilename().substring(form.getFilename().lastIndexOf('.'));
 
 			// アップロードファイルを置く

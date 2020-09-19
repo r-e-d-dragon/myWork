@@ -3,26 +3,17 @@
     xmlns:th="http://www.thymeleaf.org"
     xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout-main}">
 <head>
-    <title>予約登録</title>
+    <title>ファイルダウンロード</title>
     <link rel="stylesheet" th:href="@{/css/admin/mypage.css}"></link>
-
-    <script>
-    $(document).on('change', ':file', function() {
-        var input = $(this),
-        numFiles = input.get(0).files ? input.get(0).files.length : 1,
-        label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
-        input.parent().parent().next(':text').val(label);
-    });
-    </script>
 </head>
 <body>
 <div layout:fragment="content"><!-- /** layout contents start */ -->
 
-    <form id="form"  method="post" enctype="multipart/form-data" th:action="@{/admin/booking/fileUpload/finish}" th:object="${fileUploadListForm}">
+    <form id="form"  method="post" th:action="@{/admin/booking/fileDownload}" th:object="${fileDownloadForm}">
 
         <div class="wrapper mypage-custom-index" id="body-index">
             <section>
-                <h1 class="c-ttl c-ttl__01 m-b-50">CSVFILEアップロード</h1>
+                <h1 class="c-ttl c-ttl__01 m-b-50">CSVファイルダウンロード</h1>
                 <div class="form-register">
                   <section class="m-b-55">
                     <div class="c-box-account m-b-20">
@@ -42,18 +33,12 @@
                   </section>
                 </div>
                 
-				<div class="input-group">
-				    <label class="input-group-btn">
-				        <span class="btn btn-primary">
-				                          参照<input type="file" th:field="*{multipartFile}" style="display:none">
-				        </span>
-				    </label>
-				    <input type="text" name="filename" class="c-input" readonly>
-				</div>                
-            
                 <div class="c-box-confirm text-center m-b-70">
                 <div class="align-items-center registerBtn">
-                  <a id="registerBtn" class="c-btn btn-primary btn-confirm m-b-15" href="#" th:url="@{/admin/booking/fileUpload/finish}">登録</a>
+                  <a id="registerBtn" class="c-btn btn-primary btn-confirm m-b-15" href="#" th:url="@{/admin/booking/fileDownload/csv}">ダウンロード</a>
+                </div>
+                <div class="m-b-55">
+                  <a class="c-btn swap btn-primary m-b-15" href="#" th:url="@{/admin/main}">管理者トップへ</a>
                 </div>
                 </div>
 

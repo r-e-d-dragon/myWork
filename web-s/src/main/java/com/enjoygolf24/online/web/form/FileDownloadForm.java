@@ -4,15 +4,13 @@ import java.io.Serializable;
 
 import javax.validation.constraints.NotBlank;
 
-import org.springframework.web.multipart.MultipartFile;
-
 import com.enjoygolf24.api.common.validator.groups.Insert0;
 
 import lombok.Data;
 
 @Data
 //@GroupSequence({BasicInfo.class, AdvanceInfo.class})
-public class FileUploadListForm implements Serializable {
+public class FileDownloadForm implements Serializable {
 
 	private static final long serialVersionUID = -937204629996741357L;
 
@@ -20,14 +18,10 @@ public class FileUploadListForm implements Serializable {
 	String aspCode;
 	String memberCode;
 	String filenpath;
-	@NotBlank(groups = Insert0.class)
+	String filename;
 	String targetMonth;
 
-	@NotBlank(groups = Insert0.class)
-	String filename;
-
 	String loginUserCd;
-	String uploadDate;
-
-	MultipartFile multipartFile;
+	String downloadDate;
+	String downloadUserCd;
 }

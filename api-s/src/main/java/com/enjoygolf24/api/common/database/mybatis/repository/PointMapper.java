@@ -1,23 +1,17 @@
 package com.enjoygolf24.api.common.database.mybatis.repository;
 
-import java.util.Date;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import com.enjoygolf24.api.common.database.bean.TblPointHistory;
+import com.enjoygolf24.api.common.database.bean.TblPointManage;
 
 @Mapper
 public interface PointMapper {
 
-	public int getMonthlyPointBalance(@Param("memberCode") String memberCode, @Param("month") int month);
-
-	public int getCarriablePointBalance(@Param("memberCode") String memberCode, @Param("currentDate") Date currentDate);
-
-	public List<TblPointHistory> getHistory(@Param("memberCode") String memberCode,
-			@Param("categoryCode") String categoryCode);
-
-	public List<TblPointHistory> getHistoryList(@Param("memberCode") String memberCode, @Param("name") String name,
-			@Param("phone") String phone, @Param("email") String email, @Param("aspCode") String aspCode);
+	public List<TblPointManage> getHistoryList(@Param("memberCode") String memberCode, @Param("name") String name,
+			@Param("registerUserCode") String registerUserCode, @Param("registerUserName") String registerUserName,
+			@Param("registeredMonth") String registeredMonth, @Param("startMonth") String startMonth,
+			@Param("aspCode") String aspCode);
 }

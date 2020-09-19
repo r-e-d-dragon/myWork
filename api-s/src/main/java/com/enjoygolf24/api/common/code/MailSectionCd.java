@@ -8,4 +8,6 @@ public class MailSectionCd {
 
 	public static final String PRE_MEMBER_REGESTERED = "03";
 
+	public static final String PRE_MEMBER_REGESTERED_FOR_MANAGER = "04";
+
 }

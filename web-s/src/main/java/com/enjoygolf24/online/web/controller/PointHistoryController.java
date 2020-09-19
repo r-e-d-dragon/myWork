@@ -15,7 +15,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.enjoygolf24.api.common.database.bean.TblPointHistory;
+import com.enjoygolf24.api.common.code.CodeTypeCd;
+import com.enjoygolf24.api.common.database.bean.TblPointManage;
 import com.enjoygolf24.api.common.utility.DefaultPageSizeUtility;
 import com.enjoygolf24.api.common.utility.LoginUtility;
 import com.enjoygolf24.api.common.validator.groups.Search0;
@@ -61,15 +62,16 @@ public class PointHistoryController {
 		initListForm(form, model);
 		form.setPageNo(DefaultPageSizeUtility.PAGE_FIRST);
 		
-		List<TblPointHistory> pointHistoryList = pointService.getHistoryListAll(form.getAspCode(), form.getPageNo(),
+		List<TblPointManage> pointHistoryList = pointService.getHistoryListAll(form.getAspCode(), form.getPageNo(),
 				form.getPageSize());
 		
-		PageInfo<TblPointHistory> pageInfo = new PageInfo<TblPointHistory>(pointHistoryList);
+		PageInfo<TblPointManage> pageInfo = new PageInfo<TblPointManage>(pointHistoryList);
 		model.addAttribute("pageInfo", pageInfo);
 
 		form.setPointHistoryList(pointHistoryList);
 
-		model.addAttribute("modelPointHistoryListt", pointHistoryList);
+		model.addAttribute("modelPointHistoryList", pointHistoryList);
+		model.addAttribute("pointHistoryListForm", form);
 
 		logger.info("End pointHistory Controller");
 		return "/admin/member/pointHistory/index";
@@ -83,14 +85,15 @@ public class PointHistoryController {
 		initListForm(form, model);
 		form.setPageNo(DefaultPageSizeUtility.PAGE_FIRST);
 
-		List<TblPointHistory> pointHistoryList = pointService.getHistoryListAll(form.getAspCode(), form.getPageNo(),
+		List<TblPointManage> pointHistoryList = pointService.getHistoryListAll(form.getAspCode(), form.getPageNo(),
 				form.getPageSize());
 
-		PageInfo<TblPointHistory> pageInfo = new PageInfo<TblPointHistory>(pointHistoryList);
+		PageInfo<TblPointManage> pageInfo = new PageInfo<TblPointManage>(pointHistoryList);
 		model.addAttribute("pageInfo", pageInfo);
 		form.setPointHistoryList(pointHistoryList);
 
-		model.addAttribute("modelPointHistoryListt", pointHistoryList);
+		model.addAttribute("modelPointHistoryList", pointHistoryList);
+		model.addAttribute("pointHistoryListForm", form);
 
 		logger.info("End pointHistory Controller");
 		
@@ -108,14 +111,17 @@ public class PointHistoryController {
 
 		initListForm(form, model);
 
-		List<TblPointHistory> pointHistoryList = pointService.getHistoryList(form.getMemberCode(),
-				form.getName(), form.getPhone(), form.getEmail(), form.getAspCode(), form.getPageNo(),
+		List<TblPointManage> pointHistoryList = pointService.getHistoryList(form.getMemberCode(),
+				form.getName(), form.getRegisterUserCode(), form.getRegisterUserName(), form.getRegisteredMonth(),
+				form.getStartMonth(),
+				form.getAspCode(), form.getPageNo(),
 				form.getPageSize());
 
-		PageInfo<TblPointHistory> pageInfo = new PageInfo<TblPointHistory>(pointHistoryList);
+		PageInfo<TblPointManage> pageInfo = new PageInfo<TblPointManage>(pointHistoryList);
 		model.addAttribute("pageInfo", pageInfo);
 		form.setPointHistoryList(pointHistoryList);
-		model.addAttribute("modelPointHistoryListt", pointHistoryList);
+		model.addAttribute("modelPointHistoryList", pointHistoryList);
+		model.addAttribute("pointHistoryListForm", form);
 
 		logger.info("End pointHistory Controller");
 
@@ -135,13 +141,16 @@ public class PointHistoryController {
 
 		form.setPageNo(form.getPageNo() - 1);
 
-		List<TblPointHistory> pointHistoryList = pointService.getHistoryList(form.getMemberCode(), form.getName(),
-				form.getPhone(), form.getEmail(), form.getAspCode(), form.getPageNo(), form.getPageSize());
+		List<TblPointManage> pointHistoryList = pointService.getHistoryList(form.getMemberCode(), form.getName(),
+				form.getRegisterUserCode(), form.getRegisterUserName(), form.getRegisteredMonth(), form.getStartMonth(),
+				form.getAspCode(),
+				form.getPageNo(), form.getPageSize());
 
-		PageInfo<TblPointHistory> pageInfo = new PageInfo<TblPointHistory>(pointHistoryList);
+		PageInfo<TblPointManage> pageInfo = new PageInfo<TblPointManage>(pointHistoryList);
 		model.addAttribute("pageInfo", pageInfo);
 		form.setPointHistoryList(pointHistoryList);
-		model.addAttribute("modelPointHistoryListt", pointHistoryList);
+		model.addAttribute("modelPointHistoryList", pointHistoryList);
+		model.addAttribute("pointHistoryListForm", form);
 
 		logger.info("End pointHistory Controller");
 
@@ -161,17 +170,40 @@ public class PointHistoryController {
 
 		form.setPageNo(form.getPageNo() + 1);
 
-		List<TblPointHistory> pointHistoryList = pointService.getHistoryList(form.getMemberCode(), form.getName(),
-				form.getPhone(), form.getEmail(), form.getAspCode(), form.getPageNo(), form.getPageSize());
+		List<TblPointManage> pointHistoryList = pointService.getHistoryList(form.getMemberCode(), form.getName(),
+				form.getRegisterUserCode(), form.getRegisterUserName(), form.getRegisteredMonth(), form.getStartMonth(),
+				form.getAspCode(),
+				form.getPageNo(), form.getPageSize());
 
-		PageInfo<TblPointHistory> pageInfo = new PageInfo<TblPointHistory>(pointHistoryList);
+		PageInfo<TblPointManage> pageInfo = new PageInfo<TblPointManage>(pointHistoryList);
 		model.addAttribute("pageInfo", pageInfo);
 		form.setPointHistoryList(pointHistoryList);
-		model.addAttribute("modelPointHistoryListt", pointHistoryList);
+		model.addAttribute("modelPointHistoryList", pointHistoryList);
+		model.addAttribute("pointHistoryListForm", form);
 
 		logger.info("End pointHistory Controller");
 
 		return "/admin/member/pointHistory/index";
+	}
+
+	@RequestMapping(value = "/details", method = RequestMethod.POST)
+	public String details(@ModelAttribute PointHistoryListForm form, BindingResult result, Model model) {
+
+		TblPointManage pointHistory = pointService.getHistory(form.getSelectedId(), form.getSelectedMemberCode());
+
+		model.addAttribute("pointHistory", pointHistory);
+		model.addAttribute("pointHistoryId", pointHistory.getId().getId());
+		model.addAttribute("memberCode", pointHistory.getId().getMemberCode());
+		model.addAttribute("pointTypeName",
+				cdMapService.getName(CodeTypeCd.POINT_TYPE_CD, pointHistory.getPointType()));
+		model.addAttribute("pointCategoryName",
+				cdMapService.getName(CodeTypeCd.POINT_CATEGORY_CD, pointHistory.getCategoryCode()));
+
+		model.addAttribute("memberName",
+				memberInfoManageService.selectMember(pointHistory.getId().getMemberCode()).getUserName());
+
+		return "/admin/member/pointHistory/details";
+
 	}
 
 

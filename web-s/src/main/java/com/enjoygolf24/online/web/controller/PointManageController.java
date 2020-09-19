@@ -18,11 +18,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.enjoygolf24.api.common.code.CodeTypeCd;
-import com.enjoygolf24.api.common.code.PointCategoryCd;
-import com.enjoygolf24.api.common.constants.PointContants;
+import com.enjoygolf24.api.common.database.bean.TblPointManage;
 import com.enjoygolf24.api.common.database.bean.TblUser;
 import com.enjoygolf24.api.common.database.mybatis.bean.MemberReservationManage;
-import com.enjoygolf24.api.common.database.mybatis.bean.PointManage;
 import com.enjoygolf24.api.common.utility.DefaultPageSizeUtility;
 import com.enjoygolf24.api.common.utility.LoginUtility;
 import com.enjoygolf24.api.common.validator.groups.All;
@@ -32,6 +30,7 @@ import com.enjoygolf24.api.service.CdMapService;
 import com.enjoygolf24.api.service.MemberInfoManageService;
 import com.enjoygolf24.api.service.MemberReservationManageService;
 import com.enjoygolf24.api.service.PointService;
+import com.enjoygolf24.online.web.form.PointHistoryListForm;
 import com.enjoygolf24.online.web.form.PointManageForm;
 import com.enjoygolf24.online.web.form.PointManageListForm;
 import com.github.pagehelper.PageInfo;
@@ -219,6 +218,28 @@ public class PointManageController {
 		return "/admin/member/point/details";
 	}
 
+	@RequestMapping(value = "/history", method = RequestMethod.POST)
+	public String list(@ModelAttribute PointManageForm form,
+			Model model) {
+
+		PointHistoryListForm historyForm = new PointHistoryListForm();
+
+		initListForm(historyForm, model, form.getMemberCode());
+
+		List<TblPointManage> pointHistoryList = pointService.getHistoryList(historyForm.getMemberCode(),
+				historyForm.getName(), historyForm.getRegisterUserCode(), historyForm.getRegisterUserName(),
+				historyForm.getRegisteredMonth(), historyForm.getStartMonth(), historyForm.getAspCode(),
+				historyForm.getPageNo(), historyForm.getPageSize());
+
+		PageInfo<TblPointManage> pageInfo = new PageInfo<TblPointManage>(pointHistoryList);
+		model.addAttribute("pageInfo", pageInfo);
+		historyForm.setPointHistoryList(pointHistoryList);
+		model.addAttribute("modelPointHistoryList", pointHistoryList);
+		model.addAttribute("pointHistoryListForm", historyForm);
+
+		return "/admin/member/pointHistory/index";
+	}
+
 
 
 	private void initListForm(PointManageListForm form, Model model) {
@@ -229,35 +250,45 @@ public class PointManageController {
 	}
 
 	private void initDetailForm(PointManageForm form, Model model, String memberCode) {
-		form.init(pointService, memberCode, PointContants.DEFAULT, PointContants.MIN, PointContants.MAX,
-				PointContants.SIZE);
+		form.init(pointService, memberCode);
 		form.setLoginUserCd(LoginUtility.getLoginUser().getMemberCode());
-
-		MemberReservationManage reservation = new MemberReservationManage();
 
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/M/d");
 		String stringDate = dateFormat.format(new Date());
 
-		// 月ポイント情報取得
-		List<PointManage> totMonPointList = memberReservationManageService
-				.getMemberPointManageList(memberCode, PointCategoryCd.MONTLY_POINT, null);
-		List<PointManage> validMonPointList = memberReservationManageService
-				.getMemberPointManageList(memberCode, PointCategoryCd.MONTLY_POINT, stringDate);
-		// 月ポイント情報取得
+		// TODO ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+//		MemberReservationManage reservation = new MemberReservationManage();
+//
+//		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/M/d");
+//		String stringDate = dateFormat.format(new Date());
+//
+//		// 月ポイント情報取得
+//		List<MemberReservationManage> totMonPointList = memberReservationManageService
+//				.getMemberPointManageList(memberCode, PointCategoryCd.MONTLY_POINT, null);
+//		List<MemberReservationManage> validMonPointList = memberReservationManageService
+//				.getMemberPointManageList(memberCode, PointCategoryCd.MONTLY_POINT, stringDate);
+//		// 月ポイント情報取得
+//
+//
+//		List<MemberReservationManage> totEvtPointList = memberReservationManageService
+//				.getMemberPointManageList(memberCode, PointCategoryCd.EVENT_POINT, null);
+//		List<MemberReservationManage> validEvtPointList = memberReservationManageService
+//				.getMemberPointManageList(memberCode, PointCategoryCd.EVENT_POINT, stringDate);
+//
+//		reservation.setTotalMonthlyPoint(totMonPointList.stream().mapToInt(x -> x.getPointAmount()).sum());
+//		reservation.setTotalEventPoint(totEvtPointList.stream().mapToInt(x -> x.getPointAmount()).sum());
+//		reservation.setValidMonthlyPoint(validMonPointList.stream().mapToInt(x -> x.getPointAmount()).sum());
+//		reservation.setValidEventPoint(validEvtPointList.stream().mapToInt(x -> x.getPointAmount()).sum());
+		// TODO ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
 
+		MemberReservationManage reservation = memberReservationManageService.getMemberReservationInfo(memberCode,
+				stringDate);
 
-		List<PointManage> totEvtPointList = memberReservationManageService
-				.getMemberPointManageList(memberCode, PointCategoryCd.EVENT_POINT, null);
-		List<PointManage> validEvtPointList = memberReservationManageService
-				.getMemberPointManageList(memberCode, PointCategoryCd.EVENT_POINT, stringDate);
-
-		reservation.setTotalMonthlyPoint(totMonPointList.stream().mapToInt(x -> x.getPointAmount()).sum());
-		reservation.setTotalEventPoint(totEvtPointList.stream().mapToInt(x -> x.getPointAmount()).sum());
-		reservation.setValidMonthlyPoint(validMonPointList.stream().mapToInt(x -> x.getPointAmount()).sum());
-		reservation.setValidEventPoint(validEvtPointList.stream().mapToInt(x -> x.getPointAmount()).sum());
-
-		form.setCarriablePointBalance(reservation.getValidEventPoint());
+		// TODO: modify point of next month
+		form.setEventPointBalance(reservation.getValidEventPoint());
 		form.setMonthlyPointBalance(reservation.getValidMonthlyPoint());
+		form.setEventPointBalanceNextMonth(reservation.getTotalEventPoint());
+		form.setMonthlyPointBalanceNextMonth(reservation.getTotalMonthlyPoint());
 
 		setModelMapper(model);
 	}
@@ -265,6 +296,14 @@ public class PointManageController {
 	private void setModelMapper(Model model) {
 		model.addAttribute("pointAppliedMonthCdMap", cdMapService.createMap(CodeTypeCd.POINT_APPLIED_MONTH));
 
+	}
+
+	private void initListForm(PointHistoryListForm form, Model model, String memberCode) {
+		form.setMemberCode(memberCode);
+		String aspCode = LoginUtility.getLoginUser().getAspCode();
+		if (!aspService.getAspByName("本社").getAspCode().equals(aspCode)) {
+			form.setAspCode(aspCode);
+		}
 	}
 
 }

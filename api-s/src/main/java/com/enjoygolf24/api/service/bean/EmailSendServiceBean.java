@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.enjoygolf24.api.common.code.MailSectionCd;
 import com.enjoygolf24.api.common.database.bean.TblAsp;
 import com.enjoygolf24.api.common.database.bean.TblMailMaster;
 import com.enjoygolf24.api.common.database.bean.TblUser;
@@ -31,6 +32,8 @@ public class EmailSendServiceBean {
 
 	public static final String PHONE_NUMBER = "${PHONE_NUMBER}";
 
+	public static final String EMAIL_ADDRESS = "${EMAIL_ADDRESS}";
+
 	public static final String MEMO = "${MEMO}";
 
 	@Setter(AccessLevel.NONE)
@@ -44,9 +47,6 @@ public class EmailSendServiceBean {
 
 	@Setter(AccessLevel.NONE)
 	private String targetEmailAddress;
-
-	@Setter(AccessLevel.NONE)
-	private String bccEmailAddress;
 
 	@Setter(AccessLevel.NONE)
 	private String senderName;
@@ -87,12 +87,17 @@ public class EmailSendServiceBean {
 
 	public EmailSendServiceBean(String mailSectionCd, TblUserPre member, TblAsp asp, String memo) {
 		this(mailSectionCd);
-		targetName = member.getLastName() + member.getFirstName() + "様";
-		this.targetEmailAddress = member.getEmail();
-		this.bccEmailAddress = asp.getAspEmail();
+		if (MailSectionCd.PRE_MEMBER_REGESTERED.equals(mailSectionCd)) {
+			targetName = member.getLastName() + member.getFirstName() + "様";
+			this.targetEmailAddress = member.getEmail();
+		} else {
+			targetName = asp.getAspName() + " " + asp.getManagerName();
+			this.targetEmailAddress = asp.getAspEmail();
+		}
 
 		putReplace(MEMBER_NAME, member.getLastName() + member.getFirstName());
 		putReplace(API_NAME, asp.getAspName());
+		putReplace(EMAIL_ADDRESS, member.getEmail());
 		putReplace(PHONE_NUMBER, member.getPhone());
 		putReplace(MEMO, memo);
 

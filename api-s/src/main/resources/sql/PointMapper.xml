@@ -2,59 +2,43 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.enjoygolf24.api.common.database.mybatis.repository.PointMapper">
-
-    <select id="getMonthlyPointBalance" resultType="java.lang.Integer">
-		SELECT COALESCE(sum(consumed_point), 0)
-        from tbl_point_history
-        where EXTRACT(MONTH FROM start_date) = #{month}
-        and category_code = '01'
-        and member_code = #{memberCode}    
-    </select>
-    
-    <select id="getCarriablePointBalance" resultType="java.lang.Integer">
-		SELECT COALESCE(sum(consumed_point), 0)
-		from tbl_point_history
-		where 
-		<![CDATA[
-		start_date <= #{currentDate}
-		]]>
-        and category_code = '02'
-		and member_code = #{memberCode}
-    </select>
-    
-     <select id="getHistory" resultType="com.enjoygolf24.api.common.database.mybatis.bean.PointHistoryManage">
-    	select *
-        from 
-            (
-             select * 
-                    , cast(start_date as date) as registerDateFormatted
-             from tbl_point_history
-             where member_code = #{memberCode}
-             <if test="categoryCode != null and categoryCode != ''">
-	            and category_code = #{categoryCode}
-	            </if>
-             )p
-             inner join
-                 (select
-                    cd
-                    ,name AS pointTypeName
-                 from code_master
-                 where code_type='007'
-                ) cdm
-                on p.point_code = cdm.cd   
-    </select>
     
     <select id="getHistoryList" resultType="com.enjoygolf24.api.common.database.mybatis.bean.PointHistoryListManage">
     	select *
         from 
             (
              select * 
-                    , cast(start_date as date) as registerDateFormatted
-             from tbl_point_history
+             		, cast(start_date as date) as startDateFormatted
+                    , cast(register_date as date) as registerDateFormatted
+             from tbl_point_manage
+             <where>
              <if test="memberCode != null and memberCode != ''">
-             where member_code = #{memberCode}
+             and member_code = #{memberCode}
              </if>
+             <if test="registerUserCode != null and registerUserCode != ''">
+             and register_user = #{registerUserCode}
+             </if>
+             <if test="registeredMonth != null and registeredMonth != ''">
+             and EXTRACT(YEAR FROM register_date) || '-' || EXTRACT(MONTH FROM register_date) = #{registeredMonth}
+             </if>
+             <if test="startMonth != null and startMonth != ''">
+			 and EXTRACT(YEAR FROM start_date) || '-' || EXTRACT(MONTH FROM start_date) = #{startMonth}
+             </if>
+             </where>
              )p
+             inner join
+             	(select
+             	  member_code as registerUserCode
+             	 ,last_name || '　' ||first_name as registerUserName
+             	 from tbl_user
+             	 where
+             	 	member_type_cd = '01'	
+             	 	<if test="registerUserName != null and registerUserName != ''">
+		                and CONCAT(last_name,first_name) like CONCAT('%',REPLACE(#{registerUserName},'%','¥%'),'%') ESCAPE '¥'
+		                or CONCAT(last_name_kana,first_name_kana) like CONCAT('%',REPLACE(#{registerUserName},'%','¥%'),'%') ESCAPE '¥'
+		            </if>
+             	)m
+             on p.register_user = m.registerUserCode
              inner join 
                 (select
                   *
@@ -66,13 +50,8 @@
 	                 <if test="name != null and name != ''">
 		                and CONCAT(last_name,first_name) like CONCAT('%',REPLACE(#{name},'%','¥%'),'%') ESCAPE '¥'
 		                or CONCAT(last_name_kana,first_name_kana) like CONCAT('%',REPLACE(#{name},'%','¥%'),'%') ESCAPE '¥'
-		            </if>            
-		            <if test="phone != null and phone != ''">
-		                 and phone like CONCAT('%',REPLACE(#{phone},'%','¥%'),'%') ESCAPE '¥'
-		            </if>
-		            <if test="email != null and email != ''">
-		                 and email like CONCAT('%',REPLACE(#{email},'%','¥%'),'%') ESCAPE '¥'
-		            </if>
+		            </if>   
+		            and member_type_cd != '01'        
                  </where>
                 )u
              on p.member_code = u.member_code
@@ -81,9 +60,9 @@
                     cd
                     ,name AS pointTypeName
                  from code_master
-                 where code_type='007'
+                 where code_type='009'
                 ) cdm
-                on p.point_code = cdm.cd   
+                on p.point_type = cdm.cd   
     </select>
 
 

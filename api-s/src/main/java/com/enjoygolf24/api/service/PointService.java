@@ -6,7 +6,7 @@ import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
 
-import com.enjoygolf24.api.common.database.bean.TblPointHistory;
+import com.enjoygolf24.api.common.database.bean.TblPointManage;
 import com.enjoygolf24.api.common.database.bean.TblUser;
 import com.enjoygolf24.api.service.bean.PointManageServiceBean;
 
@@ -25,15 +25,12 @@ public interface PointService {
 	@Transactional
 	public void insertPoint(PointManageServiceBean serviceBean);
 
-	public int getCarriablePointBalance(String memberCode);
+	public List<TblPointManage> getHistoryListAll(String aspCode, int pageNo, int pageSize);
 
-	public int getMonthlyPointBalance(String memberCode);
+	public List<TblPointManage> getHistoryList(String memberCode, String name, String registerUserCode,
+			String registerUserName, String registeredMonth, String startMonth, String aspCode, int pageNo,
+			int pageSize);
 
-	public List<TblPointHistory> getHistory(String memberCode, String categoryCode, int pageNo, int pageSize);
-
-	public List<TblPointHistory> getHistoryListAll(String aspCode, int pageNo, int pageSize);
-
-	public List<TblPointHistory> getHistoryList(String memberCode, String name, String phone, String aspCode,
-			String email, int pageNo, int pageSize);
+	public TblPointManage getHistory(String id, String memberCode);
 
 }

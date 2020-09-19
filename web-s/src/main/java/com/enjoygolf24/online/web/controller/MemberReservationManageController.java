@@ -1,6 +1,9 @@
 package com.enjoygolf24.online.web.controller;
 
 import java.lang.reflect.InvocationTargetException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -82,11 +85,21 @@ public class MemberReservationManageController {
 			form.setReservationDate(DateUtility.getCurrentDateTime(DateUtility.DATE_FORMAT));
 		}
 
+		// 予約範囲指定 今月一日から翌月末日まで
+		LocalDate now = LocalDate.now();
+		LocalDate minDate = now.with(TemporalAdjusters.firstDayOfMonth());
+		LocalDate maxDate = now.plusMonths(1).with(TemporalAdjusters.lastDayOfMonth());
+
+		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+		model.addAttribute("minDate", minDate.format(dateTimeFormatter));
+		model.addAttribute("maxDate", maxDate.format(dateTimeFormatter));
+
 		// タイム表取得
 		List<ReservationPointTimeTableInfo> reservationPointTimeTable = memberReservationManageService
 				.getViewReservationPonitTimeTableInfo(DateUtility.getDate(form.getReservationDate()),
 						DateUtility.getDate(form.getReservationDate()));
 		model.addAttribute("reservationPointTimeTable", reservationPointTimeTable);
+
 		// 休日、祝日判定
 		form.setDateKind(reservationPointTimeTable.get(0).getHolydayTypeCd());
 		model.addAttribute("dateType",

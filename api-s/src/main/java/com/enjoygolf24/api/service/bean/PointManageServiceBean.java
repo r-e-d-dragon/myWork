@@ -13,4 +13,6 @@ public class PointManageServiceBean {
 
 	private String pointAppliedMonthCd;
 
+	private String memo;
+
 }

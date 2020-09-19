@@ -39,6 +39,15 @@ public class DateUtility {
 	/** 日付フォーマット */
 	public static final String TIME_FORMAT = "HH:mm";
 
+	/** 日付フォーマット */
+	public static final String SLASH_DATE_FORMAT_YEAR_MONTH = "yyyy/MM";
+
+	/** 日付フォーマット */
+	public static final String PLAIN_DATE_FORMAT_FULL = "yyyyMMddHHmmss";
+
+	/** 日付フォーマット */
+	public static final String PLAIN_DATE_FORMAT_FULL_WITH_MS = "yyyyMMddHHmmssSSS";
+
 	/** 日時フォーマット */
 	public static final String SLASH_TIMESTAMP_PATTERN_WITH_SECOND = "yyyy/MM/dd HH:mm:ss";
 
@@ -489,6 +498,20 @@ public class DateUtility {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(baseDate);
 		cal.add(Calendar.DATE, i);
+		return cal.getTime();
+	}
+
+	/**
+	 * 日付加算
+	 *
+	 * @param baseDate 基準日
+	 * @param i        加算日数
+	 * @return 計算後日付
+	 */
+	public static Date addMonth(Date baseDate, int i) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(baseDate);
+		cal.add(Calendar.MONTH, i);
 		return cal.getTime();
 	}
 

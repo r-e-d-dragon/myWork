@@ -49,3 +49,10 @@
   display: -webkit-inline-box !important;
   display: -ms-inline-flexbox !important;
   display: inline-flex !important; }
+  
+  
+.fa-plus-square:hover,  .fa-minus-square:hover{
+	cursor: pointer;
+}
+
+  

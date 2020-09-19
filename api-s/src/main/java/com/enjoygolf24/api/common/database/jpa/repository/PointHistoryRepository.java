@@ -12,5 +12,7 @@ public interface PointHistoryRepository extends JpaRepository<TblPointHistory, S
 
 	TblPointHistory findByMemberCode(String memberCode);
 
+	TblPointHistory findByPointHistoryId(Long pointHistoryId);
+
 	List<TblPointHistory> findByReservationId(String reservationId);
 }

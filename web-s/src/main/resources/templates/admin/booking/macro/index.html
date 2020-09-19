@@ -10,29 +10,55 @@
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script src="https://rawgit.com/jquery/jquery-ui/master/ui/i18n/datepicker-ja.js"></script>
     <script>
+    var dateformat = 'yy/mm/dd';    
     $( function() {
-      $('#fromDatepicker').datepicker({
+      // 開始日の設定
+      var start = $('#fromDatepicker').datepicker({
+          dateFormat: dateformat,
           minDate: 0 ,
           showButtonPanel: true
-      });      
-      $("#toDatepicker").datepicker({
-    	  minDate: 0,
-    	  showButtonPanel: true
+      }).on("change", function () {
+          // 開始日が選択されたとき
+          // 終了日の選択可能最小日を設定
+          end.datepicker("option", "minDate", getDate(this));
+      });
+      // 終了日の設定
+      var end = $("#toDatepicker").datepicker({
+          dateFormat: dateformat,
+          minDate: 0,
+          showButtonPanel: true
+      }).on("change", function () {
+          // 開始日が選択されたとき
+          // 開始日の選択可能最大日を設定
+          start.datepicker("option", "maxDate", getDate(this));
       });
       
       (function(){
-    	  var old_fn = $.datepicker._updateDatepicker;
-    	  $.datepicker._updateDatepicker = function(inst) {
-    	    old_fn.call(this, inst);
-    	    var buttonPane = $(this).datepicker("widget").find(".ui-datepicker-buttonpane");
-    	    var buttonHtml = "<button type='button' class='ui-datepicker-clean ui-state-default ui-priority-primary ui-corner-all'>削除</button>";
-    	    $(buttonHtml).appendTo(buttonPane).click(
-    	      function(ev) {
-    	        $.datepicker._clearDate(inst.input);
-    	    });
-    	  }
-    	})();      
+          var old_fn = $.datepicker._updateDatepicker;
+          $.datepicker._updateDatepicker = function(inst) {
+            old_fn.call(this, inst);
+            var buttonPane = $(this).datepicker("widget").find(".ui-datepicker-buttonpane");
+            var buttonHtml = "<button type='button' class='ui-datepicker-clean ui-state-default ui-priority-primary ui-corner-all'>削除</button>";
+            $(buttonHtml).appendTo(buttonPane).click(
+              function(ev) {
+                $.datepicker._clearDate(inst.input);
+            });
+          }
+      })();
     });
+
+    /**
+     * 選択された日付をminDate,maxDate用に変換
+     */
+    function getDate(element) {
+        var date;
+        try {
+            date = $.datepicker.parseDate(dateformat, element.value);
+        } catch (error) {
+            date = null;
+        }
+        return date;
+    }    
     </script>
 
 </head>
@@ -68,43 +94,94 @@
                             <span class="tag-icon tag-red m-t-5">必須</span>
                           </div>
                           <div>
-                          <table>
-                          <thead>
-                            <tr>
-                              <th>　 </th>
-                              <th>予約日</th>
-                              <th>　</th>
-                              <th>予約時間</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            <tr>
-                              <td><span>FROM:</span></td>
-                              <td>
-	                            <input class="c-input" type="text" readonly th:field="*{fromReservationDate}" id="fromDatepicker" th:errorclass="fieldError"/>
-                              </td>
-                              <td>　</td>
-                              <td>
-                                <select class="selectBoxCss select-option width-180"　id="fromReservationTime" name="fromReservationTime">
-                                  <option th:each="data, iter : ${timeTableList}" th:text="${data.timeSlotName}">
-                                </select>
-                              </td>
-                            </tr>
-                            <tr><td colspan="4"><div class="box-filter m-b-0 c-form-01 text-md" >　</div></td></tr>
-                            <tr>
-                              <td><span>TO:</span></td>
-                              <td>
-                                <input class="c-input" type="text" readonly th:field="*{toReservationDate}" id="toDatepicker" th:errorclass="fieldError"/>
-                              </td>
-                              <td>　</td>
-                              <td>
-	                            <select class="selectBoxCss select-option width-180" id="toReservationTime" name="toReservationTime">
-                                  <option th:each="data, iter : ${timeTableList}" th:text="${data.timeSlotName}">
-	                            </select>
-                              </td>
-                            </tr>
-                          </tbody>
-                          </table>
+	                          <ul class="nav nav-tabs">
+	                            <li class="nav-item">
+	                              <a href="#reservation1" class="nav-link active" data-toggle="tab">期間指定予約</a>
+	                            </li>
+	                            <li class="nav-item">
+	                              <a href="#reservation2" class="nav-link" data-toggle="tab">繰り返し予約</a>
+	                            </li>
+	                          </ul>
+	                          <div class="tab-content">                             
+	                            <div id="reservation1" class="tab-pane active">
+		                            <table>
+		                            <thead>
+		                              <tr>
+		                                <th>　 </th>
+		                                <th>予約日</th>
+		                                <th>　</th>
+		                                <th>予約時間    </th>
+		                              </tr>
+		                            </thead>
+		                            <tbody>
+		                              <tr>
+		                                <td><span>FROM:</span></td>
+		                                <td>
+		                                  <input class="c-input" type="text" readonly th:field="*{fromReservationDate}" id="fromDatepicker" th:errorclass="fieldError"/>
+		                                </td>
+		                                <td>　</td>
+		                                <td>
+		                                  <select class="selectBoxCss select-option width-180"　id="fromReservationTime" name="fromReservationTime">
+		                                    <option th:each="data, iter : ${timeTableList}" th:text="${data.timeSlotName}">
+		                                  </select>
+		                                </td>
+		                              </tr>
+		                              <tr><td colspan="4"><div class="box-filter m-b-0 c-form-01 text-md" >　</div></td></tr>
+		                              <tr>
+		                                <td><span>TO:</span></td>
+		                                <td>
+		                                  <input class="c-input" type="text" readonly th:field="*{toReservationDate}" id="toDatepicker" th:errorclass="fieldError"/>
+		                                </td>
+		                                <td>　</td>
+		                                <td>
+		                                  <select class="selectBoxCss select-option width-180" id="toReservationTime" name="toReservationTime">
+		                                    <option th:each="data, iter : ${timeTableList}" th:text="${data.timeSlotName}">
+		                                  </select>
+		                                </td>
+		                              </tr>
+		                            </tbody>
+		                            </table>
+	                            </div>
+	                            <div id="reservation2" class="tab-pane">
+                                    <table>
+                                    <thead>
+                                      <tr>
+                                        <th>　 </th>
+                                        <th>予約日</th>
+                                        <th>　</th>
+                                        <th>予約時間    </th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      <tr>
+                                        <td><span>FROM:</span></td>
+                                        <td>
+                                          <input class="c-input" type="text" readonly th:field="*{fromReservationDate}" id="fromDatepicker" th:errorclass="fieldError"/>
+                                        </td>
+                                        <td>　</td>
+                                        <td>
+                                          <select class="selectBoxCss select-option width-180"　id="fromReservationTime" name="fromReservationTime">
+                                            <option th:each="data, iter : ${timeTableList}" th:text="${data.timeSlotName}">
+                                          </select>
+                                        </td>
+                                      </tr>
+                                      <tr><td colspan="4"><div class="box-filter m-b-0 c-form-01 text-md" >　</div></td></tr>
+                                      <tr>
+                                        <td><span>TO:</span></td>
+                                        <td>
+                                          <input class="c-input" type="text" readonly th:field="*{toReservationDate}" id="toDatepicker" th:errorclass="fieldError"/>
+                                        </td>
+                                        <td>　</td>
+                                        <td>
+                                          <select class="selectBoxCss select-option width-180" id="toReservationTime" name="toReservationTime">
+                                            <option th:each="data, iter : ${timeTableList}" th:text="${data.timeSlotName}">
+                                          </select>
+                                        </td>
+                                      </tr>
+                                    </tbody>
+                                    </table>
+	                            </div>
+	                          </div>                   
                           </div>
                         </div>
 
@@ -114,24 +191,24 @@
                             <span class="tag-icon tag-red m-t-5">必須</span>
                           </div>
                           <div>
-		                    <div class="custom-control custom-checkbox" th:each="item : ${batNumbers}">
-		                        <input type="checkbox" class="custom-control-input" th:value="${item}" th:field="*{chkBatNumbers}">
-		                        <label class="custom-control-label c-ttl c-ttl__03" th:for="${#ids.prev('chkBatNumbers')}" th:text="${item}"></label>
-		                    </div>
+                            <div class="custom-control custom-checkbox" th:each="item : ${batNumbers}">
+                                <input type="checkbox" class="custom-control-input" th:value="${item}" th:field="*{chkBatNumbers}">
+                                <label class="custom-control-label c-ttl c-ttl__03" th:for="${#ids.prev('chkBatNumbers')}" th:text="${item}"></label>
+                            </div>
                           </div>
                         </div>
                     </div>
 
-	                <div class="c-box-confirm text-center m-b-70">
-	                <div class="align-items-center registerBtn">
-	                  <a id="registerBtn" class="c-btn btn-primary m-b-30" href="#" th:url="@{/admin/booking/macro/confirm}" autofocus>一括予約登録</a>
-	                </div>
-	                </div>
+                    <div class="c-box-confirm text-center m-b-70">
+                    <div class="align-items-center registerBtn">
+                      <a id="registerBtn" class="c-btn btn-primary m-b-30" href="#" th:url="@{/admin/booking/macro/confirm}" autofocus>一括予約登録</a>
+                    </div>
+                    </div>
                   </section>
                 </div>
 
-    <select class="form-control" id="exampleFormControlSelect1">
-    </select>
+
+
     
                 <section class="reservation_dialog">
                 <p class="text-warning" id="reservation_message"></p>

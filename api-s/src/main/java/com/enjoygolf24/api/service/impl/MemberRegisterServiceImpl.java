@@ -242,24 +242,45 @@ public class MemberRegisterServiceImpl implements MemberRegisterService {
 	@Transactional
 	public void sendPreRequestMail(String memberCode, String memo) {
 
-		EmailSendServiceBean emailSendServiceBean = createPreRequestEmailSendServiceBean(memberCode, memo);
+		EmailSendServiceBean emailSendServiceBean = createPreRequestEmailSendServiceBean(memberCode, memo, true);
 
 		// TODO: AWS email send
 		emailSendService.send(emailSendServiceBean);
 
 		String txt = emailSendServiceBean.getSenderName() + "\n" + emailSendServiceBean.getSenderEmailAddress() + "\n"
 				+ emailSendServiceBean.getTargetName() + "\n" + emailSendServiceBean.getTargetEmailAddress() + "\n"
-				+ emailSendServiceBean.getBccEmailAddress() + "\n" + emailSendServiceBean.getSubject() + "\n"
-				+ emailSendServiceBean.getBody();
+				+ emailSendServiceBean.getSubject() + "\n" + emailSendServiceBean.getBody();
 
 		logger.info(txt);
 	}
 
-	private EmailSendServiceBean createPreRequestEmailSendServiceBean(String memberCode, String memo) {
+	@Override
+	@Transactional
+	public void sendPreRequestMailToManager(String memberCode, String memo) {
+
+		EmailSendServiceBean emailSendServiceBean = createPreRequestEmailSendServiceBean(memberCode, memo, false);
+
+		// TODO: AWS email send
+		emailSendService.send(emailSendServiceBean);
+
+		String txt = emailSendServiceBean.getSenderName() + "\n" + emailSendServiceBean.getSenderEmailAddress() + "\n"
+				+ emailSendServiceBean.getTargetName() + "\n" + emailSendServiceBean.getTargetEmailAddress() + "\n"
+				+ emailSendServiceBean.getSubject() + "\n" + emailSendServiceBean.getBody();
+
+		logger.info(txt);
+	}
+
+	private EmailSendServiceBean createPreRequestEmailSendServiceBean(String memberCode, String memo,
+			boolean toMember) {
 		TblUserPre member = preMemberRepository.findByPreMemberCode(memberCode);
 		TblAsp asp = aspRepository.findByAspCode(member.getAspCode());
-		EmailSendServiceBean mailSendServiceBean = new EmailSendServiceBean(MailSectionCd.PRE_MEMBER_REGESTERED, member,
-				asp, memo);
+		String mailSectionCd = null;
+		if (toMember) {
+			mailSectionCd = MailSectionCd.PRE_MEMBER_REGESTERED;
+		} else {
+			mailSectionCd = MailSectionCd.PRE_MEMBER_REGESTERED_FOR_MANAGER;
+		}
+		EmailSendServiceBean mailSendServiceBean = new EmailSendServiceBean(mailSectionCd, member, asp, memo);
 		return mailSendServiceBean;
 	}
 
@@ -333,6 +354,7 @@ public class MemberRegisterServiceImpl implements MemberRegisterService {
 
 		if (serviceBean.getLoginUserCd() == null) {
 			sendPreRequestMail(member.getPreMemberCode(), serviceBean.getMemo());
+			sendPreRequestMailToManager(member.getPreMemberCode(), serviceBean.getMemo());
 		}
 
 		return member.getPreMemberCode();

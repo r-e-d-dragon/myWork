@@ -102,13 +102,13 @@ $(function(){
                                 
                             } else if (data.reservation['monthlyReservationCount'] >= data.reservation['limitMonthlyReservationCount']) {
                                 $("#reservation_message").text("既に月ポイントで可能な予約限度まで予約がありました。　月ポイントでは追加予約は出来ません。");
-                                $("#pointCategoryCode").val("002");
+                                $("#pointCategoryCode").val("02");
                                 $("#pointCategoryCode option:not(:selected)").prop('disabled', true);
                                 mCountOverFlag = true;
 
                             } else if (data.reservation['eventReservationCount'] >= data.reservation['limitEventReservationCount']) {
                                 $("#reservation_message").text("既にイベントポイントで可能な予約限度まで予約がありました。　イベントポイントでは追加予約は出来ません。");
-                                $("#pointCategoryCode").val("001");
+                                $("#pointCategoryCode").val("01");
                                 $("#pointCategoryCode option:not(:selected)").prop('disabled', true);
                                 eCountOverFlag = true;
                                 
@@ -119,13 +119,13 @@ $(function(){
                         if (consumedPoint<=data.reservation['validMonthlyPoint']) {
                             mPointFlag = true;
                         } else {
-                            $("#pointCategoryCode").val("002");
+                            $("#pointCategoryCode").val("02");
                             $("#pointCategoryCode option:not(:selected)").prop('disabled', true);
                         }
                         if (consumedPoint<=data.reservation['validEventPoint']) {
                             ePointFlag = true;
                         } else {
-                            $("#pointCategoryCode").val("001");
+                            $("#pointCategoryCode").val("01");
                             $("#pointCategoryCode option:not(:selected)").prop('disabled', true);
                         }
 

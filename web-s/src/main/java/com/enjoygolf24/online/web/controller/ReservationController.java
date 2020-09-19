@@ -2,7 +2,6 @@ package com.enjoygolf24.online.web.controller;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -16,10 +15,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.enjoygolf24.api.common.code.PointCategoryCd;
-import com.enjoygolf24.api.common.database.bean.TblUser;
 import com.enjoygolf24.api.common.database.mybatis.bean.MemberReservationManage;
-import com.enjoygolf24.api.common.database.mybatis.bean.PointManage;
 import com.enjoygolf24.api.common.utility.LoginUtility;
 import com.enjoygolf24.api.service.MemberInfoManageService;
 import com.enjoygolf24.api.service.MemberReservationManageService;
@@ -69,31 +65,39 @@ public class ReservationController {
 	}
 
 	private void initPointInfoModel(Model model) {
-		MemberReservationManage reservation = new MemberReservationManage();
 
-		// 会員情報取得
-		TblUser member = memberInfoManageService.selectMember(LoginUtility.getLoginUser().getMemberCode());
-		reservation.setTblUser(member);
+		// TODO ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+//		MemberReservationManage reservation = new MemberReservationManage();
+//
+//		// 会員情報取得
+//		TblUser member = memberInfoManageService.selectMember(LoginUtility.getLoginUser().getMemberCode());
+//		reservation.setTblUser(member);
+//
+//		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/M/d");
+//		String stringDate = dateFormat.format(new Date());
+//
+//		// 月ポイント情報取得
+//		List<PointManage> totMonPointList = memberReservationManageService
+//				.getMemberPointManageList(LoginUtility.getLoginUser().getMemberCode(), PointCategoryCd.MONTLY_POINT, null);
+//		List<PointManage> validMonPointList = memberReservationManageService
+//				.getMemberPointManageList(LoginUtility.getLoginUser().getMemberCode(), PointCategoryCd.MONTLY_POINT, stringDate);
+//
+//		// 月ポイント情報取得
+//		List<PointManage> totEvtPointList = memberReservationManageService
+//				.getMemberPointManageList(LoginUtility.getLoginUser().getMemberCode(), PointCategoryCd.EVENT_POINT, null);
+//		List<PointManage> validEvtPointList = memberReservationManageService
+//				.getMemberPointManageList(LoginUtility.getLoginUser().getMemberCode(), PointCategoryCd.EVENT_POINT, stringDate);
+//
+//		reservation.setTotalMonthlyPoint(totMonPointList.stream().mapToInt(x -> x.getPointAmount()).sum());
+//		reservation.setTotalEventPoint(totEvtPointList.stream().mapToInt(x -> x.getPointAmount()).sum());
+//		reservation.setValidMonthlyPoint(validMonPointList.stream().mapToInt(x -> x.getPointAmount()).sum());
+//		reservation.setValidEventPoint(validEvtPointList.stream().mapToInt(x -> x.getPointAmount()).sum());
+		// TODO ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
 
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/M/d");
 		String stringDate = dateFormat.format(new Date());
-
-		// 月ポイント情報取得
-		List<PointManage> totMonPointList = memberReservationManageService
-				.getMemberPointManageList(LoginUtility.getLoginUser().getMemberCode(), PointCategoryCd.MONTLY_POINT, null);
-		List<PointManage> validMonPointList = memberReservationManageService
-				.getMemberPointManageList(LoginUtility.getLoginUser().getMemberCode(), PointCategoryCd.MONTLY_POINT, stringDate);
-
-		// 月ポイント情報取得
-		List<PointManage> totEvtPointList = memberReservationManageService
-				.getMemberPointManageList(LoginUtility.getLoginUser().getMemberCode(), PointCategoryCd.EVENT_POINT, null);
-		List<PointManage> validEvtPointList = memberReservationManageService
-				.getMemberPointManageList(LoginUtility.getLoginUser().getMemberCode(), PointCategoryCd.EVENT_POINT, stringDate);
-
-		reservation.setTotalMonthlyPoint(totMonPointList.stream().mapToInt(x -> x.getPointAmount()).sum());
-		reservation.setTotalEventPoint(totEvtPointList.stream().mapToInt(x -> x.getPointAmount()).sum());
-		reservation.setValidMonthlyPoint(validMonPointList.stream().mapToInt(x -> x.getPointAmount()).sum());
-		reservation.setValidEventPoint(validEvtPointList.stream().mapToInt(x -> x.getPointAmount()).sum());
+		MemberReservationManage reservation = memberReservationManageService
+				.getMemberReservationInfo(LoginUtility.getLoginUser().getMemberCode(), stringDate);
 
 		model.addAttribute("totalMonthlyPoint", reservation.getTotalMonthlyPoint());
 		model.addAttribute("totalEventPoint", reservation.getTotalEventPoint());

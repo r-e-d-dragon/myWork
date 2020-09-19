@@ -120,7 +120,7 @@
             <if test="reservationDate != null and reservationDate != ''">
                 and to_date(#{reservationDate}, 'YYYY/MM/DD') between pm.start_date and pm.end_date
             </if>
-            <if test="categoryCode = '001'">
+            <if test="categoryCode == '01'">
                 and pm.start_date > (DATE_TRUNC('month', now()) +'-1 Day')
             </if>
         order by pm.end_date, pm.start_date

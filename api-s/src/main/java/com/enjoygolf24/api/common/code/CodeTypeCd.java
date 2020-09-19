@@ -28,6 +28,10 @@ public interface CodeTypeCd {
 
 	public static final String POINT_APPLIED_MONTH = "014";
 
+	public static final String NEWS_TYPE_CD = "015";
+
+	public static final String NEWS_OPEN_TYPE_CD = "016";
+
 	public static final String YESNO_TYPE_CD = "900";
 
 }

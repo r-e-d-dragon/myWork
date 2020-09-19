@@ -1,6 +1,6 @@
 $(function(){
 	$("#btnRegisterBooking*").on("click", function(e) {
-		var reservationDate = $('#reservationDate').val();
+		var reservationDate = $('#datepicker').val();
 		var reservationTime = $(this).closest('tr').data('timeslotname');
 		var consumedPoint = $(this).closest('tr').data('consumedpoint');
         var gradeTypeCd = $(this).closest('tr').data('gradetypecd');

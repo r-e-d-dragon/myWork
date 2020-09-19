@@ -6,8 +6,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
+import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -52,7 +54,7 @@ public class CsvFileUtility {
 	 */
 	public static final void write(String filePath, List<?> csvDatas, String quotation) {
 		try (BufferedWriter writer = new BufferedWriter(
-		        new OutputStreamWriter(new FileOutputStream(filePath), DEFAULT_CHARSET))) {
+				new OutputStreamWriter(new FileOutputStream(filePath), DEFAULT_CHARSET))) {
 			for (Object csvData : csvDatas) {
 				String line = getCsvString(csvData, quotation);
 				writer.write(line);
@@ -75,7 +77,7 @@ public class CsvFileUtility {
 	 */
 	public static final void write(String filePath, String header, List<?> csvDatas, String quotation) {
 		try (BufferedWriter writer = new BufferedWriter(
-		        new OutputStreamWriter(new FileOutputStream(filePath), DEFAULT_CHARSET))) {
+				new OutputStreamWriter(new FileOutputStream(filePath), DEFAULT_CHARSET))) {
 			writer.write(header);
 			writer.write("\r\n");
 
@@ -170,7 +172,7 @@ public class CsvFileUtility {
 
 			for (Field field : fields) {
 				if (field.getAnnotation(CsvColumn.class) != null
-				        || field.getAnnotation(CsvColumnWithLength.class) != null) {
+						|| field.getAnnotation(CsvColumnWithLength.class) != null) {
 					set.add(field);
 				}
 			}
@@ -229,12 +231,20 @@ public class CsvFileUtility {
 	public static void putCsvDataToResponse(HttpServletResponse response, Pair<String, List<String>> csvData) {
 		response.setContentType(MimeTypeUtils.APPLICATION_OCTET_STREAM_VALUE);
 		response.setCharacterEncoding(DEFAULT_CHARSET.toString());
-		response.setHeader("Content-Disposition", String.format("attachment; filename=\"%s\"", csvData.getLeft()));
+		// "filename*=\"UTF-8''" + encodedFilename + "\""
+		try {
+			response.setHeader("Content-Disposition",
+					String.format("attachment; filename=\"%s\"", URLEncoder.encode(csvData.getLeft(), "UTF-8")));
+		} catch (UnsupportedEncodingException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		try (PrintWriter pw = response.getWriter()) {
 			csvData.getRight().stream().forEach(line -> {
 				pw.print(line);
 				pw.print("\r\n");
 			});
+			response.flushBuffer();
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}

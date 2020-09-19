@@ -3,19 +3,17 @@ package com.enjoygolf24.online.web.form;
 import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.List;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 import com.enjoygolf24.api.common.code.CodeTypeCd;
-import com.enjoygolf24.api.common.database.bean.TblPointHistory;
+import com.enjoygolf24.api.common.code.PointAppliedMonthCd;
+import com.enjoygolf24.api.common.constants.PointContants;
 import com.enjoygolf24.api.common.database.bean.TblUser;
 import com.enjoygolf24.api.common.utility.DateUtility;
-import com.enjoygolf24.api.common.utility.DefaultPageSizeUtility;
 import com.enjoygolf24.api.common.validator.annotation.CodeMaster;
 import com.enjoygolf24.api.common.validator.annotation.Numeric;
-import com.enjoygolf24.api.common.validator.annotation.PageSize;
 import com.enjoygolf24.api.common.validator.groups.Insert0;
 import com.enjoygolf24.api.service.PointService;
 import com.enjoygolf24.api.service.bean.PointManageServiceBean;
@@ -46,7 +44,11 @@ public class PointManageForm implements Serializable {
 	
 	private int monthlyPointBalance;
 	
-	private int carriablePointBalance;
+	private int eventPointBalance;
+
+	private int monthlyPointBalanceNextMonth;
+
+	private int eventPointBalanceNextMonth;
 
 	private int pointVariationDefault;
 
@@ -56,10 +58,13 @@ public class PointManageForm implements Serializable {
 
 	private int pointVariationSize;
 
+	private String memo;
+
 	@NotBlank(groups = Insert0.class)
 	private String loginUserCd;
 
-	@Numeric(groups = Insert0.class)
+	@NotBlank(groups = Insert0.class)
+	@Numeric(groups = Insert0.class, min = PointContants.MIN, max = PointContants.MAX)
 	private String pointVariation;
 
 	@NotBlank(groups = Insert0.class)
@@ -67,16 +72,8 @@ public class PointManageForm implements Serializable {
 	@CodeMaster(groups = Insert0.class, code = CodeTypeCd.POINT_APPLIED_MONTH)
 	private String pointAppliedMonthCd;
 
-	@PageSize
-	int pageSize = DefaultPageSizeUtility.DEFAULT_PAGE_SIZE;
 
-	/** 現在ページ */
-	int pageNo = DefaultPageSizeUtility.PAGE_FIRST;
-
-	List<TblPointHistory> pointHistoryList;
-
-
-	public void init(PointService pointService, String memberCode, int defaultVal, int min, int max, int size) {
+	public void init(PointService pointService, String memberCode) {
 		this.pointService = pointService;
 		this.selectedMember = pointService.selectMember(memberCode);
 		this.memberCode = memberCode;
@@ -92,15 +89,17 @@ public class PointManageForm implements Serializable {
 		registerDate = dateFormat.format(selectedMember.getRegisterDate());
 
 		pointVariation = null;
-		pointAppliedMonthCd = null;
+		pointAppliedMonthCd = PointAppliedMonthCd.THIS_MONTH;
 
-		pointVariationDefault = defaultVal;
+		pointVariationDefault = PointContants.DEFAULT;
 
-		pointVariationMin = min;
+		pointVariationMin = PointContants.MIN;
 
-		pointVariationMax = max;
+		pointVariationMax = PointContants.MAX;
 
-		pointVariationSize = size;
+		pointVariationSize = PointContants.SIZE;
+
+		memo = null;
 
 	}
 
@@ -113,6 +112,7 @@ public class PointManageForm implements Serializable {
 
 		serviceBean.setPointVariation(pointVariation);
 		serviceBean.setPointAppliedMonthCd(pointAppliedMonthCd);
+		serviceBean.setMemo(memo);
 
 		return serviceBean;
 	}

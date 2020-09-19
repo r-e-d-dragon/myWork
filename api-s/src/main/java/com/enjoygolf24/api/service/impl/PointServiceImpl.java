@@ -12,11 +12,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.util.StringUtils;
 
 import com.enjoygolf24.api.common.code.CodeTypeCd;
 import com.enjoygolf24.api.common.code.PointAppliedMonthCd;
 import com.enjoygolf24.api.common.code.PointCategoryCd;
-import com.enjoygolf24.api.common.database.bean.TblPointHistory;
+import com.enjoygolf24.api.common.code.PointTypeCd;
 import com.enjoygolf24.api.common.database.bean.TblPointManage;
 import com.enjoygolf24.api.common.database.bean.TblPointManagePK;
 import com.enjoygolf24.api.common.database.bean.TblUser;
@@ -92,11 +93,6 @@ public class PointServiceImpl implements PointService {
 
 		Integer pointVariation = Integer.parseInt(serviceBean.getPointVariation());
 
-		TblPointHistory pointHistory = new TblPointHistory();
-
-		pointHistory.setConsumedPoint(pointVariation);
-		pointHistory.setMemberCode(serviceBean.getMemberCode());
-
 		Calendar c = Calendar.getInstance();
 		c.set(Calendar.DAY_OF_MONTH, 1);
 
@@ -106,34 +102,6 @@ public class PointServiceImpl implements PointService {
 
 		startDate = c.getTime();
 
-		pointHistory.setStartDate(startDate);
-
-		pointHistory.setExpireDate(DateUtility.getDate("9999/12/31"));
-
-		// TODO:PointCode?
-		pointHistory.setPointCode("00");
-		pointHistory.setRegisterDate(current);
-		pointHistory.setRegisterUser(serviceBean.getLoginUserCd());
-		pointHistory.setUpdateDate(current);
-		pointHistory.setUpdateUser(serviceBean.getLoginUserCd());
-
-		pointHistoryRepository.save(pointHistory);
-
-		// set pointManage
-		// TblPointManage tblPointManage = pointManageRepository
-		// .findByIdMemberCodeAndCategoryCode(serviceBean.getMemberCode(),
-		// PointCategoryCd.EVENT_POINT);
-		/*
-		 * if (tblPointManage != null) {
-		 * tblPointManage.setConsumedPoint(pointVariation);
-		 * tblPointManage.setPointAmount(tblPointManage.getPointAmount() +
-		 * pointVariation); tblPointManage.setUpdateDate(current);
-		 * tblPointManage.setUpdateUser(serviceBean.getLoginUserCd());
-		 * 
-		 * pointManageRepository.save(tblPointManage);
-		 * 
-		 * } else {
-		 */
 		TblPointManagePK pk = new TblPointManagePK();
 		pk.setId(pointManageRepository.count());
 		pk.setMemberCode(serviceBean.getMemberCode());
@@ -146,15 +114,14 @@ public class PointServiceImpl implements PointService {
 		newPointManage.setCategoryCode(PointCategoryCd.EVENT_POINT);
 
 		newPointManage.setPointAmount(pointVariation);
-		newPointManage.setPointType("00");
+		newPointManage.setPointType(PointTypeCd.CUSTOM);
 		newPointManage.setRegisterDate(current);
 		newPointManage.setRegisterUser(serviceBean.getLoginUserCd());
 		newPointManage.setUpdateDate(current);
 		newPointManage.setUpdateUser(serviceBean.getLoginUserCd());
+		newPointManage.setMemo(serviceBean.getMemo());
 
 		pointManageRepository.save(newPointManage);
-
-		// }
 
 		String txt = pointVariation + "pt" + " to " + serviceBean.getMemberCode() + " by "
 				+ serviceBean.getLoginUserCd() + " at " + current;
@@ -163,33 +130,40 @@ public class PointServiceImpl implements PointService {
 	}
 
 	@Override
-	public int getCarriablePointBalance(String memberCode) {
-		return pointMapper.getCarriablePointBalance(memberCode, new Date());
-	}
-
-	@Override
-	public int getMonthlyPointBalance(String memberCode) {
-		return pointMapper.getMonthlyPointBalance(memberCode, Calendar.getInstance().get(Calendar.MONTH) + 1);
-	}
-
-	@Override
-	public List<TblPointHistory> getHistory(String memberCode, String categoryCode, int pageNo, int pageSize) {
-		PageHelper.startPage(pageNo, pageSize);
-		return pointMapper.getHistory(memberCode, categoryCode);
-	}
-
-	@Override
-	public List<TblPointHistory> getHistoryListAll(String aspCode, int pageNo, int pageSize) {
+	public List<TblPointManage> getHistoryListAll(String aspCode, int pageNo, int pageSize) {
 
 		PageHelper.startPage(pageNo, pageSize);
-		return pointMapper.getHistoryList(null, null, null, null, aspCode);
+		return pointMapper.getHistoryList(null, null, null, null, null, null, aspCode);
 	}
 
 	@Override
-	public List<TblPointHistory> getHistoryList(String memberCode, String name, String phone, String email,
-			String aspCode, int pageNo, int pageSize) {
+	public List<TblPointManage> getHistoryList(String memberCode, String name, String registerUserCode,
+			String registerUserName, String registeredMonth, String startMonth, String aspCode, int pageNo,
+			int pageSize) {
 		PageHelper.startPage(pageNo, pageSize);
-		return pointMapper.getHistoryList(memberCode, name, phone, email, aspCode);
+
+		return pointMapper.getHistoryList(memberCode, name, registerUserCode, registerUserName,
+				monthformat(registeredMonth), monthformat(startMonth), aspCode);
+	}
+
+	private String monthformat(String month) {
+		if (!StringUtils.isEmpty(month)) {
+			if (Integer.parseInt(month.substring(5)) < 10) {
+				month = month.substring(0, 5) + month.substring(6);
+			}
+		}
+		return month;
+	}
+
+	@Override
+	public TblPointManage getHistory(String id, String memberCode) {
+
+		TblPointManagePK pk = new TblPointManagePK();
+		pk.setId(Long.parseLong(id, 10));
+		pk.setMemberCode(memberCode);
+
+		TblPointManage pointHistory = pointManageRepository.findById(pk);
+		return pointHistory;
 	}
 
 }
