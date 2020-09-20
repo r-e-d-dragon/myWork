@@ -65,6 +65,8 @@ public class MemberReservationManage implements Serializable {
 	private String toReservationDate;
 	private String toReservationTime;
 	private String macroName;
+	private String macroDateType;
+	private String macroDateTypeName;
 
 	private Time startTime;
 	private Time endTime;

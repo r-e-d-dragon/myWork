@@ -43,5 +43,12 @@ public class MemberReservationServiceBean {
 	private String fromReservationTime;
 	private String toReservationDate;
 	private String toReservationTime;
+
+	private String macroDateType;
+	private String repeatFromReservationDate;
+	private String repeatToReservationDate;
+	private String repeatFromReservationTime;
+	private String repeatToReservationTime;
+
 	private List<String> chkBatNumbers = new ArrayList<String>();
 }

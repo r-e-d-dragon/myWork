@@ -5,6 +5,13 @@
 <head>
     <title>一括予約管理</title>
     <link rel="stylesheet" th:href="@{/css/admin/mypage.css}"></link>
+    <script type="text/javascript">
+    $( function() {
+      $('#registerBtn').click(function() {
+        $('#registerBtn').html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>登録中').addClass('disabled');
+      });
+    });
+    </script>
 </head>
 <body>
 
@@ -27,58 +34,110 @@
                         <div class="row align-items-start m-b-20">
                           <div class="d-flex justify-content-between align-items-start m-t-10">
                             <span class="text c-ttl c-ttl__04">一括予約名</span>
+                            <span class="tag-icon tag-red m-t-5">必須</span>
                           </div>
                           <div><span th:text="*{macroName}"></span><input type="hidden" th:field="*{macroName}"></div>
                         </div>
-                       
+
+
                         <div class="row align-items-start m-b-20">
                           <div class="d-flex justify-content-between align-items-start m-t-10">
                             <span class="text c-ttl c-ttl__04">予約期間</span>
+                            <span class="tag-icon tag-red m-t-5">必須</span>
                           </div>
+                            
                           <div>
-                          <table>
-                          <thead>
-                            <tr>
-                              <th>　 </th>
-                              <th>予約日</th>
-                              <th>　</th>
-                              <th>予約時間</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            <tr>
-                              <td><span>FROM:</span></td>
-                              <td>
-                                <span th:text="*{fromReservationDate}"></span>
-                                <input type="hidden" readonly th:field="*{fromReservationDate}"/>
-                              </td>
-                              <td>　</td>
-                              <td>
-                                <span th:text="*{fromReservationTime}"></span>
-                                <input type="hidden" readonly th:field="*{fromReservationTime}"/>
-                              </td>
-                            </tr>
-                            <tr><td colspan="4"><div class="box-filter m-b-0 c-form-01 text-md" >　</div></td></tr>
-                            <tr>
-                              <td><span>TO:</span></td>
-                              <td>
-                                <span th:text="*{toReservationDate}"></span>
-                                <input type="hidden" readonly th:field="*{toReservationDate}"/>
-                              </td>
-                              <td>　</td>
-                              <td>
-                                <span th:text="*{toReservationTime}"></span>
-                                <input type="hidden" readonly th:field="*{toReservationTime}"/>
-                              </td>
-                            </tr>
-                          </tbody>  
-                          </table>
-                          </div>
+	                        <div class="box-register d-flex nav nav-tabs" role="tablist">
+	                          <div class="item">
+	                              <label class="c-radio" for="optTerm">
+	                                <input id="optTerm" th:field="*{macroDateType}" th:value="${termDate}" type="radio" data-target="#reservation1" th:checked="${termDate}eq*{macroDateType}" th:disabled="${termDate}neq*{macroDateType}" />
+	                                <span class="box flex-column">
+	                                  <span>期間指定予約</span><span class="circle">&nbsp;</span>
+	                                </span>
+	                              </label>
+	                          </div>
+	                          <div class="item">
+	                              <label class="c-radio" for="optPeriod">
+	                                <input id="optPeriod" th:field="*{macroDateType}" th:value="${repeatDate}" type="radio" data-target="#reservation2" th:checked="${repeatDate}eq*{macroDateType}" th:disabled="${repeatDate}neq*{macroDateType}" />
+	                                <span class="box flex-column">
+	                                  <span>繰り返し予約</span><span class="circle">&nbsp;</span>
+	                                </span>
+	                              </label>
+	                          </div>
+	                        </div>
+
+	                        <div class="tab-content">                             
+                              <div id="reservation1" class="tab-pane" th:classappend="(${termDate}==*{macroDateType} ? ' active' : '')">
+                                <table>
+                                <thead>
+                                  <tr>
+                                    <th>　 </th>
+                                    <th>予約日</th>
+                                    <th>　</th>
+                                    <th>予約時間    </th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr>
+                                    <th width="10%"><span>FROM</span></th>
+                                    <td>
+                                      <span th:text="*{fromReservationDate}"></span><input type="hidden" readonly th:field="*{fromReservationDate}"/>
+                                    </td>
+                                    <td>　</td>
+                                    <td>
+                                      <span th:text="*{fromReservationTime}"></span><input type="hidden" readonly th:field="*{fromReservationTime}"/>
+                                    </td>
+                                  </tr>
+                                  <tr><td colspan="4"><div class="box-filter m-b-0 c-form-01 text-md" >　</div></td></tr>
+                                  <tr>
+                                    <th><span>TO</span></th>
+                                    <td>
+                                      <span th:text="*{toReservationDate}"></span><input type="hidden" readonly th:field="*{toReservationDate}"/>
+                                    </td>
+                                    <td>　</td>
+                                    <td>
+                                      <span th:text="*{toReservationTime}"></span><input type="hidden" readonly th:field="*{toReservationTime}"/>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                                </table>
+                              </div>
+                              <div id="reservation2" class="tab-pane" th:classappend="(${repeatDate}==*{macroDateType} ? ' active' : '')">
+                                <table>
+                                <thead>
+                                  <tr><td colspan="4"><div class="box-filter m-b-0 c-form-01 text-md" >　</div></td></tr>
+                                </thead>
+                                <tbody>
+                                  <tr>
+                                    <th width="10%"><span>予約日 </span></th>
+                                    <td>
+                                      <span th:text="*{repeatFromReservationDate}"></span><input type="hidden" readonly th:field="*{repeatFromReservationDate}"/>
+                                    </td>
+                                    <td>～</td>
+                                    <td>
+                                      <span th:text="*{repeatToReservationDate}"></span><input type="hidden" readonly th:field="*{repeatToReservationDate}"/>
+                                    </td>
+                                  </tr>
+                                  <tr><td colspan="4"><div class="box-filter m-b-0 c-form-01 text-md" >　</div></td></tr>
+                                  <tr>
+                                    <th><span>予約時間 </span></th>
+                                    <td colspan="3">
+                                      <span th:text="*{repeatFromReservationTime}"></span><input type="hidden" readonly th:field="*{repeatFromReservationTime}"/>
+                                    <span>～</span>
+                                      <span th:text="*{repeatToReservationTime}"></span><input type="hidden" readonly th:field="*{repeatToReservationTime}"/>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                                </table>
+                              </div>
+	                        </div>
+                          </div>                   
                         </div>
 
                         <div class="row align-items-start m-b-20">
                           <div class="d-flex justify-content-between align-items-start m-t-10">
                             <span class="text c-ttl c-ttl__04">打席番号</span>
+                            <span class="tag-icon tag-red m-t-5">必須</span>
                           </div>
                           <div>
                             <p class="badge badge-pill badge-primary c-ttl c-ttl__04" th:each="item : *{chkBatNumbers}" th:text="${item}"></p>
@@ -100,8 +159,9 @@
                 </div>
           　　　　　　　</section>
         </div>
-        
     </form>
+
+
 </div> <!-- /** layout contents finish */ -->
 </body>
 </html>

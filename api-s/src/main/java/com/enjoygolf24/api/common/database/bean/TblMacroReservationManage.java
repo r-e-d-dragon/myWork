@@ -46,6 +46,9 @@ public class TblMacroReservationManage implements Serializable {
 	@Column(name = "macro_name")
 	private String macroName;
 
+	@Column(name = "macro_date_type")
+	private String macroDateType;
+
 	@Column(name = "register_date")
 	private Timestamp registerDate;
 
@@ -119,6 +122,14 @@ public class TblMacroReservationManage implements Serializable {
 
 	public void setMacroName(String macroName) {
 		this.macroName = macroName;
+	}
+
+	public String getMacroDateType() {
+		return this.macroDateType;
+	}
+
+	public void setMacroDateType(String macroDateType) {
+		this.macroDateType = macroDateType;
 	}
 
 	public Timestamp getRegisterDate() {

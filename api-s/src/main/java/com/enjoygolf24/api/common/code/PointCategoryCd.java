@@ -3,7 +3,7 @@ package com.enjoygolf24.api.common.code;
 public interface PointCategoryCd {
 
 	/** 月ポイント */
-	public static final String MONTLY_POINT = "01";
+	public static final String MONTHLY_POINT = "01";
 
 	/** イベントポイント */
 	public static final String EVENT_POINT = "02";

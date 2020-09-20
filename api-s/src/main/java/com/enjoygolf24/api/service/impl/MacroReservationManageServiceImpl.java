@@ -14,6 +14,7 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.enjoygolf24.api.common.code.MacroDateTypeCd;
 import com.enjoygolf24.api.common.code.PointCategoryCd;
 import com.enjoygolf24.api.common.code.ReservationStatusCd;
 import com.enjoygolf24.api.common.database.bean.MstTimeTable;
@@ -70,11 +71,26 @@ public class MacroReservationManageServiceImpl implements MacroReservationManage
 	@Override
 	@Transactional
 	public TblMacroReservationManage MacroReservationRegister(MemberReservationServiceBean serviceBean) {
+		if (MacroDateTypeCd.TERM_DATE.equals(serviceBean.getMacroDateType())) {
+			return macroTermReservationRegister(serviceBean);
+		} else if (MacroDateTypeCd.REPEAT_DATE.equals(serviceBean.getMacroDateType())) {
+			return macroRepeatReservationRegister(serviceBean);
+		}
+		return null;
+	}
 
+	/**
+	 * 期間指定一括予約
+	 * 
+	 * @param serviceBean
+	 * @return
+	 */
+	@Transactional
+	public TblMacroReservationManage macroTermReservationRegister(MemberReservationServiceBean serviceBean) {
 		List<MstTimeTable> timeTable = getMstTimeTable(serviceBean.getAspCode());
+		// 一括予約情報登録
 		TblMacroReservationManage manager = insertMacroReservationManage(serviceBean);
 
-		// TODO
 		int fromReservationTime = Integer.valueOf(serviceBean.getFromReservationTime().substring(0, 2));
 		int toReservationTime = Integer.valueOf(serviceBean.getToReservationTime().substring(0, 2));
 
@@ -92,7 +108,6 @@ public class MacroReservationManageServiceImpl implements MacroReservationManage
 			serviceBean.setReservationTime(timeSlotName);
 			// 打席数分
 			for (String batNumber : serviceBean.getChkBatNumbers()) {
-
 				// 予約情報取得
 				TblReservation reservation = reservationRepository
 						.findByAspCodeAndReservationDateAndReservationTimeAndBatNumberAndStatus(
@@ -105,12 +120,70 @@ public class MacroReservationManageServiceImpl implements MacroReservationManage
 					// 取消、ポイント戻し処理
 					updateMemberCanclePointManage(serviceBean, reservation.getReservationId());
 				}
-
 				// 予約情報登録
 				insertMacroReservation(serviceBean, batNumber);
 			}
 		}
+		return manager;
+	}
 
+	/**
+	 * 繰り返し一括予約
+	 * 
+	 * @param serviceBean
+	 * @return
+	 */
+	@Transactional
+	public TblMacroReservationManage macroRepeatReservationRegister(MemberReservationServiceBean serviceBean) {
+
+		DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+
+		List<MstTimeTable> timeTable = getMstTimeTable(serviceBean.getAspCode());
+		serviceBean.setFromReservationDate(serviceBean.getRepeatFromReservationDate());
+		serviceBean.setToReservationDate(serviceBean.getRepeatToReservationDate());
+		serviceBean.setFromReservationTime(serviceBean.getRepeatFromReservationTime());
+		serviceBean.setToReservationTime(serviceBean.getRepeatToReservationTime());
+
+		// 一括予約情報登録
+		TblMacroReservationManage manager = insertMacroReservationManage(serviceBean);
+
+		int fromReservationTime = Integer.valueOf(serviceBean.getRepeatFromReservationTime().substring(0, 2));
+		int toReservationTime = Integer.valueOf(serviceBean.getRepeatToReservationTime().substring(0, 2));
+
+		LocalDateTime start = DateUtility.getDate(serviceBean.getRepeatFromReservationDate()).toInstant()
+				.atZone(ZoneId.systemDefault()).toLocalDateTime();
+		LocalDateTime end = DateUtility.getDate(serviceBean.getRepeatToReservationDate()).toInstant()
+				.atZone(ZoneId.systemDefault()).toLocalDateTime();
+
+		for (LocalDateTime current = start; !current.isAfter(end); current = current.plusDays(1)) {
+
+			LocalDateTime startTime = current.plusHours(fromReservationTime);
+			LocalDateTime endTime = current.plusHours(toReservationTime);
+
+			for (LocalDateTime currentTime = startTime; !currentTime.isAfter(endTime); currentTime = currentTime
+					.plusHours(1)) {
+				String timeSlotName = DateUtility.toTimeString(timeTable.get(currentTime.getHour()).getStartTime())
+						+ "~" + DateUtility.toTimeString(timeTable.get(currentTime.getHour()).getEndTime());
+				serviceBean.setReservationDate(currentTime.format(format));
+				serviceBean.setReservationTime(timeSlotName);
+				// 打席数分
+				for (String batNumber : serviceBean.getChkBatNumbers()) {
+					// 予約情報取得
+					TblReservation reservation = reservationRepository
+							.findByAspCodeAndReservationDateAndReservationTimeAndBatNumberAndStatus(
+									serviceBean.getAspCode(), DateUtility.getDate(serviceBean.getReservationDate()),
+									serviceBean.getReservationTime(), batNumber, ReservationStatusCd.STATUS_FIXED);
+					if (reservation != null) {
+						// 予約情報更新ー取消
+						updateReservationCancle(serviceBean, reservation);
+						// 取消、ポイント戻し処理
+						updateMemberCanclePointManage(serviceBean, reservation.getReservationId());
+					}
+					// 予約情報登録
+					insertMacroReservation(serviceBean, batNumber);
+				}
+			}
+		}
 		return manager;
 	}
 
@@ -130,6 +203,7 @@ public class MacroReservationManageServiceImpl implements MacroReservationManage
 
 		macroReservationManage.setReservationNumber(serviceBean.getReservationNumber());
 		macroReservationManage.setMacroName(serviceBean.getMacroName());
+		macroReservationManage.setMacroDateType(serviceBean.getMacroDateType());
 
 		macroReservationManage.setStatus(serviceBean.getStatus());
 		macroReservationManage.setAspCode(serviceBean.getAspCode());

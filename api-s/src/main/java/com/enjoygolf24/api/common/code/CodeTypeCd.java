@@ -14,9 +14,9 @@ public interface CodeTypeCd {
 
 	public static final String ADDITIONAL_LESSON_CD = "006";
 
-	public static final String POINT_TYPE_CD = "007";
-
 	public static final String POINT_CATEGORY_CD = "008";
+
+	public static final String POINT_TYPE_CD = "009";
 
 	public static final String HOLIDAY_TYPE_CD = "010";
 
@@ -31,6 +31,8 @@ public interface CodeTypeCd {
 	public static final String NEWS_TYPE_CD = "015";
 
 	public static final String NEWS_OPEN_TYPE_CD = "016";
+
+	public static final String MACRO_DATE_TYPE_CD = "701";
 
 	public static final String YESNO_TYPE_CD = "900";
 

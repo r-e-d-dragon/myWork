@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,7 +21,10 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.enjoygolf24.api.common.code.CodeTypeCd;
+import com.enjoygolf24.api.common.code.MacroDateTypeCd;
 import com.enjoygolf24.api.common.code.ReservationStatusCd;
+import com.enjoygolf24.api.common.database.bean.CodeMaster;
 import com.enjoygolf24.api.common.database.bean.MstTimeTable;
 import com.enjoygolf24.api.common.database.bean.TblAsp;
 import com.enjoygolf24.api.common.database.jpa.repository.CodeMasterRepository;
@@ -29,6 +33,7 @@ import com.enjoygolf24.api.common.database.mybatis.bean.MemberReservationManage;
 import com.enjoygolf24.api.common.database.mybatis.bean.ReservationPointTimeTableInfo;
 import com.enjoygolf24.api.common.utility.DateUtility;
 import com.enjoygolf24.api.common.utility.LoginUtility;
+import com.enjoygolf24.api.common.utility.StringUtil;
 import com.enjoygolf24.api.common.validator.groups.All;
 import com.enjoygolf24.api.service.AspService;
 import com.enjoygolf24.api.service.MacroReservationManageService;
@@ -90,6 +95,13 @@ public class MacroReservationController {
 				.collect(Collectors.toList());
 		model.addAttribute("batNumbers", batNumbers);
 
+		model.addAttribute("termDate", MacroDateTypeCd.TERM_DATE);
+		model.addAttribute("repeatDate", MacroDateTypeCd.REPEAT_DATE);
+
+		if (StringUtil.isEmpty(form.getMacroDateType())) {
+			form.setMacroDateType(MacroDateTypeCd.TERM_DATE);
+		}
+
 		serchCommonLogic(form, model);
 
 		logger.info("End macrosReservationInfo Controller");
@@ -108,27 +120,52 @@ public class MacroReservationController {
 			return macrosReservationInfo(form, model);
 		}
 
-		int fromReservationTime = Integer.valueOf(form.getFromReservationTime().substring(0, 2));
-		int toReservationTime = Integer.valueOf(form.getToReservationTime().substring(0, 2));
-
-		LocalDateTime fromReservationDateTime = DateUtility.getDate(form.getFromReservationDate()).toInstant()
-				.atZone(ZoneId.systemDefault()).toLocalDateTime().plusHours(fromReservationTime);
-		LocalDateTime toReservationDateTime = DateUtility.getDate(form.getToReservationDate()).toInstant()
-				.atZone(ZoneId.systemDefault()).toLocalDateTime().plusHours(toReservationTime);
-
-		if (fromReservationDateTime.compareTo(toReservationDateTime) > 0) {
-			model.addAttribute("macroReservationManageListForm", form);
-			result.rejectValue("toReservationDate", "error.toReservationDate", "{0} : 開始日時より未来日時を選択して下さい。");
-			return macrosReservationInfo(form, model);
-		}
-
+		// 現在時刻
 		LocalDateTime currentDateTime = DateUtility.getCurrentTimestamp().toInstant().atZone(ZoneId.systemDefault())
 				.toLocalDateTime();
-		if (currentDateTime.compareTo(fromReservationDateTime) > 0) {
-			model.addAttribute("macroReservationManageListForm", form);
-			result.rejectValue("fromReservationTime", "error.fromReservationTime",
-					"{0} : 開始日時の予約時刻は現在時刻より未来時刻を選択して下さい。");
-			return macrosReservationInfo(form, model);
+
+		if (MacroDateTypeCd.TERM_DATE.equals(form.getMacroDateType())) {
+			// 期間指定予約
+			int fromReservationTime = Integer.valueOf(form.getFromReservationTime().substring(0, 2));
+			int toReservationTime = Integer.valueOf(form.getToReservationTime().substring(0, 2));
+
+			LocalDateTime fromReservationDateTime = DateUtility.getDate(form.getFromReservationDate()).toInstant()
+					.atZone(ZoneId.systemDefault()).toLocalDateTime().plusHours(fromReservationTime);
+			LocalDateTime toReservationDateTime = DateUtility.getDate(form.getToReservationDate()).toInstant()
+					.atZone(ZoneId.systemDefault()).toLocalDateTime().plusHours(toReservationTime);
+			if (fromReservationDateTime.compareTo(toReservationDateTime) > 0) {
+				model.addAttribute("macroReservationManageListForm", form);
+				result.rejectValue("toReservationDate", "error.toReservationDate", "{0} : 開始日時より未来日時を選択して下さい。");
+				return macrosReservationInfo(form, model);
+			}
+			if (currentDateTime.compareTo(fromReservationDateTime) > 0) {
+				model.addAttribute("macroReservationManageListForm", form);
+				result.rejectValue("fromReservationTime", "error.fromReservationTime",
+						"{0} : 開始日時の予約時刻は現在時刻より未来時刻を選択して下さい。");
+				return macrosReservationInfo(form, model);
+			}
+
+		} else if (MacroDateTypeCd.REPEAT_DATE.equals(form.getMacroDateType())) {
+			// 繰り返し予約
+			int repeatFromReservationTime = Integer.valueOf(form.getRepeatFromReservationTime().substring(0, 2));
+			int repeatToReservationTime = Integer.valueOf(form.getRepeatToReservationTime().substring(0, 2));
+
+			LocalDateTime repeatFromReservationDateTime = DateUtility.getDate(form.getRepeatFromReservationDate())
+					.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime().plusHours(repeatFromReservationTime);
+			LocalDateTime repeatToReservationDateTime = DateUtility.getDate(form.getRepeatToReservationDate())
+					.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime().plusHours(repeatToReservationTime);
+			if (repeatFromReservationDateTime.compareTo(repeatToReservationDateTime) > 0) {
+				model.addAttribute("macroReservationManageListForm", form);
+				result.rejectValue("repeatToReservationDate", "error.repeatToReservationDate",
+						"{0} : 開始日時より未来日時を選択して下さい。");
+				return macrosReservationInfo(form, model);
+			}
+			if (currentDateTime.compareTo(repeatFromReservationDateTime) > 0) {
+				model.addAttribute("macroReservationManageListForm", form);
+				result.rejectValue("repeatFromReservationTime", "error.repeatFromReservationTime",
+						"{0} : 開始日時の予約時刻は現在時刻より未来時刻を選択して下さい。");
+				return macrosReservationInfo(form, model);
+			}
 		}
 
 		initListForm(form, model);
@@ -140,6 +177,9 @@ public class MacroReservationController {
 		List<String> batNumbers = codeMasterRepository.findByCodeTypeOrderByCd("990").stream().map(p -> p.getName())
 				.collect(Collectors.toList());
 		model.addAttribute("batNumbers", batNumbers);
+
+		model.addAttribute("termDate", MacroDateTypeCd.TERM_DATE);
+		model.addAttribute("repeatDate", MacroDateTypeCd.REPEAT_DATE);
 
 		model.addAttribute("macroReservationManageListForm", form);
 
@@ -176,12 +216,24 @@ public class MacroReservationController {
 
 		model.addAttribute("action", "ins");
 		model.addAttribute("reservationNumber", searchForm.getReservationNumber());
-
 		model.addAttribute("macroName", form.getMacroName());
-		model.addAttribute("fromReservationDate", form.getFromReservationDate());
-		model.addAttribute("fromReservationTime", form.getFromReservationTime());
-		model.addAttribute("toReservationDate", form.getToReservationDate());
-		model.addAttribute("toReservationTime", form.getToReservationTime());
+
+		model.addAttribute("macroDateTypeName", codeMasterRepository
+				.findByCodeTypeAndCd(CodeTypeCd.MACRO_DATE_TYPE_CD, form.getMacroDateType()).getName());
+
+		if (MacroDateTypeCd.TERM_DATE.equals(form.getMacroDateType())) {
+			// 期間指定
+			model.addAttribute("fromReservationDate", form.getFromReservationDate());
+			model.addAttribute("fromReservationTime", form.getFromReservationTime());
+			model.addAttribute("toReservationDate", form.getToReservationDate());
+			model.addAttribute("toReservationTime", form.getToReservationTime());
+		} else if (MacroDateTypeCd.REPEAT_DATE.equals(form.getMacroDateType())) {
+			// 繰り返し
+			model.addAttribute("fromReservationDate", form.getRepeatFromReservationDate());
+			model.addAttribute("fromReservationTime", form.getRepeatFromReservationTime());
+			model.addAttribute("toReservationDate", form.getRepeatToReservationDate());
+			model.addAttribute("toReservationTime", form.getRepeatToReservationTime());
+		}
 		model.addAttribute("chkBatNumbers", form.getChkBatNumbers());
 
 		model.addAttribute("macroReservationManageListForm", form);
@@ -223,6 +275,14 @@ public class MacroReservationController {
 
 		PageInfo<MemberReservationManage> pageInfo = new PageInfo<MemberReservationManage>(macroReservationList);
 		model.addAttribute("pageInfo", pageInfo);
+		
+		Map<String, String> macroDateTypeMap = codeMasterRepository
+				.findByCodeTypeOrderByCdDesc(CodeTypeCd.MACRO_DATE_TYPE_CD).stream()
+				.collect(Collectors.toMap(CodeMaster::getCd, d -> d.getName()));
+
+		macroReservationList.forEach(p -> {
+			p.setMacroDateTypeName(macroDateTypeMap.get(p.getMacroDateType()));
+		});
 		form.setReservationList(macroReservationList);
 
 		model.addAttribute("macroReservationList", macroReservationList);

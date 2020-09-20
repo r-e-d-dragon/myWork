@@ -130,6 +130,7 @@
         select
             rev.reservation_number     as reservation_number
             , rev.macro_name           as macro_name
+            , rev.macro_date_type      as macro_date_type
             , rev.status               as status
             , rev.asp_code             as asp_code
             , rev.bat_number           as bat_number

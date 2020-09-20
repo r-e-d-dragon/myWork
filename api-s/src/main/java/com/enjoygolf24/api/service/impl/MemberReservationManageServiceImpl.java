@@ -96,9 +96,9 @@ public class MemberReservationManageServiceImpl implements MemberReservationMana
 		// 予約日
 		String reservationDate = serviceBean.getReservationDate();
 		// 月ポイント情報取得
-		if (PointCategoryCd.MONTLY_POINT.equals(serviceBean.getPointCategoryCode())) {
+		if (PointCategoryCd.MONTHLY_POINT.equals(serviceBean.getPointCategoryCode())) {
 			List<PointManage> pointList = getMemberPointManageList(serviceBean.getMemberCode(),
-					PointCategoryCd.MONTLY_POINT, serviceBean.getReservationDate());
+					PointCategoryCd.MONTHLY_POINT, serviceBean.getReservationDate());
 			// TODO 当月分は当月のみ使用、ポイントがあっても開始日か過ぎてないと使えない。
 			// TODO 来月は、来月の使用ポイントから計算
 			Optional<PointManage> mPoint = pointList.stream()
@@ -414,8 +414,8 @@ public class MemberReservationManageServiceImpl implements MemberReservationMana
 		reservation.setTblUser(member);
 
 		// 月ポイント情報取得
-		List<PointManage> totMonPointList = getMemberPointManageList(memberCode, PointCategoryCd.MONTLY_POINT, null);
-		List<PointManage> validMonPointList = getMemberPointManageList(memberCode, PointCategoryCd.MONTLY_POINT,
+		List<PointManage> totMonPointList = getMemberPointManageList(memberCode, PointCategoryCd.MONTHLY_POINT, null);
+		List<PointManage> validMonPointList = getMemberPointManageList(memberCode, PointCategoryCd.MONTHLY_POINT,
 				reservationDate);
 		// イベントポイント情報取得
 		List<PointManage> totEvtPointList = getMemberPointManageList(memberCode, PointCategoryCd.EVENT_POINT, null);
@@ -433,7 +433,7 @@ public class MemberReservationManageServiceImpl implements MemberReservationMana
 		reservation.setReservationList(reservationList);
 
 		reservation.setMonthlyReservationCount(
-				reservationList.stream().filter(p -> p.getPointCategoryCode().equals(PointCategoryCd.MONTLY_POINT))
+				reservationList.stream().filter(p -> p.getPointCategoryCode().equals(PointCategoryCd.MONTHLY_POINT))
 						.collect(Collectors.toList()).size());
 		reservation.setEventReservationCount(
 				reservationList.stream().filter(p -> p.getPointCategoryCode().equals(PointCategoryCd.EVENT_POINT))

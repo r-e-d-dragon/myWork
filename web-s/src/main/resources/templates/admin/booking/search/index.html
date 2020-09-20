@@ -98,9 +98,9 @@
 				        <td class="text-center"><span th:text="${data.consumedPoint}"></span></td>
                         <td class="text-center">
                           <span>
-                          <img th:if="${data.pointCategoryCode == '002'}" th:src="@{/images/common/ico_e.png}" height="30" alt="イベントポイント"/>
-                          <img th:if="${data.pointCategoryCode == '001'}" th:src="@{/images/common/ico_m.png}" height="30" alt="月ポイント"/>
-                          <img th:if="${data.pointCategoryCode == '999'}" th:src="@{/images/common/ico_a.png}" height="30" alt="管理者"/>
+                          <img th:if="${data.pointCategoryCode eq monthlyPt}" th:src="@{/images/common/ico_e.png}" height="30" alt="イベントポイント"/>
+                          <img th:if="${data.pointCategoryCode eq eventPt}" th:src="@{/images/common/ico_m.png}" height="30" alt="月ポイント"/>
+                          <img th:if="${data.pointCategoryCode eq adminPt}" th:src="@{/images/common/ico_a.png}" height="30" alt="管理者"/>
                           </span>
                         </td>
 				        <td th:if="${data.expireFlag=='1'}" class="text-center">

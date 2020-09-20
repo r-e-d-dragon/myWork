@@ -179,7 +179,7 @@ public class MemberReservationManageController {
 			form.setValid(false);
 		}
 
-		model.addAttribute("monthlyPoint", PointCategoryCd.MONTLY_POINT);
+		model.addAttribute("monthlyPoint", PointCategoryCd.MONTHLY_POINT);
 		model.addAttribute("eventPoint", PointCategoryCd.EVENT_POINT);
 
 		model.addAttribute("memberReservationRegisterForm", form);
@@ -214,7 +214,7 @@ public class MemberReservationManageController {
 		}
 
 		int consumedPoint = Integer.valueOf(form.getConsumedPoint());
-		if (PointCategoryCd.MONTLY_POINT.equals(form.getPointCategoryCode())) {
+		if (PointCategoryCd.MONTHLY_POINT.equals(form.getPointCategoryCode())) {
 			if (consumedPoint > form.getValidMonthlyPoint()) {
 				model.addAttribute("memberReservationRegisterForm", form);
 				result.rejectValue("validMonthlyPoint", "error.validMonthlyPoint", "{0} : 月ポイントが足りないため、予約出来ません。");
@@ -222,7 +222,7 @@ public class MemberReservationManageController {
 			}
 			// 月ポイント情報取得
 			List<PointManage> validMonPointList = memberReservationManageService.getMemberPointManageList(
-					form.getMemberCode(), PointCategoryCd.MONTLY_POINT, form.getReservationDate());
+					form.getMemberCode(), PointCategoryCd.MONTHLY_POINT, form.getReservationDate());
 			if (consumedPoint > validMonPointList.stream().mapToInt(x -> x.getPointAmount()).sum()) {
 				model.addAttribute("memberReservationRegisterForm", form);
 				result.rejectValue("validMonthlyPoint", "error.validMonthlyPoint", "{0} : 月ポイントが足りないため、予約出来ません。");
@@ -496,6 +496,10 @@ public class MemberReservationManageController {
 		model.addAttribute("pageInfo", pageInfo);
 		form.setReservationList(memberReservationList);
 
+		model.addAttribute("monthlyPt", PointCategoryCd.MONTHLY_POINT);
+		model.addAttribute("eventPt", PointCategoryCd.EVENT_POINT);
+		model.addAttribute("adminPt", PointCategoryCd.ADMIN_POINT);
+
 		model.addAttribute("modelMemberReservationList", memberReservationList);
 	}
 
@@ -507,7 +511,7 @@ public class MemberReservationManageController {
 	private void setMemberPointInfoForm(MemberReservationRegisterForm form) {
 		// 月ポイント情報取得
 		List<PointManage> monthlyPointList = memberReservationManageService
-				.getMemberPointManageList(form.getMemberCode(), PointCategoryCd.MONTLY_POINT, null);
+				.getMemberPointManageList(form.getMemberCode(), PointCategoryCd.MONTHLY_POINT, null);
 		// 月ポイント合計
 		int totalMonthlyPoint = monthlyPointList.stream().mapToInt(x -> x.getPointAmount()).sum();
 

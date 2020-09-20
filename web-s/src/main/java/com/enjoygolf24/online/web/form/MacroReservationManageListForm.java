@@ -49,15 +49,18 @@ public class MacroReservationManageListForm implements Serializable {
 
 	@NotBlank(groups = Insert0.class)
 	private String macroName;
+	@NotBlank(groups = Insert0.class)
+	private String macroDateType;
 
-	@NotBlank(groups = Insert0.class)
 	private String fromReservationDate;
-	@NotBlank(groups = Insert0.class)
 	private String toReservationDate;
-	@NotBlank(groups = Insert0.class)
 	private String fromReservationTime;
-	@NotBlank(groups = Insert0.class)
 	private String toReservationTime;
+
+	private String repeatFromReservationDate;
+	private String repeatToReservationDate;
+	private String repeatFromReservationTime;
+	private String repeatToReservationTime;
 
 	private String pointCategoryCode;
 	private String pointGrade;

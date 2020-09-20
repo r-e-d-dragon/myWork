@@ -31,8 +31,6 @@ public class TblPointManage implements Serializable {
 	@Column(name = "end_date")
 	private Timestamp endDate;
 
-	private String memo;
-
 	@Column(name = "point_amount")
 	private Integer pointAmount;
 
@@ -56,6 +54,8 @@ public class TblPointManage implements Serializable {
 
 	@Column(name = "update_user")
 	private String updateUser;
+
+	private String memo;
 
 	public TblPointManage() {
 	}
@@ -90,14 +90,6 @@ public class TblPointManage implements Serializable {
 
 	public void setEndDate(Timestamp endDate) {
 		this.endDate = endDate;
-	}
-
-	public String getMemo() {
-		return this.memo;
-	}
-
-	public void setMemo(String memo) {
-		this.memo = memo;
 	}
 
 	public Integer getPointAmount() {
@@ -162,6 +154,14 @@ public class TblPointManage implements Serializable {
 
 	public void setUpdateUser(String updateUser) {
 		this.updateUser = updateUser;
+	}
+
+	public String getMemo() {
+		return this.memo;
+	}
+
+	public void setMemo(String memo) {
+		this.memo = memo;
 	}
 
 }
