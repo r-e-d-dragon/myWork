@@ -17,6 +17,9 @@ public interface MacroReservationManageService {
 	@Transactional
 	public TblMacroReservationManage MacroReservationRegister(MemberReservationServiceBean serviceBean);
 
+	@Transactional
+	public void MacroReservationCancle(MemberReservationServiceBean serviceBean);
+
 	public List<MemberReservationManage> getMacroReservationList(String aspCode, int pageNo, int pageSize);
 
 	public List<MstTimeTable> getMstTimeTable(String aspCode);

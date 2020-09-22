@@ -242,6 +242,22 @@ public class MacroReservationController {
 		return "/admin/booking/macro/finish";
 	}
 
+	@RequestMapping(value = "/cancle", method = RequestMethod.POST)
+	public String cancleMacroReservationInfo(
+			@ModelAttribute MacroReservationManageListForm form, Model model) {
+		logger.info("Start cancleMacroReservationInfo Controller");
+
+		initListForm(form, model);
+
+		// 一括予約登録
+		macroReservationManageService.MacroReservationCancle(form.createMemberReservationServiceBean());
+
+		model.addAttribute("macroReservationManageListForm", form);
+
+		logger.info("End cancleMacroReservationInfo Controller");
+		return "/admin/booking/macro/cancleFinish";
+	}
+
 	/**
 	 * リストフォーム初期処理
 	 * 

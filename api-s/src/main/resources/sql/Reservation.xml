@@ -164,4 +164,9 @@
             ]]>            
     </select>
 
+    <update id="updateReservationCancle">
+        update tbl_reservation SET status = #{statusCd}, update_date = now(), update_user = #{loginUserCd}
+        where reservation_number = #{reservationNumber}
+    </update>
+
 </mapper>

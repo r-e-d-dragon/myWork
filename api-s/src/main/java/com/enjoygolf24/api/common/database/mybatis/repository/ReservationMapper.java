@@ -29,4 +29,7 @@ public interface ReservationMapper {
 
 	public List<ReservationPointTimeTableInfo> getViewReservationPoitTimeTableInfo(@Param("dateTime") Date dateTime,
 			@Param("validateStartTerm") Date validateStartTerm);
+
+	public void updateReservationCancle(@Param("statusCd") String statusCd,
+			@Param("reservationNumber") String reservationNumber, @Param("loginUserCd") String loginUserCd);
 }

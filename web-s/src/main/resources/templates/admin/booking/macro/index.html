@@ -267,7 +267,7 @@
                         <td class="text-left"><span th:text="${data.batNumber}"></span></td>
                         <td class="text-center">
                           <a id="searchBtn" class="badge badge-info" href="#" th:url="@{/admin/booking/search}" th:value="${data.reservationNumber}" target="reservationNumber">予約検索</a><br>
-                          <a href="#" class="badge badge-warning">取消</a>
+                          <a id="registerBtn" class="badge badge-warning" href="#" th:url="@{/admin/booking/macro/cancle}" th:value="${data.reservationNumber}" target="reservationNumber">取消</a>
                         </td>
                     </tr>
                 </tbody>

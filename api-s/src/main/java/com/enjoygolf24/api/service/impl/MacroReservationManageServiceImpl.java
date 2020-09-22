@@ -68,6 +68,58 @@ public class MacroReservationManageServiceImpl implements MacroReservationManage
 		return mstTimeTableRepository.findByAspCodeAndDayTypeCdOrderByTimeTableCode("0", "02");
 	}
 
+	/**
+	 * 一括予約取消
+	 */
+	@Override
+	@Transactional
+	public void MacroReservationCancle(MemberReservationServiceBean serviceBean) {
+
+		updateMacroReservationCancle(serviceBean);
+		updateReservationCancle(serviceBean);
+
+		return;
+	}
+
+	/**
+	 * 一括予約情報取消更新
+	 * 
+	 * @param serviceBean
+	 * @return
+	 */
+	@Transactional
+	public TblMacroReservationManage updateMacroReservationCancle(MemberReservationServiceBean serviceBean) {
+
+		// 一括予約情報登録
+		TblMacroReservationManage manager = macroReservationManageRepository
+				.findByReservationNumber(serviceBean.getReservationNumber());
+
+		manager.setStatus(ReservationStatusCd.STATUS_CANCLE);
+		manager.setUpdateUser(serviceBean.getLoginUserCd());
+		manager.setUpdateDate(new Timestamp(System.currentTimeMillis()));
+		macroReservationManageRepository.save(manager);
+
+		return manager;
+	}
+
+	/**
+	 * 予約情報取消更新
+	 * 
+	 * @param serviceBean
+	 * @return TblReservation
+	 */
+	@Transactional
+	private void updateReservationCancle(MemberReservationServiceBean serviceBean) {
+
+		reservationMapper.updateReservationCancle(ReservationStatusCd.STATUS_CANCLE, serviceBean.getReservationNumber(),
+				serviceBean.getLoginUserCd());
+
+		return;
+	}
+
+	/**
+	 * 一括取消登録
+	 */
 	@Override
 	@Transactional
 	public TblMacroReservationManage MacroReservationRegister(MemberReservationServiceBean serviceBean) {
@@ -275,7 +327,7 @@ public class MacroReservationManageServiceImpl implements MacroReservationManage
 		reservation.setUpdateUser(serviceBean.getLoginUserCd());
 		reservation.setUpdateDate(new Timestamp(System.currentTimeMillis()));
 
-		// TODO
+		// TODO 一般ユーザの予約取消時
 		if (!PointCategoryCd.ADMIN_POINT.contentEquals(reservation.getPointCategoryCode())) {
 			// ユーザ予約
 			// TODO 予約取消メール送信
