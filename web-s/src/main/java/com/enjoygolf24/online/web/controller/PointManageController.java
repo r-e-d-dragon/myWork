@@ -287,8 +287,9 @@ public class PointManageController {
 		// TODO: modify point of next month
 		form.setEventPointBalance(reservation.getValidEventPoint());
 		form.setMonthlyPointBalance(reservation.getValidMonthlyPoint());
-		form.setEventPointBalanceNextMonth(reservation.getTotalEventPoint());
-		form.setMonthlyPointBalanceNextMonth(reservation.getTotalMonthlyPoint());
+		// TODO
+//		form.setEventPointBalanceNextMonth(reservation.getTotalEventPoint());
+//		form.setMonthlyPointBalanceNextMonth(reservation.getTotalMonthlyPoint());
 
 		setModelMapper(model);
 	}

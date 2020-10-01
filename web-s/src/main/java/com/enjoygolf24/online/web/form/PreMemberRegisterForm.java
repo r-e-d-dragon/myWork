@@ -17,6 +17,7 @@ import com.enjoygolf24.api.common.validator.annotation.SjisSafe;
 import com.enjoygolf24.api.common.validator.annotation.Telephone;
 import com.enjoygolf24.api.common.validator.annotation.UniqueEmail;
 import com.enjoygolf24.api.common.validator.groups.Insert0;
+import com.enjoygolf24.api.common.validator.groups.Insert1;
 import com.enjoygolf24.api.service.bean.PreMemberRegisterServiceBean;
 
 import lombok.Data;
@@ -31,36 +32,37 @@ public class PreMemberRegisterForm implements Serializable {
 	private String aspCode;
 
 	@NotBlank(groups = Insert0.class)
-	@Size(groups = Insert0.class, max = 80)
-	@Email(groups = Insert0.class)
-	@UniqueEmail(groups = Insert0.class)
+	@Size(groups = Insert1.class, max = 80)
+	@Email(groups = Insert1.class)
+	@UniqueEmail(groups = Insert1.class)
 	private String email;
 
 	@NotBlank(groups = Insert0.class)
-	@Size(groups = Insert0.class, max = 80)
-	@Email(groups = Insert0.class)
+	@Size(groups = Insert1.class, max = 80)
+	@Email(groups = Insert1.class)
 	private String emailConfirm;
 
 	@NotBlank(groups = Insert0.class)
-	@Kanji(groups = Insert0.class, max = 80)
-	@SjisSafe(groups = Insert0.class)
+	@Kanji(groups = Insert1.class, max = 80)
+	@SjisSafe(groups = Insert1.class)
 	private String firstName;
 
 	@NotBlank(groups = Insert0.class)
-	@Kana(groups = Insert0.class, max = 80)
+	@Kana(groups = Insert1.class, max = 80)
 	@SjisSafe(groups = Insert0.class)
 	private String firstNameKana;
 
 	@NotBlank(groups = Insert0.class)
-	@Kanji(groups = Insert0.class, max = 80)
-	@SjisSafe(groups = Insert0.class)
+	@Kanji(groups = Insert1.class, max = 80)
+	@SjisSafe(groups = Insert1.class)
 	private String lastName;
 
 	@NotBlank(groups = Insert0.class)
-	@Kana(groups = Insert0.class, max = 80)
-	@SjisSafe(groups = Insert0.class)
+	@Kana(groups = Insert1.class, max = 80)
+	@SjisSafe(groups = Insert1.class)
 	private String lastNameKana;
 
+	@NotBlank(groups = Insert0.class)
 	@Telephone(groups = Insert0.class)
 	private String phone;
 
@@ -72,7 +74,7 @@ public class PreMemberRegisterForm implements Serializable {
 
 	private String hasChanged;
 
-	@AssertTrue(groups = Insert0.class, message = "{application.combination.validation.needSameEmailAndEmailConfirm}")
+	@AssertTrue(groups = Insert1.class, message = "{application.combination.validation.needSameEmailAndEmailConfirm}")
 	public boolean isSameEmailAndEmailConfirm() {
 		if (StringUtils.isEmpty(email) || StringUtils.isEmpty(emailConfirm)) {
 			return true;

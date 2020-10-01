@@ -70,6 +70,23 @@ public class CdMapServiceImpl implements CdMapService {
 	}
 
 	/**
+	 * CDマップ作成 includeCds のみから作成
+	 *
+	 * @param codeType   コード種類
+	 * @param includeCds 指定コード
+	 * @return CDマップ
+	 */
+	@Override
+	public LinkedHashMap<String, String> createMapOnlyIncludesReverse(String codeType, String... includeCds) {
+		List<String> includeList = Arrays.asList(includeCds);
+		Predicate<CodeMaster> includeFilter = c -> includeList.contains(c.getCd());
+		LinkedHashMap<String, String> map = new LinkedHashMap<>();
+		codeMasterRepository.findByCodeTypeOrderByCdDesc(codeType).stream().filter(includeFilter)
+				.forEach(e -> map.put(e.getCd(), e.getName()));
+		return map;
+	}
+
+	/**
 	 * CDマップ作成 excludeCds を除外
 	 *
 	 * @param codeType   コード種類

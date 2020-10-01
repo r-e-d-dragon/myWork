@@ -7176,3 +7176,10 @@ html {
   font-weight: normal;
   min-width: 1200px;
 }
+
+p.individual-error{
+	color: #f20000;
+	display: block;
+    vertical-align: top;
+    font-size: 12px;
+}

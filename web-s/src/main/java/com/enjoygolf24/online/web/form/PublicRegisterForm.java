@@ -68,7 +68,7 @@ public class PublicRegisterForm implements Serializable {
 	@Size(groups = Insert0.class, max = 1200)
 	private String memo;
 
-	private String hasChanged;
+	private boolean hasChanged;
 
 	private String loginUserCd;
 

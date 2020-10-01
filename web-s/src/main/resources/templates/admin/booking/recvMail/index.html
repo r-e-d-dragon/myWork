@@ -18,11 +18,11 @@
 <body>
 <div layout:fragment="content"><!-- /** layout contents start */ -->
 
-    <form id="form"  method="post" th:action="@{/admin/booking/sendMail/finish}" th:object="${sendMailForm}">
+    <form id="form"  method="post" th:action="@{/admin/booking/recvMail/finish}" th:object="${recvMailForm}">
 
         <div class="wrapper mypage-custom-index" id="body-index">
             <section>
-                <h1 class="c-ttl c-ttl__01 m-b-50">メール送信</h1>
+                <h1 class="c-ttl c-ttl__01 m-b-50">メール受信（ロリポップメール限定)</h1>
                 <div class="form-register">
                   <section class="m-b-55">
                   <div class="c-box-account m-b-20">
@@ -58,7 +58,7 @@
 
                     <div class="row align-items-start m-b-20">
                       <div class="d-flex justify-content-between align-items-start m-t-5">
-                        <span class="text c-ttl c-ttl__04">E-MAIL</span>
+                        <span class="text c-ttl c-ttl__04">E-MAIL(送信者)</span>
                         <span class="tag-icon tag-red m-t-5">必須</span>
                       </div>
                       <div>
@@ -81,7 +81,7 @@
 
                 <div class="c-box-confirm text-center m-b-70">
                 <div class="align-items-center registerBtn">
-                  <a id="registerBtn" class="c-btn btn-primary btn-confirm m-b-15" href="#" th:url="@{/admin/booking/sendMail/finish}">送信</a>
+                  <a id="registerBtn" class="c-btn btn-primary btn-confirm m-b-15" href="#" th:url="@{/admin/booking/recvMail/finish}">送信</a>
                 </div>
                 </div>
              </section>

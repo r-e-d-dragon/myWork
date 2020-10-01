@@ -8,7 +8,9 @@
 	<meta name="Description" content="">
 	<meta property="og:image" content="http://">
 	<link th:href="@{/css/admin/base.css}" rel="stylesheet" />
+	<script type="text/javascript" th:src="@{/scripts/sweetalert.min.js}"></script>
 	<script type="text/javascript" th:src="@{/scripts/common.js}"></script>
+	<script type="text/javascript" th:src="@{/scripts/front/register/index.js}"></script>
 </head>
 <div layout:fragment="content"><!-- /** layout contents start */ -->
 
@@ -32,8 +34,7 @@
       </li>
     </ol>    
   </section>
-  <div layout:replace="~{layout/common-error :: errors}"></div>
-  
+ 
     
   <div class="column_wrap" id="register">  
     
@@ -55,6 +56,7 @@
 			                  <select th:field="*{aspCode}" class="selectBoxCss select-option width-240" th:errorclass="fieldError">
 			                    <option th:each="aspItem : ${aspMap}" th:value="${aspItem.key}" th:text="${aspItem.value}" th:errorclass="fieldError"></option>
 			                  </select>
+			                  <p th:if="${#fields.hasErrors('aspCode')}" class="individual-error" th:errors="*{aspCode}"></p>	
 			                </div>
 			               </div>
 		               
@@ -68,6 +70,10 @@
 		                    <input class="c-input" type="text" maxlength="20" placeholder="山田" style="width: 240px;" th:field="*{lastName}" th:errorclass="fieldError">
 		                    <input class="c-input" type="text" maxlength="20" placeholder="花子" style="width: 240px;" th:field="*{firstName}" th:errorclass="fieldError">
 				           </div>
+				           	<div>
+				           	 <p th:if="${#fields.hasErrors('lastName')}" class="individual-error" th:errors="*{lastName}"></p>
+				             <p th:if="${#fields.hasErrors('firstName')}" class="individual-error" th:errors="*{firstName}"></p>	
+				           	</div>          
 		                  </div>
 		                </div>
 		                
@@ -81,6 +87,10 @@
 		                    <input class="c-input" type="text" maxlength="20" placeholder="ヤマダ" style="width: 240px;" th:field="*{lastNameKana}" th:errorclass="fieldError">
 		                    <input class="c-input" type="text" maxlength="20" placeholder="ハナコ"  style="width: 240px;" th:field="*{firstNameKana}" th:errorclass="fieldError">
 				           </div>
+				           <div>
+				           	<p th:if="${#fields.hasErrors('lastNameKana')}" class="individual-error" th:errors="*{lastNameKana}"></p>	
+				           	<p th:if="${#fields.hasErrors('firstNameKana')}" class="individual-error" th:errors="*{firstNameKana}"></p>	
+				           </div>			           
 		                  </div>
 		                </div>
 			            <div class="row align-items-start m-b-20">
@@ -88,7 +98,11 @@
 			                <span class="tag-icon tag-red m-t-5">必須</span>
 			              </div>
 			              <div>
-			                <input class="c-input" type="text" maxlength="256" placeholder="〇〇〇@〇〇〇.com" th:field="*{email}" value="" th:errorclass="fieldError">
+			                <input class="c-input" type="text" maxlength="256" placeholder="ユーザ名@ドメイン名" th:field="*{email}" value="" th:errorclass="fieldError" th:classappend="${publicRegisterForm.sameEmailAndEmailConfirm}?'':'fieldError'">
+			              	<div>
+				              <p th:if="${#fields.hasErrors('email')}" class="individual-error" th:errors="*{email}"></p>	
+				              <p th:if="${#fields.hasErrors('sameEmailAndEmailConfirm')}" class="individual-error" th:errors="*{sameEmailAndEmailConfirm}"></p>
+			              	</div>			              	
 			              </div>
 			            </div>
 			            
@@ -97,7 +111,11 @@
 			                <span class="tag-icon tag-red m-t-5">必須</span>
 			              </div>
 			              <div>
-			                <input class="c-input" type="text" maxlength="256" placeholder="〇〇〇@〇〇〇.com" th:field="*{emailConfirm}" value="" th:errorclass="fieldError">
+			                <input class="c-input" type="text" maxlength="256" placeholder="ユーザ名@ドメイン名" th:field="*{emailConfirm}" value="" th:errorclass="fieldError" th:classappend="${publicRegisterForm.sameEmailAndEmailConfirm}?'':'fieldError'" autocomplete="off">
+			                <div>
+			                  <p th:if="${#fields.hasErrors('emailConfirm')}" class="individual-error" th:errors="*{emailConfirm}"></p>
+			                  <p th:if="${#fields.hasErrors('sameEmailAndEmailConfirm')}" class="individual-error" th:errors="*{sameEmailAndEmailConfirm}"></p>
+			                </div>			                
 			              </div>
 			            </div>
 			            
@@ -105,7 +123,10 @@
 			              <div class="d-flex justify-content-between align-items-start m-t-10"><span class="text c-ttl c-ttl__04">電話番号</span><span class="tag-icon tag-red m-t-5">必須</span></div>
 			              <div>
 			                <input class="c-input" type="text" th:field="*{phone}" th:errorclass="fieldError" maxlength="20" placeholder="00-0000-0000">
-			              </div>
+			                <div>
+			                  <p th:if="${#fields.hasErrors('phone')}" class="individual-error" th:errors="*{phone}"></p>
+			                </div>			                
+			              </div>			               
 			            </div>
 			            
 			            <div class="row align-items-start m-b-80">
@@ -114,6 +135,9 @@
 			              </div>
 			              <div>
 			                <textarea class="c-textarea" cols="4" rows="80" maxlength="1200" th:field="*{memo}" th:errorclass="fieldError" placeholder="ご希望の日付やご質問の内容などをご記入ください。"></textarea>
+			                <div>
+			                  <p th:if="${#fields.hasErrors('memo')}" class="individual-error" th:errors="*{memo}"></p>
+			                </div>			                
 			              </div>
 			            </div>			        
 		            </div>
@@ -123,6 +147,7 @@
             <div class="c-box-confirm text-center m-b-70">
             <div class="m-b-55">
               <div style="color:red;"><small>※個人情報の扱いについての文言については受領必要</small></div>
+              <input type="hidden" th:field="*{hasChanged}">
               <a id="registerBtn" class="c-btn btn-primary btn-confirm m-b-15" href="#" th:url="@{/public/register/finish}">登録</a>
             </div>
           </div>

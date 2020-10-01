@@ -38,11 +38,17 @@
 	    <main id="booking">
 	    	<div class="inner">
 	    		<section>
+	    			<div layout:replace="~{layout/common-error :: errors}"></div>
 	    			<div id="memberdata">
 				      <dl>
-				        <dt>会員番号：</dt><dd><span  th:text="${#authentication.principal.getUser().getMemberCode()}"></span></dd>
+				        <dt>会員番号：</dt><dd><span th:text="${#authentication.principal.getUser().getMemberCode()}"></span></dd>
 				        <dt>お名前：</dt><dd><span th:text="${#authentication.principal.getUser().getUserName()}"></span></dd>
-				        <dt>保有ポイント：</dt><dd><span th:text="${validMonthlyPoint}"></span>　/　<span th:text="${validEventPoint}"></span></dd>
+				        <dt>保有月P：</dt><dd><span th:text="${currentMonth + '月 ' + currentMonthlyPoint + 'P'}"></span>　<span th:text="${nextMonth + '月 ' + nextMonthlyPoint + 'P'}"></span></dd>
+				        <dt>保有イベントP：</dt><dd><span th:text="${validEventPoint + 'P'}"></span></dd>
+				      </dl>
+				      <dl th:unless="${#lists.isEmpty(reservationList)}" th:each="reservationItem,iter : ${reservationList}">
+				        <dt>予約<span th:text="${iter.index + 1}"></span>：</dt>
+				        <dd><span class="js-cancel reservation-cancel" th:url="@{/user/reservation/cancel}" th:value="${reservationItem.reservationId}" th:text="${#strings.replace(reservationItem.reservationDate, '-', '/') + '　' + reservationItem.reservationTime}"></span></dd>
 				      </dl>
 				    </div>
 			        <div id="content" class="clearfix">

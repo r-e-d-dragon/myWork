@@ -2,8 +2,11 @@ package com.enjoygolf24.api.service.impl;
 
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAdjusters;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -405,8 +408,17 @@ public class MemberReservationManageServiceImpl implements MemberReservationMana
 				reservationDate, reservationTime, status, valide);
 	}
 
+	/**
+	 * 会員予約情報、予約制限情報取得
+	 * 
+	 */
 	@Override
 	public MemberReservationManage getMemberReservationInfo(String memberCode, String reservationDate) {
+
+		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy/MM");
+		LocalDate now = LocalDate.now();
+		LocalDate currentMonth = now.with(TemporalAdjusters.firstDayOfMonth());
+		LocalDate nextMonth = now.with(TemporalAdjusters.firstDayOfNextMonth());
 
 		MemberReservationManage reservation = new MemberReservationManage();
 		// 会員情報取得
@@ -414,18 +426,22 @@ public class MemberReservationManageServiceImpl implements MemberReservationMana
 		reservation.setTblUser(member);
 
 		// 月ポイント情報取得
-		List<PointManage> totMonPointList = getMemberPointManageList(memberCode, PointCategoryCd.MONTHLY_POINT, null);
 		List<PointManage> validMonPointList = getMemberPointManageList(memberCode, PointCategoryCd.MONTHLY_POINT,
 				reservationDate);
+		List<PointManage> currMonPointList = getMemberPointManageList(memberCode, PointCategoryCd.MONTHLY_POINT,
+				currentMonth.format(dateTimeFormatter));
+		List<PointManage> nextMonPointList = getMemberPointManageList(memberCode, PointCategoryCd.MONTHLY_POINT,
+				nextMonth.format(dateTimeFormatter));
+
 		// イベントポイント情報取得
-		List<PointManage> totEvtPointList = getMemberPointManageList(memberCode, PointCategoryCd.EVENT_POINT, null);
 		List<PointManage> validEvtPointList = getMemberPointManageList(memberCode, PointCategoryCd.EVENT_POINT,
 				reservationDate);
 
-		reservation.setTotalMonthlyPoint(totMonPointList.stream().mapToInt(x -> x.getPointAmount()).sum());
 		reservation.setValidMonthlyPoint(validMonPointList.stream().mapToInt(x -> x.getPointAmount()).sum());
 
-		reservation.setTotalEventPoint(totEvtPointList.stream().mapToInt(x -> x.getPointAmount()).sum());
+		reservation.setCurrentMonthlyPoint(currMonPointList.stream().mapToInt(x -> x.getPointAmount()).sum());
+		reservation.setNextMonthlyPoint(nextMonPointList.stream().mapToInt(x -> x.getPointAmount()).sum());
+
 		reservation.setValidEventPoint(validEvtPointList.stream().mapToInt(x -> x.getPointAmount()).sum());
 
 		List<MemberReservationManage> reservationList = getMemberReservationAllList(null, memberCode, null, null, null,
@@ -439,21 +455,34 @@ public class MemberReservationManageServiceImpl implements MemberReservationMana
 				reservationList.stream().filter(p -> p.getPointCategoryCode().equals(PointCategoryCd.EVENT_POINT))
 						.collect(Collectors.toList()).size());
 
-		// 予約制限情報取得
-		MstReservationLimit master = getMemberReservationLimit(member.getMemberTypeCd(),
-				DateUtility.getDate(reservationDate));
-		if (master != null) {
-			reservation.setLimitReservationCount(master.getReservationLimit());
-			reservation.setLimitEventReservationCount(master.getEventLimit());
-			reservation.setLimitMonthlyReservationCount(master.getMonthlyLimit());
-			reservation.setLimitReservationPoint(master.getMaxReservationPoint());
-		} else {
-			reservation.setLimitReservationCount(0);
-			reservation.setLimitEventReservationCount(0);
-			reservation.setLimitMonthlyReservationCount(0);
-			reservation.setLimitReservationPoint(0);
-		}
+		// 月ポイント予約ポイント
+		reservation.setMonthlyReservationPoint(
+				reservationList.stream().filter(p -> p.getPointCategoryCode().equals(PointCategoryCd.MONTHLY_POINT))
+						.mapToInt(x -> Integer.valueOf(x.getConsumedPoint())).sum());
+		// イベントポイント予約ポイント
+		reservation.setEventReservationPoint(
+				reservationList.stream().filter(p -> p.getPointCategoryCode().equals(PointCategoryCd.EVENT_POINT))
+						.mapToInt(x -> Integer.valueOf(x.getConsumedPoint())).sum());
 
+		reservation.setCurrentMonth(currentMonth.format(dateTimeFormatter));
+		reservation.setNextMonth(nextMonth.format(dateTimeFormatter));
+
+		if (member != null) {
+			// 予約制限情報取得
+			MstReservationLimit master = getMemberReservationLimit(member.getMemberTypeCd(),
+					DateUtility.getDate(reservationDate));
+			if (master != null) {
+				reservation.setLimitReservationCount(master.getReservationLimit());
+				reservation.setLimitEventReservationCount(master.getEventLimit());
+				reservation.setLimitMonthlyReservationCount(master.getMonthlyLimit());
+				reservation.setLimitReservationPoint(master.getMaxReservationPoint());
+			}
+		} else {
+			reservation.setLimitReservationCount(99);
+			reservation.setLimitEventReservationCount(99);
+			reservation.setLimitMonthlyReservationCount(99);
+			reservation.setLimitReservationPoint(99);
+		}
 		return reservation;
 	}
 }

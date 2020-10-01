@@ -19,9 +19,11 @@ public class SendMailForm implements Serializable {
 	String aspCode;
 	String memberCode;
 
-	@NotBlank(groups = Insert0.class)
 	@Email(groups = Insert0.class)
 	String fromMail;
+	@NotBlank(groups = Insert0.class)
+	@Email(groups = Insert0.class)
+	String toMail;
 	@NotBlank(groups = Insert0.class)
 	String memberName;
 	@NotBlank(groups = Insert0.class)

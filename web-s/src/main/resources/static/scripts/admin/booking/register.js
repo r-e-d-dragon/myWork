@@ -22,13 +22,17 @@ $(function(){
         $("#memberName").val("");
         $("#validMonthlyPoint").val(0);
         $("#validEventPoint").val(0);
-        $("#monthlyPoint").val("0");
-        $("#eventPoint").val("0");
+
+        $("#currentMonthlyPointText").text("");
+        $("#nextMonthlyPointText").text("");
+        $("#validEventPointText").text("");
 
         $("#limitReservationCount").val(0);
         $("#limitMonthlyReservationCount").val(0);
         $("#limitEventReservationCount").val(0);
         $("#limitReservationPoint").val(0);
+        $("#monthlyReservationPoint").val(0);
+        $("#eventReservationPoint").val(0);
                 
 		if( memberCode == '') {
 			alert("会員コードに値を入力してください。");
@@ -48,6 +52,7 @@ $(function(){
         var countOverFlag = false;
         var mCountOverFlag = false;
         var eCountOverFlag = false;
+        var pointOverFlag = false;
         
 		var linkUrl = $(this).attr('url');
 		$.ajax({
@@ -63,9 +68,7 @@ $(function(){
                 $("#memberName").removeClass('fieldError');
                 $('#validMonthlyPoint').removeClass('fieldError');
                 $('#validEventPoint').removeClass('fieldError');
-                $('#monthlyPoint').removeClass('fieldError');
-                $('#eventPoint').removeClass('fieldError');
-                
+                 
 				if(data == null) {
 					return null;
 				}
@@ -75,13 +78,17 @@ $(function(){
                         $("#memberName").val(data.reservation.tblUser['lastName'] + ' ' + data.reservation.tblUser['firstName']);
                         $("#validMonthlyPoint").val(data.reservation['validMonthlyPoint']);
                         $("#validEventPoint").val(data.reservation['validEventPoint']);
-                        $("#monthlyPoint").val(data.reservation['totalMonthlyPoint']);
-                        $("#eventPoint").val(data.reservation['totalEventPoint']);
+
+                        $("#currentMonthlyPointText").text(data.reservation['currentMonth']+' '+data.reservation['currentMonthlyPoint']+'P');
+                        $("#nextMonthlyPointText").text(data.reservation['nextMonth']+' '+data.reservation['nextMonthlyPoint']+' P');
+                        $("#validEventPointText").text(data.reservation['validEventPoint']+ 'P');
                         
                         $("#limitReservationCount").val(data.reservation['limitReservationCount']);
                         $("#limitEventReservationCount").val(data.reservation['limitEventReservationCount']);
                         $("#limitMonthlyReservationCount").val(data.reservation['limitMonthlyReservationCount']);
                         $("#limitReservationPoint").val(data.reservation['limitReservationPoint']);
+                        $("#monthlyReservationPoint").val(data.reservation['monthlyReservationPoint']);
+                        $("#eventReservationPoint").val(data.reservation['eventReservationPoint']);
                         
                         $('tbody').find("tr:gt(0)").remove();
                         if(data['hasReservation']){
@@ -112,6 +119,11 @@ $(function(){
                                 $("#pointCategoryCode option:not(:selected)").prop('disabled', true);
                                 eCountOverFlag = true;
                                 
+                                //$("#monthlyReservationPoint").val
+                            } else if ((data.reservation['monthlyReservationPoint'] >= data.reservation['limitReservationPoint'])
+                                || (data.reservation['eventReservationPoint'] >= data.reservation['limitReservationPoint'])) {
+                                $("#reservation_message").text("既に予約限度まで予約がありました。　追加予約は出来ません。");
+                                pointOverFlag = true;
                             }
                             $(".reservation_dialog").show();
                         }
@@ -138,6 +150,10 @@ $(function(){
                                 $(".registerBtn").show();
                             }
                         }
+                        if (pointOverFlag === true) {
+                            $("#valid").val(false);
+                            $(".registerBtn").hide();
+                        }
                     } else {
                         alert("該当する会員が存在しません。　会員コードを確認してから再検索を行ってください。");
                     }
@@ -145,14 +161,20 @@ $(function(){
                     $("#memberName").val("");
                     $("#validMonthlyPoint").val(0);
                     $("#validEventPoint").val(0);
-                    $("#monthlyPoint").val("0");
-                    $("#eventPoint").val("0");
+
+                    $("#currentMonthlyPointText").text('0 P');
+                    $("#nextMonthlyPointText").text('0 P');
+                    $("#validEventPointText").text('0 P');
                     
                     $("#memberName").addClass('fieldError');
                     $('#validMonthlyPoint').addClass('fieldError');
                     $('#validEventPoint').addClass('fieldError');
-					$('#monthlyPoint').addClass('fieldError');
-                    $('#eventPoint').addClass('fieldError');
+                    $("#limitReservationPoint").val(0);
+                    $("#monthlyReservationPoint").val(0);
+                    $("#eventReservationPoint").val(0);
+
+                    $("#valid").val(false);
+                    $(".registerBtn").hide();
                 }
             },
             error : function(XMLHttpRequest, textStatus, errorThrown) {

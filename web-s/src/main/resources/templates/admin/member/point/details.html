@@ -35,9 +35,9 @@
 								</tr>
 								<tr>
 									<th>月固定ポイント残高</th>
-									<td><p th:text="${'今月：' +  #numbers.formatDecimal(pointManageForm.monthlyPointBalance, 0, 'DEFAULT', 0, 'DEFAULT') + ' / 来月：' +  #numbers.formatDecimal(pointManageForm.monthlyPointBalanceNextMonth, 0, 'DEFAULT', 0, 'DEFAULT')}"></p></td>
+									<td><p th:text="${#numbers.formatDecimal(pointManageForm.monthlyPointBalance, 0, 'DEFAULT', 0, 'DEFAULT')}"></p></td>
 									<th>繰越可能ポイント残高</th>
-									<td><p th:text="${'今月：' +  #numbers.formatDecimal(pointManageForm.eventPointBalance, 0, 'DEFAULT', 0, 'DEFAULT') + ' / 来月：' +  #numbers.formatDecimal(pointManageForm.eventPointBalanceNextMonth, 0, 'DEFAULT', 0, 'DEFAULT')}"></p></td>
+									<td><p th:text="${#numbers.formatDecimal(pointManageForm.eventPointBalance, 0, 'DEFAULT', 0, 'DEFAULT')}"></p></td>
 								</tr>
 							</tbody>
 						</table>

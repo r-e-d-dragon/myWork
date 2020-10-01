@@ -59,7 +59,7 @@
 			                </div>
 			                <div>
 			                  <select th:field="*{additionalLessonCd}" class="selectBoxCss select-option width-240" th:errorclass="fieldError">
-			                    <option th:each="additionalLessonCdItem : ${additionalLessonCdMap}" th:value="${additionalLessonCdItem.key}" th:text="${additionalLessonCdItem.value}" th:errorclass="fieldError"></option>
+			                    <option th:each="additionalLessonCdItem : ${additionalLessonCdMap}" th:value="${additionalLessonCdItem.key}" th:text="${additionalLessonCdItem.value}" th:errorclass="fieldError" th:classappend="${memberRegisterForm.filledAdditionalLessonCd}?'':'fieldError'"></option>
 			                  </select>
 			                </div>
 			               </div>
@@ -127,8 +127,8 @@
 			              <div>
 			                <div class="d-flex justify-content-start align-items-center">
 			                  <div class="width-330 d-flex justify-content-between align-items-center">
-			                    <input class="c-input width-150 number" type="text" th:field="*{zip1}" th:errorclass="fieldError" maxlength="3" placeholder="103"><span class="middle-border"></span>
-			                    <input class="c-input width-150 number" type="text" th:field="*{zip2}" th:errorclass="fieldError" maxlength="4" placeholder="0034">
+			                    <input class="c-input width-150 number" type="text" th:field="*{zip1}" th:errorclass="fieldError" maxlength="3" placeholder="103" th:classappend="${memberRegisterForm.filledZipCdAndAddress}?'':'fieldError'"><span class="middle-border"></span>
+			                    <input class="c-input width-150 number" type="text" th:field="*{zip2}" th:errorclass="fieldError" maxlength="4" placeholder="0034" th:classappend="${memberRegisterForm.filledZipCdAndAddress}?'':'fieldError'">
 			                  </div>
 			                  <span class="m-l-20 m-t-5">
 			                    <small><a class="c-link-text text-blue user-func" id="btnSearchAddress" href="" th:url="@{/public/common/searchAddress}">住所変換</a></small>
@@ -143,8 +143,8 @@
 			            <div class="row align-items-start m-b-20">
 			              <div class="d-flex justify-content-between align-items-start m-t-10"><span class="text c-ttl c-ttl__04">ご住所</span><span class="tag-icon tag-gray m-t-5">任意</span></div>
 			              <div>
-			                <input class="c-input m-b-5" type="text" th:field="*{address1}" th:errorclass="fieldError" maxlength="60" placeholder="" style="width: 500px;">
-			                <input class="c-input" type="text" th:field="*{address2}" th:errorclass="fieldError" maxlength="60" placeholder="" style="width: 500px;">
+			                <input class="c-input m-b-5" type="text" th:field="*{address1}" th:errorclass="fieldError" maxlength="60" placeholder="" style="width: 500px;" th:classappend="${memberRegisterForm.filledZipCdAndAddress}?'':'fieldError'">
+			                <input class="c-input" type="text" th:field="*{address2}" th:errorclass="fieldError" maxlength="60" placeholder="" style="width: 500px;" th:classappend="${memberRegisterForm.filledZipCdAndAddress}?'':'fieldError'">
 			              </div>
 			            </div>
 			            
@@ -160,7 +160,7 @@
 			                <span class="tag-icon tag-red m-t-5">必須</span>
 			              </div>
 			              <div>
-			                <input class="c-input" type="text" maxlength="256" placeholder="〇〇〇@〇〇〇.com" th:field="*{email}" value="" th:errorclass="fieldError">
+			                <input class="c-input" type="text" maxlength="256" placeholder="ユーザ名@ドメイン名" th:field="*{email}" value="" th:errorclass="fieldError" th:classappend="${memberRegisterForm.sameEmailAndEmailConfirm}?'':'fieldError'">
 			              </div>
 			            </div>
 			            
@@ -169,7 +169,7 @@
 			                <span class="tag-icon tag-red m-t-5">必須</span>
 			              </div>
 			              <div>
-			                <input class="c-input" type="text" maxlength="256" placeholder="〇〇〇@〇〇〇.com" th:field="*{emailConfirm}" value="" th:errorclass="fieldError">
+			                <input class="c-input" type="text" maxlength="256" placeholder="ユーザ名@ドメイン名" th:field="*{emailConfirm}" value="" th:errorclass="fieldError" th:classappend="${memberRegisterForm.sameEmailAndEmailConfirm}?'':'fieldError'" autocomplete="off">
 			              </div>
 			            </div>
 			            

@@ -43,10 +43,6 @@ public class MemberModifyServiceBean {
 
 	Date birthday;
 
-	String memberGradeCode;
-
-	String memberGradeTimeCode;
-
 	String jobCode;
 
 	String useFlag;

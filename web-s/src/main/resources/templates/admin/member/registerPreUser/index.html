@@ -53,7 +53,7 @@
 			                <span class="tag-icon tag-red m-t-5">必須</span>
 			              </div>
 			              <div>
-			                <input class="c-input" type="text" maxlength="256" placeholder="〇〇〇@〇〇〇.com" th:field="*{email}" value="" th:errorclass="fieldError">
+			                <input class="c-input" type="text" maxlength="256" placeholder="ユーザ名@ドメイン名" th:field="*{email}" value="" th:errorclass="fieldError" th:classappend="${preMemberRegisterForm.sameEmailAndEmailConfirm}?'':'fieldError'">
 			              </div>
 			            </div>
 			            
@@ -62,12 +62,12 @@
 			                <span class="tag-icon tag-red m-t-5">必須</span>
 			              </div>
 			              <div>
-			                <input class="c-input" type="text" maxlength="256" placeholder="〇〇〇@〇〇〇.com" th:field="*{emailConfirm}" value="" th:errorclass="fieldError">
+			                <input class="c-input" type="text" maxlength="256" placeholder="ユーザ名@ドメイン名" th:field="*{emailConfirm}" value="" th:errorclass="fieldError" th:classappend="${preMemberRegisterForm.sameEmailAndEmailConfirm}?'':'fieldError'" autocomplete="off">
 			              </div>
 			            </div>
 			            
 			            <div class="row align-items-start m-b-20">
-			              <div class="d-flex justify-content-between align-items-start m-t-10"><span class="text c-ttl c-ttl__04">電話番号</span><span class="tag-icon tag-gray m-t-5">任意</span></div>
+			              <div class="d-flex justify-content-between align-items-start m-t-10"><span class="text c-ttl c-ttl__04">電話番号</span><span class="tag-icon tag-red m-t-5">必須</span></div>
 			              <div>
 			                <input class="c-input" type="text" th:field="*{phone}" th:errorclass="fieldError" maxlength="20" placeholder="00-0000-0000">
 			              </div>

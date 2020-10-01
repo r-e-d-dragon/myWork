@@ -33,15 +33,15 @@ public class InitPasswordForm implements Serializable {
 
 	@NotBlank(groups = Insert0.class)
 	@Password(groups = Insert0.class)
-	String PasswordConfirm;
+	String passwordConfirm;
 
 	@AssertTrue(groups = Insert0.class, message = "{application.combination.validation.needSameNewPasswordAndNewPasswordConfirm}")
 	public boolean isPasswordAndPasswordConfirm() {
-		if (StringUtils.isEmpty(password) || StringUtils.isEmpty(PasswordConfirm)) {
+		if (StringUtils.isEmpty(password) || StringUtils.isEmpty(passwordConfirm)) {
 			return true;
 		}
 
-		return password.equals(PasswordConfirm);
+		return password.equals(passwordConfirm);
 	}
 
 

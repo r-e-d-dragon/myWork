@@ -81,7 +81,7 @@
 	                 and asp_code = #{aspCode}
 	            </if>
 	            <if test="aspName != null and aspName != ''">
-	                 and asp_name like CONCAT('%',REPLACE(#{aspNAme},'%','¥%'),'%') ESCAPE '¥'
+	                 and asp_name like CONCAT('%',REPLACE(#{aspName},'%','¥%'),'%') ESCAPE '¥'
 	            </if>
 	            <if test="memberCode != null and memberCode != ''">
 	                 and member_code = #{memberCode}

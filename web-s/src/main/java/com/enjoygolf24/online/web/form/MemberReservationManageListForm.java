@@ -92,6 +92,8 @@ public class MemberReservationManageListForm implements Serializable {
 
 	private List<String> chkBatNumbers;
 
+	private String selectedMemberCode;
+
 	@PageSize
 	int pageSize = DefaultPageSizeUtility.DEFAULT_PAGE_SIZE;
 

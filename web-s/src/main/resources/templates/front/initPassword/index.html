@@ -15,8 +15,8 @@
 	    <form id="form"  method="post" th:action="@{/public/open/initPassword/finish}" th:object="${initPasswordForm}">
 	    	<input type="hidden" th:field="*{authKey}">
 	      <label class="id"><input type="text" th:field="*{memberCode}" th:errorclass="fieldError" maxlength="20" placeholder="会員番号入力"></label>
-	      <label class="pw"><input type="password" th:field="*{password}" th:errorclass="fieldError" placeholder="パスワード"></label>
-	      <label class="pw"><input type="password" th:field="*{PasswordConfirm}" th:errorclass="fieldError" placeholder="パスワード（確認用）"></label>
+	      <label class="pw"><input type="password" th:field="*{password}" th:errorclass="fieldError" placeholder="パスワード" th:classappend="${initPasswordForm.passwordAndPasswordConfirm}?'':'fieldError'"></label>
+	      <label class="pw"><input type="password" th:field="*{passwordConfirm}" th:errorclass="fieldError" placeholder="パスワード（確認用）" th:classappend="${initPasswordForm.passwordAndPasswordConfirm}?'':'fieldError'"></label>
 	      <div class="sub">
 	     		 ※半角英数8文字以上、大文字小文字、数字の組合せ必須となります。-（ハイフン）など一部記号もご利用いただけます。
 	      </div>

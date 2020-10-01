@@ -48,4 +48,18 @@ public class ReservationPointTimeTableInfo implements Serializable {
 
 	TblUser tblUser;
 	List<MemberReservationManage> reservationList;
+
+	public String getReservationPointCss() {
+		if (reservationPointCode.equals("11")) {
+			return "green";
+		} else if (reservationPointCode.equals("13")) {
+			return "red";
+		} else if (reservationPointCode.equals("21")) {
+			return "navy";
+		} else if (reservationPointCode.equals("23")) {
+			return "purple";
+		} else {
+			return "gray";
+		}
+	}
 }

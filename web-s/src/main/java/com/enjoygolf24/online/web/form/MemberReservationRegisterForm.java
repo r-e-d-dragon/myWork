@@ -69,10 +69,15 @@ public class MemberReservationRegisterForm implements Serializable {
 	private int limitEventReservationCount;
 	private int limitMonthlyReservationCount;
 	private int limitReservationPoint;
+	private int eventReservationPoint;
+	private int monthlyReservationPoint;
 
 	TblReservation reservation;
 
 	private boolean valid;
+
+	private boolean hasChanged;
+	private String searchTime;
 
 	public MemberReservationServiceBean createMemberReservationServiceBean() {
 		ModelMapper modelMapper = new ModelMapper();

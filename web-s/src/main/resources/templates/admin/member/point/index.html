@@ -32,7 +32,7 @@
 									<th>電話番号</th>
 									<td><input class="c-input" type="text" th:field="*{phone}" th:errorclass="fieldError" maxlength="20" placeholder="00-0000-0000"></td>
 									<th>メールアドレス</th>
-									<td><input class="c-input" type="text" maxlength="256" placeholder="〇〇〇@〇〇〇.com" th:field="*{email}" value="" th:errorclass="fieldError"></td>
+									<td><input class="c-input" type="text" maxlength="256" placeholder="ユーザ名@ドメイン名" th:field="*{email}" value="" th:errorclass="fieldError"></td>
 								</tr>
 							</tbody>
 						</table>
@@ -53,8 +53,7 @@
                 </div>
                <table class="table-detail m-b-40" >
                  <tr>				        
-			        <th style="width: 10%;">会員番号</th>
-					<th style="width: 10%;">会員レベル</th>
+			        <th>会員番号</th>
 					<th>お名前</th>
 					<th>フリガナ</th>
 					<th>メール</th>
@@ -63,7 +62,6 @@
 			    <div th:if="${pageInfo != null}" >
 			         <tr th:each="data , itemStat : ${pageInfo.list}" th:class="${itemStat.odd}? 'odd' : 'even' ">
 				        <td th:text="${data.memberCode}"></td>
-				        <td th:text="${data.memberGradeName}"></td>
 				        <td th:text="${data.lastName + ' ' + data.firstName}"></td>
 				        <td th:text="${data.lastNameKana + ' ' + data.firstNameKana}"></td>
 				        <td th:text="${data.email}"></td>

@@ -26,7 +26,7 @@ public class CommonLogoutHandler implements LogoutSuccessHandler {
 
 		logger.info("");
 
-        String URL = request.getContextPath();
+		String URL = request.getContextPath() + "/public";
 
         response.setStatus(HttpStatus.OK.value());
         response.sendRedirect(URL);

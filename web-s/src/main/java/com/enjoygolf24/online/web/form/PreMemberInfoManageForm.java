@@ -69,6 +69,7 @@ public class PreMemberInfoManageForm implements Serializable {
 	@SjisSafe(groups = Insert0.class)
 	private String lastNameKana;
 
+	@NotBlank(groups = Insert0.class)
 	@Telephone(groups = Insert0.class)
 	private String phone;
 

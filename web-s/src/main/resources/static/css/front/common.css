@@ -2363,7 +2363,7 @@ main#booking table.reserve_list {
       main#booking table.reserve_list tbody td .circle_min {
       width: 27px;
       height: 27px;
-      background: green;
+      background: gray;
       -moz-border-radius: 70px; 
 	   -webkit-border-radius: 70px; 
 	   border-radius: 70px;     
@@ -2380,6 +2380,9 @@ main#booking table.reserve_list {
 	margin: 0 !important; 
       }
       
+main#booking table.reserve_list tbody td .circle_min.green{
+	background: green !important; 
+}
 	
 main#booking table.reserve_list tbody td .circle_min.red{
 	background: red !important; 
@@ -2387,6 +2390,14 @@ main#booking table.reserve_list tbody td .circle_min.red{
 
 main#booking table.reserve_list tbody td .circle_min.navy{
 	background: navy !important; 
+}
+
+main#booking table.reserve_list tbody td .circle_min.purple{
+	background: purple !important; 
+}
+
+main#booking table.reserve_list tbody td .circle_min.gray{
+	background: gray !important; 
 }
       
   main#booking table.reserve_list tbody th, main#booking table.reserve_list tbody td {
@@ -2447,6 +2458,40 @@ main#booking table.reserve_list tbody td .circle_min.navy{
       @media (min-width: 768px) {
         #memberdata dl dd + dt {
           margin-left: 25px; } }
+          
+          input[type="date"]::-webkit-calendar-picker-indicator {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: auto;
+    height: auto;
+    color: transparent;
+    background: transparent;
+}
+
+
+.ul-error {
+    padding: 0 !important;
+}
+
+.li-error {
+  display: inline-block;
+  padding: 4px 7px;
+  background-color: rgba(255, 0, 0, 0.05);
+  color: #f20000;
+  font-size: 16px;
+  font-weight: normal;
+}
+
+.reservation-cancel{
+	cursor: pointer;
+}
+
+.reservation-cancel:hover {
+  text-decoration: underline;
+}
 
 /*------------------------------------------*/
 /*------------------------------------------*/

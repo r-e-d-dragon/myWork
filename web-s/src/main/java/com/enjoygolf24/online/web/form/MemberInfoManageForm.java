@@ -123,20 +123,12 @@ public class MemberInfoManageForm implements Serializable {
 	private String birthday;
 
 	@Size(groups = Insert0.class, max = 2)
-	@CodeMaster(groups = Insert0.class, code = CodeTypeCd.MEMBER_GRADE_CD)
-	private String memberGradeCode;
-
-	@Size(groups = Insert0.class, max = 2)
 	@CodeMaster(groups = Insert0.class, code = CodeTypeCd.ADDITIONAL_LESSON_CD)
 	private String additionalLessonCd;
 
 	@Size(groups = Insert0.class, max = 2)
 	@CodeMaster(groups = Insert0.class, code = CodeTypeCd.JOB_CD)
 	private String jobCode;
-
-	@Size(groups = Insert0.class, max = 2)
-	@CodeMaster(groups = Insert0.class, code = CodeTypeCd.MEMBER_GRADE_TIME_CD)
-	private String memberGradeTimeCode;
 
 	@NotBlank(groups = Insert0.class)
 	@Size(groups = Insert0.class, max = 2)
@@ -154,15 +146,6 @@ public class MemberInfoManageForm implements Serializable {
 		return email.equals(emailConfirm);
 	}
 
-	@AssertTrue(groups = Insert0.class, message = "{application.combination.validation.needNotBlankWhenNormalMember}")
-	public boolean isFilledMemberGradeCode() {
-
-		if (isNormalMember()) {
-			return !StringUtils.isEmptyOrWhitespace(memberGradeCode);
-		} else {
-			return true;
-		}
-	}
 
 	@AssertTrue(groups = Insert0.class, message = "{application.combination.validation.needNotBlankWhenNormalMember}")
 	public boolean isFilledAdditionalLessonCd() {
@@ -179,16 +162,6 @@ public class MemberInfoManageForm implements Serializable {
 			return true;
 		}
 		return false;
-	}
-
-	@AssertTrue(groups = Insert0.class, message = "{application.combination.validation.needNotBlankWhenNormalMember}")
-	public boolean isFilledMemberGradeTimeCode() {
-
-		if (isNormalMember()) {
-			return !StringUtils.isEmptyOrWhitespace(memberGradeTimeCode);
-		} else {
-			return true;
-		}
 	}
 
 	@AssertTrue(groups = Insert0.class, message = "{application.combination.validation.needNotBlankZipCodeAndAddress}")
@@ -232,10 +205,8 @@ public class MemberInfoManageForm implements Serializable {
 			birthday = dateFormat.format(selectedMember.getBirthday());
 		}
 
-		memberGradeCode = selectedMember.getMemberGradeCode();
 		useFlag = selectedMember.getUseFlag();
 		additionalLessonCd = selectedMember.getAdditionalLessonCd();
-		memberGradeTimeCode = selectedMember.getMemberGradeTimeCode();
 		jobCode = selectedMember.getJobCode();
 
 		initPasswordCd = OnOffCd.OFF;
@@ -281,10 +252,8 @@ public class MemberInfoManageForm implements Serializable {
 
 		serviceBean.setGender(gender);
 		serviceBean.setBirthday(DateUtility.getDate(birthday));
-		serviceBean.setMemberGradeCode(memberGradeCode);
 		serviceBean.setUseFlag(useFlag);
 		serviceBean.setAdditionalLessonCd(additionalLessonCd);
-		serviceBean.setMemberGradeTimeCode(memberGradeTimeCode);
 		if (!StringUtils.isEmpty(jobCode)) {
 			serviceBean.setJobCode(jobCode);
 		}

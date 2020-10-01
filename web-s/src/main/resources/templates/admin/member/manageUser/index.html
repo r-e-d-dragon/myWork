@@ -29,7 +29,7 @@
 									<th>電話番号</th>
 									<td><input class="c-input" type="text" th:field="*{phone}" th:errorclass="fieldError" maxlength="20" placeholder="00-0000-0000"></td>
 									<th>メールアドレス</th>
-									<td><input class="c-input" type="text" maxlength="256" placeholder="〇〇〇@〇〇〇.com" th:field="*{email}" value="" th:errorclass="fieldError"></td>
+									<td><input class="c-input" type="text" maxlength="256" placeholder="ユーザ名@ドメイン名" th:field="*{email}" value="" th:errorclass="fieldError"></td>
 								</tr>
 							</tbody>
 						</table>
@@ -67,7 +67,7 @@
 				        <td th:text="${data.email}"></td>
 				        <td>
 				          <a id="linkShowDetail" href="#" th:url="@{/admin/member/manageUser/details}" th:value="${data.memberCode}" target="selectedMemberCode" th:text="情報変更"/></a>
-				          <a id="reservation" href="#"/><span th:text="予約管理" th:value="${data.memberCode}" target="selectedMemberCode"></span></a>
+				          <a id="linkShowDetail" href="#" th:url="@{/admin/booking/search}" th:value="${data.memberCode}" target="selectedMemberCode" th:text="予約管理"/></a>
 				        </td>
 				    </tr>
 			    </div>

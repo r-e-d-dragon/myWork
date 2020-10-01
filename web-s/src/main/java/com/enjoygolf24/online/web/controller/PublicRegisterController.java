@@ -65,12 +65,12 @@ public class PublicRegisterController {
 
 		if (!memberRegisterService.isUniqueEmailForPreMember(form.getEmail())) {
 			model.addAttribute("publicRegisterForm", form);
-			result.rejectValue("email", "error.user", "{0} : 同じEメールアドレスの会員が既に存在しています。");
+			result.rejectValue("email", "error.user", "メールアドレス : 同じEメールアドレスの会員が既に存在しています。");
 			return index(form, model);
 		}
 
 		String memberCode = memberRegisterService.PreMemberRegister(form.createPreMemberRegisterServiceBean());
-		result.rejectValue("hasChanged", "error.user", "登録完了しました。");
+		form.setHasChanged(true);
 
 
 		logger.info("End publicRegister Controller");

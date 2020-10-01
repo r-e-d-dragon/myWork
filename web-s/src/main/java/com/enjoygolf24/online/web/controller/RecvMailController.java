@@ -1,5 +1,6 @@
 package com.enjoygolf24.online.web.controller;
 
+import javax.mail.internet.InternetAddress;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.mail.DefaultAuthenticator;
@@ -21,14 +22,13 @@ import com.enjoygolf24.api.common.utility.LoginUtility;
 import com.enjoygolf24.api.common.validator.groups.All;
 import com.enjoygolf24.api.service.AspService;
 import com.enjoygolf24.api.service.MemberInfoManageService;
-import com.enjoygolf24.online.web.form.SendMailForm;
-
+import com.enjoygolf24.online.web.form.RecvMailForm;
 
 @Controller
-@RequestMapping("/admin/booking/sendMail")
-public class SendMailController {
+@RequestMapping("/admin/booking/recvMail")
+public class RecvMailController {
 
-	private static final Logger logger = LoggerFactory.getLogger(SendMailController.class);
+	private static final Logger logger = LoggerFactory.getLogger(RecvMailController.class);
 
 	@Autowired
 	HttpServletRequest request;
@@ -41,52 +41,62 @@ public class SendMailController {
 
 
 	@RequestMapping(value = "")
-	public String sendMailInfo(
-			@ModelAttribute("sendMailForm") SendMailForm form, Model model) {
-		logger.info("Start fileUploadInfo Controller");
+	public String recvMailInfo(
+			@ModelAttribute("recvMailForm") RecvMailForm form, Model model) {
+		logger.info("Start recvMailInfo Controller");
 
 		initForm(form, model);
 
-		logger.info("End sendMailInfo Controller");
-		return "/admin/booking/sendMail/index";
+		logger.info("End recvMailInfo Controller");
+		return "/admin/booking/recvMail/index";
 	}
 
 	@RequestMapping(value = "/finish", method = RequestMethod.POST)
-	public String sendMailFinish(@ModelAttribute @Validated(All.class) SendMailForm form, BindingResult result,
+	public String recvMailFinish(@ModelAttribute @Validated(All.class) RecvMailForm form, BindingResult result,
 			Model model) {
-		logger.info("Start sendMailFinish Controller");
+		logger.info("Start recvMailFinish Controller");
 
 		if (result.hasErrors()) {
 			model.addAttribute("sendMailForm", form);
-			return sendMailInfo(form, model);
+			return recvMailInfo(form, model);
 		}
 
 		// TODO 受信メールアドレス
-		String toMail = "admin@mail.com";
+		String toMail = "user@user.jp";
+		String passwd = "passwd";
 
 		try {
+			InternetAddress addr[] = { new InternetAddress(toMail) };
+
 			Email email = new SimpleEmail();
-			// メールサーバ
+			// TODO メールサーバ
 			email.setHostName("pop3.lolipop.jp");
-			// SSL
+
+			// Smtp-Port
 			email.setSmtpPort(465);
 			// TODO user-id, password
-			email.setAuthenticator(new DefaultAuthenticator("username", "password"));
+			email.setAuthenticator(new DefaultAuthenticator(toMail, passwd));
+			email.setDebug(true);
+			// (SSL)
 			email.setSSLOnConnect(true);
+
 			email.setFrom(form.getFromMail());
 			email.setSubject(form.getTitle());
 			email.setMsg(form.getComment());
 			email.addTo(toMail);
+
+
 			email.send();
+
 		} catch (Exception e) {
 			// 異常 - メール送信失敗
-			model.addAttribute("sendMailForm", form);
-			result.rejectValue("email", "error.memberName", "{0} : メール送信に失敗しました。");
-			return sendMailInfo(form, model);
+			model.addAttribute("recvMailForm", form);
+			result.rejectValue("memberName", "error.memberName", "{0} : メール受信に失敗しました。");
+			return recvMailInfo(form, model);
 		}
 
-		logger.info("End sendMailFinish Controller");
-		return "/admin/booking/sendMail/finish";
+		logger.info("End recvMailFinish Controller");
+		return "/admin/booking/recvMail/finish";
 	}
 
 	/**
@@ -95,7 +105,7 @@ public class SendMailController {
 	 * @param form
 	 * @return
 	 */
-	private void initForm(SendMailForm form, Model model) {
+	private void initForm(RecvMailForm form, Model model) {
 		String aspCode = LoginUtility.getLoginUser().getAspCode();
 		TblAsp asp = aspService.getAsp(aspCode);
 
@@ -104,5 +114,4 @@ public class SendMailController {
 
 		model.addAttribute("aspName", asp.getAspName());
 	}
-
 }

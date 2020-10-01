@@ -185,7 +185,6 @@ public class MemberInfoManageServiceImpl implements MemberInfoManageService {
 		member.setGender(serviceBean.getGender());
 		member.setBirthday(serviceBean.getBirthday());
 		member.setUseFlag(serviceBean.getUseFlag());
-		member.setMemberGradeCode(serviceBean.getMemberGradeCode());
 		member.setAdditionalLessonCd(serviceBean.getAdditionalLessonCd());
 
 		if (OnOffCd.ON.equals(serviceBean.getInitPasswordCd())) {
@@ -198,8 +197,6 @@ public class MemberInfoManageServiceImpl implements MemberInfoManageService {
 		member.setAddress1(serviceBean.getAddress1());
 		member.setAddress2(serviceBean.getAddress2());
 		member.setJobCd(serviceBean.getJobCode());
-		member.setMemberGradeTimeCode(serviceBean.getMemberGradeTimeCode());
-
 		memberRepository.save(member);
 	}
 

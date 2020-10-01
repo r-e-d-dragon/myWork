@@ -115,6 +115,7 @@ public class PointServiceImpl implements PointService {
 
 		newPointManage.setPointAmount(pointVariation);
 		newPointManage.setPointType(PointTypeCd.CUSTOM);
+		newPointManage.setConsumedPoint(0);
 		newPointManage.setRegisterDate(current);
 		newPointManage.setRegisterUser(serviceBean.getLoginUserCd());
 		newPointManage.setUpdateDate(current);

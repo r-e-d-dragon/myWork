@@ -7,320 +7,97 @@
 	<meta name="Keywords" content="">
 	<meta name="Description" content="">
 	<meta property="og:image" content="http://">
+	<script type="text/javascript" th:src="@{/scripts/sweetalert.min.js}"></script>
+	<script type="text/javascript" th:src="@{/scripts/front/reservation/make.js??ver=0.03}"></script>
 </head>
 <div layout:fragment="content"><!-- /** layout contents start */ -->
 
 	<h1>部屋予約（新規）</h1>
-    <form action="#" class="booking_search">
+    <form class="booking_search" id="form"  method="post" th:action="@{/user/reservation/make}" th:object="${reservationMakingForm}">
       <dl class="reserve">
-        <dt>店舗</dt>
+        <dt>店舗<input type="hidden" th:field="*{aspCode}"><input type="hidden" class="aspName" th:value="${aspName}"><input type="hidden" th:field="*{loginUserCd}"></dt>
         <dd><div class="shop">
           <select>
-            <option>曙橋店</option>
+            <option th:text="${aspName}"></option>
           </select>
           </div>
         </dd>
         <dt>予約日</dt>
         <dd>
-          <div class="date"><input type="text" readonly="" name="" id="datepicker" class="hasDatepicker"></div>
+          <div class="date"><input class="hasDatepicker" type="date" th:field="*{reservationDate}" th:errorclass="fieldError" placeholder="" min='2020-01-01' max='2100-12-31'></div>
           <div class="time">
-          <select>
-            <optgroup label="AM">
-              <option>00:00～01:00</option>
-              <option>01:00～02:00</option>
-              <option>02:00～03:00</option>
-              <option>03:00～04:00</option>
-              <option>04:00～05:00</option>
-              <option>05:00～06:00</option>
-              <option>06:00～07:00</option>
-              <option>07:00～08:00</option>
-              <option>08:00～09:00</option>
-              <option>09:00～10:00</option>
-              <option>10:00～11:00</option>
-              <option>11:00～12:00</option>
-            </optgroup>
-            <optgroup label="PM">
-              <option>12:00～13:00</option>
-              <option>13:00～14:00</option>
-              <option>14:00～15:00</option>
-              <option>15:00～16:00</option>
-              <option>16:00～17:00</option>
-              <option>17:00～18:00</option>
-              <option>18:00～19:00</option>
-              <option>19:00～20:00</option>
-              <option>20:00～21:00</option>
-              <option>21:00～22:00</option>
-              <option>22:00～23:00</option>
-              <option>23:00～24:00</option>
-            </optgroup>
-          </select>
+
+          <select th:field="*{reservationTime}">
+          	<option selected value="">時間を選択してください。</option>
+		    <option th:each="data , itemStat : ${reservationPointTimeTable}"
+		            th:value="${data.timeSlotName}"
+		            th:text="${data.timeSlotName}">
+		    </option>
+		</select>
+			<input type="hidden" th:field="*{reservationCnt}">
+      		<input type="hidden" id="reservationTotalMaxCount" th:value="${reservationTotalMaxCount}">
           </div>
         </dd>
       </dl>
-      <button type="submit">検索</button>
-    </form>
-    <div class="frame">
+      <button type="submit" style="margin-bottom:30px;">検索</button>
+    
+    <div th:if="${batNumbers} != null" class="frame">
       <div class="sp_only mb10 tac"><small>一覧は横にスクロールできます。</small></div>
       <div class="sp_scroll_table">
         <table class="reserve_list">
           <thead>
             <tr>
-              <th>時間</th>
-              <th>ポイント</th>
-              <th>B101</th>
-              <th>B102</th>
-              <th>101</th>
-              <th>201</th>
-              <th>202</th>
-              <th>301</th>
+                <th class="text-center">時間</th>
+                <th class="text-center">ポイント</th>
+                <th class="text-center" th:each="batnumber, iter : ${batNumbers}"><span th:text="${batnumber}"></span></th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <th>00:00～01:00</th>
-              <td><div class="circle_min"><p>3P</p></div></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td>×</td>
-            </tr>
-            <tr>
-              <th>01:00～02:00</th>
-              <td><div class="circle_min"><p>3P</p></div></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td>×</td>
-            </tr>
-            <tr>
-              <th>02:00～03:00</th>
-              <td><div class="circle_min"><p>3P</p></div></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td>×</td>
-            </tr>
-            <tr>
-              <th>03:00～04:00</th>
-              <td><div class="circle_min"><p>3P</p></div></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td>×</td>
-            </tr>
-            <tr>
-              <th>04:00～05:00</th>
-              <td><div class="circle_min"><p>3P</p></div></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td>×</td>
-            </tr>
-            <tr>
-              <th>05:00～06:00</th>
-              <td><div class="circle_min"><p>3P</p></div></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td>×</td>
-            </tr>
-            <tr>
-              <th>06:00～07:00</th>
-              <td><div class="circle_min"><p>3P</p></div></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td>×</td>
-            </tr>
-            <tr>
-              <th>07:00～08:00</th>
-              <td><div class="circle_min"><p>3P</p></div></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td>×</td>
-            </tr>
-            <tr>
-              <th>08:00～09:00</th>
-              <td><div class="circle_min"><p>3P</p></div></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td>×</td>
-            </tr>
-            <tr>
-              <th>09:00～10:00</th>
-              <td><div class="circle_min navy"><p>5P</p></div></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td>×</td>
-            </tr>
-            <tr>
-              <th>10:00～:1100</th>
-              <td><div class="circle_min navy"><p>5P</p></div></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td>×</td>
-            </tr>
-            <tr>
-              <th>11:00～12:00</th>
-              <td><div class="circle_min navy"><p>5P</p></div></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td>×</td>
-            </tr>
-            <tr>
-              <th>12:00～13:00</th>
-              <td><div class="circle_min navy"><p>5P</p></div></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td>×</td>
-            </tr>
-            <tr>
-              <th>13:00～14:00</th>
-              <td><div class="circle_min red"><p>10P</p></div></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td>×</td>
-            </tr>
-            <tr>
-              <th>14:00～15:00</th>
-              <td><div class="circle_min red"><p>10P</p></div></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td>×</td>
-            </tr>
-            <tr>
-              <th>15:00～16:00</th>
-              <td><div class="circle_min red"><p>10P</p></div></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td>×</td>
-            </tr>
-            <tr>
-              <th>16:00～17:00</th>
-              <td><div class="circle_min red"><p>10P</p></div></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td>×</td>
-            </tr>
-            <tr>
-              <th>17:00～18:00</th>
-              <td><div class="circle_min red"><p>10P</p></div></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td>×</td>
-            </tr>
-            <tr>
-              <th>18:00～19:00</th>
-              <td><div class="circle_min red"><p>10P</p></div></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td>×</td>
-            </tr>
-            <tr>
-              <th>19:00～20:00</th>
-              <td><div class="circle_min red"><p>10P</p></div></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td>×</td>
-            </tr>
-            <tr>
-              <th>20:00～21:00</th>
-              <td><div class="circle_min red"><p>10P</p></div></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td>×</td>
-            </tr>
-            <tr>
-              <th>21:00～22:00</th>
-              <td><div class="circle_min red"><p>10P</p></div></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td>×</td>
-            </tr>
-            <tr>
-              <th>22:00～23:00</th>
-              <td><div class="circle_min red"><p>10P</p></div></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td>×</td>
-            </tr>
-            <tr>
-              <th>23:00～24:00</th>
-              <td><div class="circle_min red"><p>10P</p></div></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td><a href="#">○</a></td>
-              <td>×</td>
+            <tr th:each="data , itemStat : ${reservationPointTimeTable}" th:data-consumedpoint="${data.pointAmount}" th:data-timeslotname="${data.timeSlotName}" th:data-gradetypecd="${data.gradeTypeCd}">
+                <td class="text-center"><span th:text="${data.timeSlotName}"></span></td>
+                <td class="text-center"><div th:class="${'circle_min ' +  data.reservationPointCss}"><p th:text="${data.pointAmount + 'P'}"></p></div></td>
+                <td class="text-center" th:each="batData, itemStat : ${data.reservationList}" th:data-batnumbercd="${batData.batNumberCd}" th:data-batnumber="${batData.batNumber}">
+                <span th:if="${batData.expireFlag == '1'}">×</span>
+                <span th:if="${batData.expireFlag == '0'}">
+                  <span th:if="${batData.emptyFlag == '0'}"></span>
+                  <span th:if="${batData.emptyFlag == '1'}"><a id="btnRegisterBooking" class="c-link-text text-blue user-func" href="#">〇</a>(<span th:text="${data.pointAmount}">P</span>)</span>
+                </span>
+                </td>
             </tr>
           </tbody>
         </table>
       </div>
-
 </div>
+</form>
+ <form id="registerForm"  method="post" th:action="@{/user/reservation/finish}" th:object="${memberReservationRegisterForm}">
+   	  <input type="hidden" th:field="*{reservationDate}">
+   	  <input type="hidden" th:field="*{reservationTime}">
+   	  <input type="hidden" th:field="*{batNumberCd}">
+   	  <input type="hidden" th:field="*{batNumber}">
+   	  <input type="hidden" th:field="*{consumedPoint}">
+      <input type="hidden" th:field="*{gradeTypeCd}">
+      
+      <input type="hidden" th:field="*{aspCode}">
+      <input type="hidden" th:field="*{loginUserCd}">
+      <input type="hidden" th:field="*{memberCode}">
+      <input type="hidden" th:field="*{validMonthlyPoint}">
+      <input type="hidden" th:field="*{monthlyPoint}">
+      <input type="hidden" th:field="*{validEventPoint}">
+      <input type="hidden" th:field="*{eventPoint}">
+      
+      <input type="hidden" th:field="*{pointCategoryCode}">
+      
+      <input type="hidden" th:field="*{reservationId}" value="">
+      <input type="hidden" th:field="*{reservationNumber}">
+      <input type="hidden" th:field="*{valid}">
+      <input type="hidden" th:field="*{limitReservationCount}">
+      <input type="hidden" th:field="*{limitMonthlyReservationCount}">
+      <input type="hidden" th:field="*{limitEventReservationCount}">
+      <input type="hidden" th:field="*{limitReservationPoint}">
+      <input type="hidden" th:field="*{penaltyPoint}">
+      <input type="hidden" th:field="*{hasChanged}">
+      <input type="hidden" th:field="*{searchTime}">
+    </form>
 
 </body>
 </html>

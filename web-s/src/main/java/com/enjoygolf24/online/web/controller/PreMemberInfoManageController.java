@@ -188,6 +188,7 @@ public class PreMemberInfoManageController {
 		}
 
 		memberInfoManageService.preMemberModify(form.createPreMemberModifyServiceBean());
+		initDetailForm(form, model, form.getPreMemberCode());
 
 		result.rejectValue("hasChanged", "error.user", "更新完了しました。");
 		model.addAttribute("preMemberInfoManageForm", form);

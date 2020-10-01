@@ -27,7 +27,7 @@
 			            <div class="row align-items-start m-b-20">
 			              <div class="d-flex justify-content-between align-items-start m-t-10"><span class="text c-ttl c-ttl__04">パスワード</span><span class="tag-icon tag-red m-t-5">必須</span></div>
 			              <div>
-			                <input class="c-input" type="password" th:field="*{password}" th:errorclass="fieldError">
+			                <input class="c-input" type="password" th:field="*{password}" th:errorclass="fieldError" th:classappend="${initPasswordForm.passwordAndPasswordConfirm}?'':'fieldError'">
 			                <p class="m-t-10"><small>※半角英数8文字以上、大文字小文字、数字の組合せ必須となります。-（ハイフン）など一部記号もご利用いただけます。</small></p>
 			              </div>
 			            </div>
@@ -35,7 +35,7 @@
 			            <div class="row align-items-start m-b-20">
 			              <div class="d-flex justify-content-between align-items-start m-t-10"><span class="text c-ttl c-ttl__04">パスワード（確認用）</span><span class="tag-icon tag-red m-t-5">必須</span></div>
 			              <div>
-			                <input class="c-input" type="password" th:field="*{PasswordConfirm}" th:errorclass="fieldError">
+			                <input class="c-input" type="password" th:field="*{passwordConfirm}" th:errorclass="fieldError" th:classappend="${initPasswordForm.passwordAndPasswordConfirm}?'':'fieldError'">
 			              </div>
 			            </div>
 			            

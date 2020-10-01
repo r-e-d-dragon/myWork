@@ -17,6 +17,9 @@ function NumCheck(chkVal) {
 
 $(function(){
 	
+	$("input").on("keydown", function (e) {
+    	return e.which !== 32;
+	});
 	
     $("a.newWindow").click(function(e) {
         e.preventDefault();

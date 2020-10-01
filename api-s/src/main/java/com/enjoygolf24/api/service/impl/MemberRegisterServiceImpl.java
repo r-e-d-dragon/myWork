@@ -372,10 +372,10 @@ public class MemberRegisterServiceImpl implements MemberRegisterService {
 		member.setAspCode(serviceBean.getAspCode());
 
 		member.setEmail(serviceBean.getEmail());
-		member.setFirstName(serviceBean.getFirstName());
-		member.setFirstNameKana(serviceBean.getFirstNameKana());
-		member.setLastName(serviceBean.getLastName());
-		member.setLastNameKana(serviceBean.getLastNameKana());
+		member.setFirstName(serviceBean.getFirstName().trim());
+		member.setFirstNameKana(serviceBean.getFirstNameKana().trim());
+		member.setLastName(serviceBean.getLastName().trim());
+		member.setLastNameKana(serviceBean.getLastNameKana().trim());
 
 		// TODO: how to set password for preMember?
 		member.setPassword(new BCryptPasswordEncoder().encode("Passw0rd"));

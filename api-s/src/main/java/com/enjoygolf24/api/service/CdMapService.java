@@ -35,6 +35,15 @@ public interface CdMapService {
 	public LinkedHashMap<String, String> createMapOnlyIncludes(String codeType, String... includeCds);
 
 	/**
+	 * CDマップ作成 includeCds のみから作成
+	 *
+	 * @param codeType   コード種類
+	 * @param includeCds 指定コード
+	 * @return CDマップ
+	 */
+	public LinkedHashMap<String, String> createMapOnlyIncludesReverse(String codeType, String... includeCds);
+
+	/**
 	 * CDマップ作成 excludeCds を除外
 	 *
 	 * @param codeType   コード種類

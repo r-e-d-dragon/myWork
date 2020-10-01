@@ -47,13 +47,16 @@ public class MemberReservationManage implements Serializable {
 	private String startDate;
 	private String endDate;
 
-	private int totalMonthlyPoint;
-	private int totalEventPoint;
 	private int validMonthlyPoint;
+	private int currentMonthlyPoint;
+	private int nextMonthlyPoint;
+
 	private int validEventPoint;
 
 	private int monthlyReservationCount;
 	private int eventReservationCount;
+	private int monthlyReservationPoint;
+	private int eventReservationPoint;
 
 	private int limitReservationCount;
 	private int limitEventReservationCount;
@@ -70,6 +73,9 @@ public class MemberReservationManage implements Serializable {
 
 	private Time startTime;
 	private Time endTime;
+
+	private String currentMonth;
+	private String nextMonth;
 
 	TblUser tblUser;
 	List<MemberReservationManage> reservationList;

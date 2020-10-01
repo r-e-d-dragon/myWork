@@ -215,6 +215,9 @@ public class MemberReservationManageController {
 
 		int consumedPoint = Integer.valueOf(form.getConsumedPoint());
 		if (PointCategoryCd.MONTHLY_POINT.equals(form.getPointCategoryCode())) {
+			System.out.println("consumedPoint" + consumedPoint);
+			System.out.println("form.getValidMonthlyPoint()" + form.getValidMonthlyPoint());
+			System.out.println("form.getValidEventPoint()" + form.getValidEventPoint());
 			if (consumedPoint > form.getValidMonthlyPoint()) {
 				model.addAttribute("memberReservationRegisterForm", form);
 				result.rejectValue("validMonthlyPoint", "error.validMonthlyPoint", "{0} : 月ポイントが足りないため、予約出来ません。");
@@ -374,7 +377,8 @@ public class MemberReservationManageController {
 
 		form.setReservationDate(DateUtility.getCurrentDateTime(DateUtility.DATE_FORMAT));
 		form.setPageNo(DefaultPageSizeUtility.PAGE_FIRST);
-		form.setStatus("1");
+		// 予約確定
+		form.setStatus(ReservationStatusCd.STATUS_FIXED);
 		
 		serchCommonLogic(form, model);
 
@@ -396,8 +400,12 @@ public class MemberReservationManageController {
 			Model model) {
 		logger.info("Start searchReservationList Controller");
 
+		if (!StringUtil.isEmpty(form.getSelectedMemberCode())) {
+			form.setMemberCode(form.getSelectedMemberCode());
+		}
+
 		form.setPageNo(DefaultPageSizeUtility.PAGE_FIRST);
-		form.setStatus("1");
+		form.setStatus(ReservationStatusCd.STATUS_FIXED);
 
 		serchCommonLogic(form, model);
 
