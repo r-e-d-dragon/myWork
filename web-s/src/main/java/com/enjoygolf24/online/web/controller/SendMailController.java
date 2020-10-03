@@ -1,5 +1,9 @@
 package com.enjoygolf24.online.web.controller;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
+import javax.mail.internet.InternetAddress;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.mail.DefaultAuthenticator;
@@ -8,6 +12,7 @@ import org.apache.commons.mail.SimpleEmail;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -23,12 +28,21 @@ import com.enjoygolf24.api.service.AspService;
 import com.enjoygolf24.api.service.MemberInfoManageService;
 import com.enjoygolf24.online.web.form.SendMailForm;
 
-
 @Controller
 @RequestMapping("/admin/booking/sendMail")
+@ConfigurationProperties(prefix = "mail")
 public class SendMailController {
 
 	private static final Logger logger = LoggerFactory.getLogger(SendMailController.class);
+
+	/** ユーザID */
+	private String userid;
+	/** パスワード */
+	private String passwd;
+	/** メールサーバ */
+	private String hostname;
+	/** SMTPポート */
+	private int smtpPort;
 
 	@Autowired
 	HttpServletRequest request;
@@ -60,28 +74,30 @@ public class SendMailController {
 			return sendMailInfo(form, model);
 		}
 
-		// TODO 受信メールアドレス
-		String toMail = "enjoygolf24@cock.li";
+		// 送信者メールアドレス
+		String fromMailAddress = "info@golfenjoy24.com";
 
 		try {
 			Email email = new SimpleEmail();
-			// TODO メールサーバ
-			// email.setHostName("pop3.lolipop.jp");
-			// TODO Cockmail
-			email.setHostName("mail.cock.li");
-
+			// メールサーバ
+			email.setHostName(hostname);
 			// Smtp-Port
-			email.setSmtpPort(465);
-			// TODO user-id, password
-			email.setAuthenticator(new DefaultAuthenticator("enjoygolf24@cock.li", "Passw0rd."));
+			email.setSmtpPort(smtpPort);
+			// user-id, password
+			email.setAuthenticator(new DefaultAuthenticator(userid, passwd));
 			email.setDebug(true);
 			// (SSL)
 			email.setSSLOnConnect(true);
 
-			email.setFrom(toMail);
+			email.setFrom(fromMailAddress);
 			email.setSubject(form.getTitle());
 			email.setMsg(form.getComment());
 			email.addTo(form.getToMail());
+
+			// 送信先メールアドレス（Reply-To）を設定する
+			Collection<InternetAddress> replyTo = new ArrayList<InternetAddress>();
+			replyTo.add(new InternetAddress(fromMailAddress));
+			email.setReplyTo(replyTo);
 
 			email.send();
 		} catch (Exception e) {
@@ -109,5 +125,37 @@ public class SendMailController {
 		form.setLoginUserCd(LoginUtility.getLoginUser().getMemberCode());
 
 		model.addAttribute("aspName", asp.getAspName());
+	}
+
+	public String getUserid() {
+		return userid;
+	}
+
+	public void setUserid(String userid) {
+		this.userid = userid;
+	}
+
+	public String getPasswd() {
+		return passwd;
+	}
+
+	public void setPasswd(String passwd) {
+		this.passwd = passwd;
+	}
+
+	public String getHostname() {
+		return hostname;
+	}
+
+	public void setHostname(String hostname) {
+		this.hostname = hostname;
+	}
+
+	public int getSmtpPort() {
+		return smtpPort;
+	}
+
+	public void setSmtpPort(int smtpPort) {
+		this.smtpPort = smtpPort;
 	}
 }
