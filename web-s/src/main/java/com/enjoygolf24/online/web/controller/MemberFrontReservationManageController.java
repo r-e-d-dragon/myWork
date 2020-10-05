@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.enjoygolf24.api.common.code.CodeTypeCd;
+import com.enjoygolf24.api.common.code.ReservationStatusCd;
 import com.enjoygolf24.api.common.database.bean.TblAsp;
 import com.enjoygolf24.api.common.database.bean.TblUser;
 import com.enjoygolf24.api.common.database.jpa.repository.CodeMasterRepository;
@@ -70,7 +71,6 @@ public class MemberFrontReservationManageController {
 			@ModelAttribute("memberInfoManageListForm") MemberInfoManageListForm memberForm, BindingResult result,
 			Model model) {
 		logger.info("Start memberReservationList Controller");
-
 
 		// TODO - ログインユーザ
 		memberForm.setSelectedMemberCode("admin2@user.com");
@@ -166,7 +166,7 @@ public class MemberFrontReservationManageController {
 
 		form.setReservationDate(DateUtility.getCurrentDateTime(DateUtility.DATE_FORMAT));
 		form.setPageNo(DefaultPageSizeUtility.PAGE_FIRST);
-		form.setStatus("1");
+		form.setStatus(ReservationStatusCd.STATUS_FIXED);
 		
 		serchCommonLogic(form, model);
 
@@ -189,7 +189,7 @@ public class MemberFrontReservationManageController {
 		logger.info("Start searchReservationList Controller");
 
 		form.setPageNo(DefaultPageSizeUtility.PAGE_FIRST);
-		form.setStatus("1");
+		form.setStatus(ReservationStatusCd.STATUS_FIXED);
 
 		serchCommonLogic(form, model);
 
@@ -226,7 +226,8 @@ public class MemberFrontReservationManageController {
 
 		List<MemberReservationManage> memberReservationList = memberReservationManageService.getMemberReservationList(
 				form.getReservationNumber(), form.getMemberCode(), LoginUtility.getLoginUser().getAspCode(),
-				form.getReservationDate(), form.getStatus(), false, form.getPageNo(), form.getPageSize());
+				form.getReservationDate(), form.getStatus(), false, form.getPageNo(),
+				form.getPageSize());
 
 		PageInfo<MemberReservationManage> pageInfo = new PageInfo<MemberReservationManage>(memberReservationList);
 		model.addAttribute("pageInfo", pageInfo);

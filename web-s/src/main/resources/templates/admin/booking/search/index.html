@@ -26,11 +26,14 @@
 							<th class="text-letf" width="20%">予約番号</th>
 							<td class="text-left" width="30%"><input type="text" maxlength="20" placeholder="" th:field="*{reservationNumber}" value="" th:errorclass="fieldError"></td>
 							<th class="text-letf" width="20%">予約日時</th>
-							<td class="text-letf"><input type="text" maxlength="20" placeholder="" th:field="*{reservationDate}" value="" th:errorclass="fieldError"></td>
+							<td class="text-letf" width="50%"><input type="text" maxlength="20" placeholder="" th:field="*{reservationDate}" value="" th:errorclass="fieldError"></td>
 						</tr>
 						<tr>
 							<th class="text-letf" width="20%">会員番号</th>
-							<td class="text-letf" colspan="3"><input type="text" maxlength="20" placeholder="" th:field="*{memberCode}" value="" th:errorclass="fieldError"></td>
+							<td class="text-letf" colspan="2"><input type="text" maxlength="20" placeholder="" th:field="*{memberCode}" value="" th:errorclass="fieldError"></td>
+                            <td class="text-letf">
+                            <input type="checkbox" th:field="*{valid}"> <label th:text="過去予約を含む"></label>
+                            </td>
 						</tr>
 						<tr>
 							<th class="text-letf" width="20%">お名前</th>
@@ -43,12 +46,10 @@
 							<td class="text-letf" colspan="2"><div class="tableLabel">（メイ）</div><input type="text" maxlength="20" placeholder="ハナコ"  style="width: 240px;" th:field="*{firstNameKana}" th:errorclass="fieldError"></td>
 						</tr>
 						<tr>
-							<th class="text-letf" width="20%">電話番号</th>
-							<td class="text-letf" colspan="3"><input type="text" th:field="*{phone}" th:errorclass="fieldError" maxlength="20" placeholder="00-0000-0000"></td>
-						</tr>
-						<tr>
-							<th class="text-letf" width="20%">メールアドレス</th>
-							<td class="text-letf" colspan="3"><input type="text" maxlength="256" placeholder="ユーザ名@ドメイン名" th:field="*{email}" value="" th:errorclass="fieldError"></td>
+							<th class="text-letf">電話番号</th>
+							<td class="text-letf"><input type="text" th:field="*{phone}" th:errorclass="fieldError" maxlength="20" placeholder="00-0000-0000"></td>
+							<th class="text-letf">メールアドレス</th>
+							<td class="text-letf"><input type="text" maxlength="256" placeholder="ユーザ名@ドメイン名" th:field="*{email}" value="" th:errorclass="fieldError"></td>
 						</tr>
 						</tbody>
 					</table>

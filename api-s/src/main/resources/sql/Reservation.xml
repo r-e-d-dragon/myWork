@@ -30,7 +30,7 @@
                 on rev.asp_code = asp.asp_code
         left outer join tbl_user usr 
                 on rev.member_code = usr.member_code
-           <where>
+        <where>
         <if test="reservationNumber != null and reservationNumber != ''">
             and rev.reservation_number like CONCAT('%',REPLACE(#{reservationNumber},'%','¥%'),'%') ESCAPE '¥'
         </if>
@@ -53,13 +53,25 @@
             and rev.status = #{status}
         </if>
         <if test="status == null or status == ''">
-               and (rev.status = '1' or (rev.status = '0' and rev.register_date > current_timestamp + '-3 minute' )) 
+            and (rev.status = '1' or (rev.status = '0' and rev.register_date > current_timestamp + '-3 minute' )) 
         </if>
-        <if test="valide == true">
+        <if test="valid == true">
             and to_timestamp(to_char(rev.reservation_date, 'YYYY/MM/DD')||' '||substring(rev.reservation_time, 0, 3), 'YYYY/MM/DD HH24') > current_timestamp
-        </if>        
-           </where>
-        order by reservation_date desc, reservation_time desc
+        </if>
+        <if test="name != null and name != ''">
+            and CONCAT(last_name,first_name) like CONCAT('%',REPLACE(#{name},'%','¥%'),'%') ESCAPE '¥'
+        </if>   
+        <if test="kananame != null and kananame != ''">
+            and CONCAT(last_name_kana,first_name_kana) like CONCAT('%',REPLACE(#{kananame},'%','¥%'),'%') ESCAPE '¥'
+        </if>   
+        <if test="phone != null and phone != ''">
+             and phone like CONCAT('%',REPLACE(#{phone},'%','¥%'),'%') ESCAPE '¥'
+        </if>
+        <if test="email != null and email != ''">
+             and email like CONCAT('%',REPLACE(#{email},'%','¥%'),'%') ESCAPE '¥'
+        </if>
+        </where>
+        order by reservation_date, reservation_time, bat_number
     </select>
 
     <select id="getReservationList" resultType="com.enjoygolf24.api.common.database.mybatis.bean.MemberReservationManage">

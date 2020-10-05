@@ -11,17 +11,23 @@ import java.util.UUID;
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.enjoygolf24.api.common.code.MacroDateTypeCd;
+import com.enjoygolf24.api.common.code.MailSectionCd;
 import com.enjoygolf24.api.common.code.PointCategoryCd;
 import com.enjoygolf24.api.common.code.ReservationStatusCd;
 import com.enjoygolf24.api.common.database.bean.MstTimeTable;
+import com.enjoygolf24.api.common.database.bean.TblAsp;
 import com.enjoygolf24.api.common.database.bean.TblMacroReservationManage;
 import com.enjoygolf24.api.common.database.bean.TblPointHistory;
 import com.enjoygolf24.api.common.database.bean.TblPointManage;
 import com.enjoygolf24.api.common.database.bean.TblReservation;
+import com.enjoygolf24.api.common.database.bean.TblUser;
+import com.enjoygolf24.api.common.database.jpa.repository.AspRepository;
 import com.enjoygolf24.api.common.database.jpa.repository.MemberRepository;
 import com.enjoygolf24.api.common.database.jpa.repository.MstTimeTableRepository;
 import com.enjoygolf24.api.common.database.jpa.repository.PointHistoryRepository;
@@ -31,12 +37,16 @@ import com.enjoygolf24.api.common.database.jpa.repository.TblMacroReservationMan
 import com.enjoygolf24.api.common.database.mybatis.bean.MemberReservationManage;
 import com.enjoygolf24.api.common.database.mybatis.repository.ReservationMapper;
 import com.enjoygolf24.api.common.utility.DateUtility;
+import com.enjoygolf24.api.service.EmailSendService;
 import com.enjoygolf24.api.service.MacroReservationManageService;
+import com.enjoygolf24.api.service.bean.EmailSendServiceBean;
 import com.enjoygolf24.api.service.bean.MemberReservationServiceBean;
 import com.github.pagehelper.PageHelper;
 
 @Service
 public class MacroReservationManageServiceImpl implements MacroReservationManageService {
+
+	private static final Logger logger = LoggerFactory.getLogger(MemberRegisterServiceImpl.class);
 
 	@Autowired
 	HttpSession session;
@@ -61,6 +71,12 @@ public class MacroReservationManageServiceImpl implements MacroReservationManage
 
 	@Autowired
 	MstTimeTableRepository mstTimeTableRepository;
+
+	@Autowired
+	private EmailSendService emailSendService;
+
+	@Autowired
+	private AspRepository aspRepository;
 
 	@Override
 	public List<MstTimeTable> getMstTimeTable(String aspCode) {
@@ -327,13 +343,14 @@ public class MacroReservationManageServiceImpl implements MacroReservationManage
 		reservation.setUpdateUser(serviceBean.getLoginUserCd());
 		reservation.setUpdateDate(new Timestamp(System.currentTimeMillis()));
 
-		// TODO 一般ユーザの予約取消時
+		reservationRepository.save(reservation);
+
+		// 一般ユーザの予約取消時
 		if (!PointCategoryCd.ADMIN_POINT.contentEquals(reservation.getPointCategoryCode())) {
 			// ユーザ予約
 			// TODO 予約取消メール送信
+			sendReservationMail(reservation);
 		}
-
-		reservationRepository.save(reservation);
 	}
 
 	/**
@@ -376,4 +393,28 @@ public class MacroReservationManageServiceImpl implements MacroReservationManage
 		PageHelper.startPage(pageNo, pageSize);
 		return reservationMapper.getMacroReservationList(aspCode);
 	}
+
+	public void sendReservationMail(TblReservation reservation) {
+
+		EmailSendServiceBean emailSendServiceBean = createReservationEmailSendServiceBean(reservation);
+
+		// email send
+		emailSendService.send(emailSendServiceBean);
+		String txt = emailSendServiceBean.getSenderName() + "\n" + emailSendServiceBean.getSenderEmailAddress() + "\n"
+				+ emailSendServiceBean.getTargetName() + "\n" + emailSendServiceBean.getTargetEmailAddress() + "\n"
+				+ emailSendServiceBean.getSubject() + "\n" + emailSendServiceBean.getBody();
+
+		logger.info(txt);
+	}
+
+	private EmailSendServiceBean createReservationEmailSendServiceBean(TblReservation reservation) {
+		TblUser member = memberRepository.findByMemberCode(reservation.getMemberCode());
+		TblAsp asp = aspRepository.findByAspCode(reservation.getAspCode());
+		String mailSectionCd = MailSectionCd.RESERVATION_MACRO_CANCLE;
+
+		EmailSendServiceBean mailSendServiceBean = new EmailSendServiceBean(mailSectionCd, reservation, member, asp);
+
+		return mailSendServiceBean;
+	}
+
 }

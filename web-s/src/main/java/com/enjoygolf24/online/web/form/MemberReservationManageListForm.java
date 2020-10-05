@@ -27,40 +27,40 @@ public class MemberReservationManageListForm implements Serializable {
 	private static final long serialVersionUID = -937204629996741357L;
 
 	@Hankaku(groups = Search0.class, max = 20)
-	String reservationNumber;
+	String reservationNumber = "";
 	@Hankaku(groups = Search0.class, max = 20)
-	String reservationDate;
+	String reservationDate = "";
 	@Hankaku(groups = Search0.class, max = 20)
-	String memberCode;
+	String memberCode = "";
 
 	@Hankaku(groups = Search0.class, max = 20)
-	String aspCode;
+	String aspCode = "";
 
 	@Zenkaku(groups = Search0.class, max = 200)
 	@SjisSafe(groups = Search0.class)
-	String aspName;
+	String aspName = "";
 
 	@Kanji(groups = Search0.class, max = 80)
 	@SjisSafe(groups = Search0.class)
-	private String firstName;
+	private String firstName = "";
 
 	@Kana(groups = Search0.class, max = 80)
 	@SjisSafe(groups = Search0.class)
-	private String firstNameKana;
+	private String firstNameKana = "";
 
 	@Kanji(groups = Search0.class, max = 80)
 	@SjisSafe(groups = Search0.class)
-	private String lastName;
+	private String lastName = "";
 
 	@Kana(groups = Search0.class, max = 80)
 	@SjisSafe(groups = Search0.class)
-	private String lastNameKana;
+	private String lastNameKana = "";
 
 	@Telephone(groups = Search0.class)
-	private String phone;
+	private String phone = "";
 
 	@Size(groups = Search0.class, max = 80)
-	private String email;
+	private String email = "";
 
 	private String memberName;
 	private String loginUserCd;
@@ -83,12 +83,11 @@ public class MemberReservationManageListForm implements Serializable {
 	private String dateKind;
 	private String selectedReservationId;
 	private String reservationId;
+	private boolean valid = false;
 
 	private int limitReservationCount;
 	private int limitEventReservationCount;
 	private int limitMonthlyReservationCount;
-
-	private String action;
 
 	private List<String> chkBatNumbers;
 

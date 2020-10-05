@@ -19,7 +19,11 @@ import com.enjoygolf24.api.service.bean.MemberReservationServiceBean;
 public interface MemberReservationManageService {
 
 	public List<MemberReservationManage> getMemberReservationList(String reservationNumber, String memberCode,
-			String aspCode, String reservationDate, String status, boolean valide, int pageNo, int pageSize);
+			String aspCode, String reservationDate, String status, boolean valid, int pageNo, int pageSize);
+
+	public List<MemberReservationManage> getMemberReservationList(String reservationNumber, String memberCode,
+			String aspCode, String reservationDate, String status, String name, String kananame, String phone,
+			String email, boolean valid, int pageNo, int pageSize);
 
 	public List<MemberReservationManage> getReservationList(String aspCode, String reservationDate, String dateKind);
 
@@ -41,7 +45,7 @@ public interface MemberReservationManageService {
 
 	public List<MemberReservationManage> getMemberReservationAllList(String reservationNumber, String memberCode,
 			String aspCode, String batNumber, String reservationDate, String reservationTime, String status,
-			boolean valide);
+			boolean valid);
 
 	public List<ReservationPointTimeTableInfo> getViewReservationPonitTimeTableInfo(Date dateTime,
 			Date validateStartTerm);

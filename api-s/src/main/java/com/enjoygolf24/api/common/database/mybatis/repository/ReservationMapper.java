@@ -17,7 +17,8 @@ public interface ReservationMapper {
 			@Param("memberCode") String memberCode, @Param("aspCode") String aspCode,
 			@Param("batNumber") String batNumber, @Param("reservationDate") String reservationDate,
 			@Param("reservationTime") String reservationTime, @Param("status") String status,
-			@Param("valide") boolean valide);
+			@Param("name") String name, @Param("kananame") String kananame, @Param("phone") String phone,
+			@Param("email") String email, @Param("valid") boolean valid);
 
 	public List<MemberReservationManage> getReservationList(@Param("aspCode") String aspCode,
 			@Param("reservationDate") String reservationDate, @Param("dateKind") String dateKind);

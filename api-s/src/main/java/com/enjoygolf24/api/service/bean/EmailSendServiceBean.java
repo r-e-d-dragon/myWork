@@ -10,6 +10,7 @@ import java.util.Map.Entry;
 import com.enjoygolf24.api.common.code.MailSectionCd;
 import com.enjoygolf24.api.common.database.bean.TblAsp;
 import com.enjoygolf24.api.common.database.bean.TblMailMaster;
+import com.enjoygolf24.api.common.database.bean.TblReservation;
 import com.enjoygolf24.api.common.database.bean.TblUser;
 import com.enjoygolf24.api.common.database.bean.TblUserPre;
 import com.enjoygolf24.api.common.utility.DateUtility;
@@ -35,6 +36,11 @@ public class EmailSendServiceBean {
 	public static final String EMAIL_ADDRESS = "${EMAIL_ADDRESS}";
 
 	public static final String MEMO = "${MEMO}";
+
+	public static final String RESERVATION_NUMBER = "${RESERVATION_NUMBER}";
+	public static final String RESERVATION_DATE = "${RESERVATION_DATE}";
+	public static final String RESERVATION_TIME = "${RESERVATION_TIME}";
+	public static final String BAT_NUMBER = "${BAT_NUMBER}";
 
 	@Setter(AccessLevel.NONE)
 	private String mailSectionCd;
@@ -101,6 +107,26 @@ public class EmailSendServiceBean {
 		putReplace(PHONE_NUMBER, member.getPhone());
 		putReplace(MEMO, memo);
 
+	}
+
+	/**
+	 * 予約登録・取消
+	 * 
+	 * @param mailSectionCd
+	 * @param reservation
+	 * @param member
+	 * @param asp
+	 */
+	public EmailSendServiceBean(String mailSectionCd, TblReservation reservation, TblUser member, TblAsp asp) {
+		this(mailSectionCd);
+		this.targetEmailAddress = member.getEmail();
+
+		putReplace(MEMBER_NAME, member.getLastName() + " " + member.getFirstName());
+		putReplace(API_NAME, asp.getAspName());
+		putReplace(RESERVATION_NUMBER, reservation.getReservationNumber());
+		putReplace(RESERVATION_DATE, reservation.getRegisterDate());
+		putReplace(RESERVATION_TIME, reservation.getReservationTime());
+		putReplace(BAT_NUMBER, reservation.getBatNumber());
 	}
 
 	public void setMailMaster(TblMailMaster mailMaster) {

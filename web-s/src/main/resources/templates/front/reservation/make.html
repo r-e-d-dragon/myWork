@@ -3,7 +3,7 @@
     xmlns:th="http://www.thymeleaf.org"
     xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{front/layout/layout-front-reservation}">
 <head>
-	<title>エンジョイゴルフ24とは｜エンジョイゴルフ24</title>
+	<title>新規予約｜エンジョイゴルフ24</title>
 	<meta name="Keywords" content="">
 	<meta name="Description" content="">
 	<meta property="og:image" content="http://">
@@ -34,8 +34,6 @@
 		            th:text="${data.timeSlotName}">
 		    </option>
 		</select>
-			<input type="hidden" th:field="*{reservationCnt}">
-      		<input type="hidden" id="reservationTotalMaxCount" th:value="${reservationTotalMaxCount}">
           </div>
         </dd>
       </dl>
@@ -97,6 +95,9 @@
       <input type="hidden" th:field="*{penaltyPoint}">
       <input type="hidden" th:field="*{hasChanged}">
       <input type="hidden" th:field="*{searchTime}">
+      
+      <input type="hidden" th:field="*{reservationCnt}">
+      <input type="hidden" th:field="*{reservationPoint}">
     </form>
 
 </body>

@@ -16,18 +16,23 @@ import java.util.stream.Collectors;
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.enjoygolf24.api.common.code.MailSectionCd;
 import com.enjoygolf24.api.common.code.PointCategoryCd;
 import com.enjoygolf24.api.common.code.ReservationStatusCd;
 import com.enjoygolf24.api.common.database.bean.MstPenaltyPoint;
 import com.enjoygolf24.api.common.database.bean.MstReservationLimit;
+import com.enjoygolf24.api.common.database.bean.TblAsp;
 import com.enjoygolf24.api.common.database.bean.TblPointHistory;
 import com.enjoygolf24.api.common.database.bean.TblPointManage;
 import com.enjoygolf24.api.common.database.bean.TblPointManagePK;
 import com.enjoygolf24.api.common.database.bean.TblReservation;
 import com.enjoygolf24.api.common.database.bean.TblUser;
+import com.enjoygolf24.api.common.database.jpa.repository.AspRepository;
 import com.enjoygolf24.api.common.database.jpa.repository.MemberRepository;
 import com.enjoygolf24.api.common.database.jpa.repository.MstPenaltyPointRepository;
 import com.enjoygolf24.api.common.database.jpa.repository.MstReservationLimitRepository;
@@ -39,12 +44,16 @@ import com.enjoygolf24.api.common.database.mybatis.bean.PointManage;
 import com.enjoygolf24.api.common.database.mybatis.bean.ReservationPointTimeTableInfo;
 import com.enjoygolf24.api.common.database.mybatis.repository.ReservationMapper;
 import com.enjoygolf24.api.common.utility.DateUtility;
+import com.enjoygolf24.api.service.EmailSendService;
 import com.enjoygolf24.api.service.MemberReservationManageService;
+import com.enjoygolf24.api.service.bean.EmailSendServiceBean;
 import com.enjoygolf24.api.service.bean.MemberReservationServiceBean;
 import com.github.pagehelper.PageHelper;
 
 @Service
 public class MemberReservationManageServiceImpl implements MemberReservationManageService {
+
+	private static final Logger logger = LoggerFactory.getLogger(MemberRegisterServiceImpl.class);
 
 	@Autowired
 	HttpSession session;
@@ -70,6 +79,12 @@ public class MemberReservationManageServiceImpl implements MemberReservationMana
 	@Autowired
 	MstPenaltyPointRepository mstPenaltyPointRepository;
 
+	@Autowired
+	private EmailSendService emailSendService;
+
+	@Autowired
+	private AspRepository aspRepository;
+
 	@Override
 	public List<ReservationPointTimeTableInfo> getViewReservationPonitTimeTableInfo(Date dateTime,
 			Date validateStartTerm) {
@@ -78,10 +93,19 @@ public class MemberReservationManageServiceImpl implements MemberReservationMana
 
 	@Override
 	public List<MemberReservationManage> getMemberReservationList(String reservationNumber, String memberCode,
-			String aspCode, String reservationDate, String status, boolean valide, int pageNo, int pageSize) {
+			String aspCode, String reservationDate, String status, boolean valid, int pageNo, int pageSize) {
 		PageHelper.startPage(pageNo, pageSize);
 		return reservationMapper.getMemberReservationList(reservationNumber, memberCode, aspCode, null, reservationDate,
-				null, status, valide);
+				null, status, null, null, null, null, valid);
+	}
+
+	@Override
+	public List<MemberReservationManage> getMemberReservationList(String reservationNumber, String memberCode,
+			String aspCode, String reservationDate, String status, String name, String kananame, String phone,
+			String email, boolean valid, int pageNo, int pageSize) {
+		PageHelper.startPage(pageNo, pageSize);
+		return reservationMapper.getMemberReservationList(reservationNumber, memberCode, aspCode, null, reservationDate,
+				null, status, name, kananame, phone, email, valid);
 	}
 
 	@Override
@@ -107,7 +131,6 @@ public class MemberReservationManageServiceImpl implements MemberReservationMana
 			Optional<PointManage> mPoint = pointList.stream()
 					.filter(p -> p.getStartDate().startsWith(reservationDate.substring(0, 7))).findFirst();
 			if (mPoint.isPresent()) {
-				System.out.println("getPointManageId > " + mPoint.get().getPointManageId());
 				if (serviceBean.getConsumedPoint() <= mPoint.get().getPointAmount()) {
 					// ポイント履歴登録
 					insertPointHistory(serviceBean, mPoint.get(), reservation.getReservationId(),
@@ -143,6 +166,10 @@ public class MemberReservationManageServiceImpl implements MemberReservationMana
 			}
 		}
 
+		// TODO
+		// 予約完了メール送信
+		sendReservationMail(MailSectionCd.RESERVATION_FIXED, reservation);
+
 		return reservation.getReservationId();
 	}
 
@@ -166,6 +193,9 @@ public class MemberReservationManageServiceImpl implements MemberReservationMana
 		if (!PointCategoryCd.ADMIN_POINT.equals(reservation.getPointCategoryCode())) {
 			// 取消、ポイント戻し処理
 			updateMemberCanclePointManage(serviceBean);
+			// TODO
+			// 予約取消メール送信
+			sendReservationMail(MailSectionCd.RESERVATION_CANCLE, reservation);
 		}
 
 		return serviceBean.getReservationId();
@@ -403,9 +433,9 @@ public class MemberReservationManageServiceImpl implements MemberReservationMana
 	@Override
 	public List<MemberReservationManage> getMemberReservationAllList(String reservationNumber, String memberCode,
 			String aspCode, String batNumber, String reservationDate, String reservationTime, String status,
-			boolean valide) {
+			boolean valid) {
 		return reservationMapper.getMemberReservationList(reservationNumber, memberCode, aspCode, batNumber,
-				reservationDate, reservationTime, status, valide);
+				reservationDate, reservationTime, status, null, null, null, null, valid);
 	}
 
 	/**
@@ -484,5 +514,34 @@ public class MemberReservationManageServiceImpl implements MemberReservationMana
 			reservation.setLimitReservationPoint(99);
 		}
 		return reservation;
+	}
+
+	/**
+	 * メール送信
+	 * 
+	 * @param mailSectionCd
+	 * @param reservation
+	 */
+	public void sendReservationMail(String mailSectionCd, TblReservation reservation) {
+
+		EmailSendServiceBean emailSendServiceBean = createReservationEmailSendServiceBean(mailSectionCd, reservation);
+
+		// email send
+		emailSendService.send(emailSendServiceBean);
+		String txt = emailSendServiceBean.getSenderName() + "\n" + emailSendServiceBean.getSenderEmailAddress() + "\n"
+				+ emailSendServiceBean.getTargetEmailAddress() + "\n" + emailSendServiceBean.getSubject() + "\n"
+				+ emailSendServiceBean.getBody();
+
+		logger.info(txt);
+	}
+
+	private EmailSendServiceBean createReservationEmailSendServiceBean(String mailSectionCd,
+			TblReservation reservation) {
+		TblUser member = memberRepository.findByMemberCode(reservation.getMemberCode());
+		TblAsp asp = aspRepository.findByAspCode(reservation.getAspCode());
+
+		EmailSendServiceBean mailSendServiceBean = new EmailSendServiceBean(mailSectionCd, reservation, member, asp);
+
+		return mailSendServiceBean;
 	}
 }
