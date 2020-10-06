@@ -119,7 +119,7 @@ public class TblReservation implements Serializable {
 		this.memberCode = memberCode;
 	}
 
-	public Timestamp getRegisterDate() {
+	public Date getRegisterDate() {
 		return this.registerDate;
 	}
 
