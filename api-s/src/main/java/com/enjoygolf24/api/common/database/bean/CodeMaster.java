@@ -43,6 +43,9 @@ public class CodeMaster implements Serializable {
 	@Column(name = "update_seq")
 	private Integer updateSeq;
 
+	@Column(name = "order_no")
+	private Long orderNo;
+
 	public CodeMaster() {
 	}
 
@@ -100,6 +103,14 @@ public class CodeMaster implements Serializable {
 
 	public void setUpdateSeq(Integer updateSeq) {
 		this.updateSeq = updateSeq;
+	}
+
+	public Long getOrderNo() {
+		return this.orderNo;
+	}
+
+	public void setOrderNo(Long orderNo) {
+		this.orderNo = orderNo;
 	}
 
 }

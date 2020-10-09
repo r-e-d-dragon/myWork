@@ -5,7 +5,7 @@
 <head>
     <title>予約取消</title>
     <link rel="stylesheet" th:href="@{/css/admin/mypage.css}"></link>
-    <script type="text/javascript" th:src="@{/scripts/admin/booking/index.js}"></script>
+    <script type="text/javascript" th:src="@{/scripts/admin/booking/index.js??ver=0.01}"></script>
 </head>
 <body>
 <div layout:fragment="content"><!-- /** layout contents start */ -->
@@ -33,7 +33,7 @@
 							<td class="text-letf"><p th:text="${memberCode}"></p><p th:text="${memberName}"></p><input type="hidden" th:field="*{memberCode}"></td>
 						</tr>
 						<tr>
-							<th class="text-letf" width="20%">予約日時</th>
+							<th class="text-letf" width="20%">予約日</th>
 							<td class="text-letf"><span th:text="${reservationDate}"></span></td>
 						</tr>
 						<tr>

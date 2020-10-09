@@ -31,6 +31,22 @@ public interface CodeMasterRepository extends JpaRepository<CodeMaster, Long> {
 	 * 検索
 	 *
 	 * @param codeType コード種類
+	 * @return コード管理テーブルリスト
+	 */
+	public List<CodeMaster> findByCodeTypeOrderByOrderNo(String codeType);
+
+	/**
+	 * 検索
+	 *
+	 * @param codeType コード種類
+	 * @return コード管理テーブルリスト
+	 */
+	public List<CodeMaster> findByCodeTypeOrderByOrderNoDesc(String codeType);
+
+	/**
+	 * 検索
+	 *
+	 * @param codeType コード種類
 	 * @param cd       コード
 	 * @return コード管理テーブル
 	 */

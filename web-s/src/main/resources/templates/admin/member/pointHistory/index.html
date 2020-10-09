@@ -6,9 +6,8 @@
     <title>ポイント履歴</title>
     <link rel="stylesheet" th:href="@{/css/admin/mypage.css}"></link>
     <link rel="stylesheet" th:href="@{/css/admin/memberInfoManage/index.css}"></link>
-    <script type="text/javascript" th:src="@{/scripts/datepicker-ja.js}"></script>
-    <script type="text/javascript" th:src="@{/scripts/calendar_past.js}"></script>
-    <script type="text/javascript" th:src="@{/scripts/admin/point/index.js}"></script>
+    <script type="text/javascript" th:src="@{/scripts/datepicker-for-month.js??ver=0.01}"></script>
+    <script type="text/javascript" th:src="@{/scripts/admin/point/index.js??ver=0.02}"></script>
 </head>
 <body>
 <div layout:fragment="content"><!-- /** layout contents start */ -->
@@ -36,9 +35,9 @@
 								</tr>
 								<tr>
 									<th>登録年月</th>
-									<td><input type="month" class="c-input" th:field="*{registeredMonth}" min="2020-01"></td>
+									<td><input type="text" class="c-input calInput" th:field="*{registeredMonth}" required></td>
 									<th>適用年月</th>
-									<td><input type="month" class="c-input" th:field="*{startMonth}" min="2020-01"></td>
+									<td><input type="text" class="c-input calInput" th:field="*{startMonth}"></td>
 								</tr>
 							</tbody>
 						</table>

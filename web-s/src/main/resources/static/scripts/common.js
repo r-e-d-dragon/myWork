@@ -18,7 +18,17 @@ function NumCheck(chkVal) {
 $(function(){
 	
 	$("input").on("keydown", function (e) {
-    	return e.which !== 32;
+		if($(this).hasClass( "trim" )){
+			return e.which !== 32;
+		}
+		return;    	
+	});
+	
+	$(".table-search input").on("keydown", function (e) {
+		if($(this).hasClass( "not-trim" )){
+			return;
+		}
+		return e.which !== 32;   	
 	});
 	
     $("a.newWindow").click(function(e) {
@@ -130,6 +140,11 @@ $(function(){
 		return;
         
     });
+
+	$(".date-clear-icon").click(function(e) {
+		var target = $(this).attr('target');
+		$("#" + target).val("");
+	});
 
 
 

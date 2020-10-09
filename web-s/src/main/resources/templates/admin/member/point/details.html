@@ -6,7 +6,7 @@
     <title>ポイント管理</title>
     <link rel="stylesheet" th:href="@{/css/admin/mypage.css}"></link>
     <link rel="stylesheet" th:href="@{/css/admin/memberInfoManage/index.css}"></link>
-    <script type="text/javascript" th:src="@{/scripts/admin/point/details.js}"></script>
+    <script type="text/javascript" th:src="@{/scripts/admin/point/details.js??ver=0.01}"></script>
 </head>
 <body>
 <div layout:fragment="content"><!-- /** layout contents start */ -->
@@ -35,9 +35,9 @@
 								</tr>
 								<tr>
 									<th>月固定ポイント残高</th>
-									<td><p th:text="${#numbers.formatDecimal(pointManageForm.monthlyPointBalance, 0, 'DEFAULT', 0, 'DEFAULT')}"></p></td>
+									<td><p th:text="${currentMonth + '月 ' +  #numbers.formatDecimal(pointManageForm.monthlyPointBalance, 0, 'DEFAULT', 0, 'DEFAULT') + 'P / ' + nextMonth + '月 ' +  #numbers.formatDecimal(pointManageForm.monthlyPointBalanceNextMonth, 0, 'DEFAULT', 0, 'DEFAULT') + 'P'}"></p></td>
 									<th>繰越可能ポイント残高</th>
-									<td><p th:text="${#numbers.formatDecimal(pointManageForm.eventPointBalance, 0, 'DEFAULT', 0, 'DEFAULT')}"></p></td>
+									<td><p th:text="${#numbers.formatDecimal(pointManageForm.eventPointBalance, 0, 'DEFAULT', 0, 'DEFAULT') + 'P'}"></p></td>
 								</tr>
 							</tbody>
 						</table>
@@ -66,6 +66,26 @@
 					                  <input type="radio" th:field="*{pointAppliedMonthCd}" th:value="${pointAppliedMonthCdItem.key}" />
 					                  <div class="box flex-column">
 					                    <div th:text="${pointAppliedMonthCdItem.value}"></div>
+					                    <div class="circle">&nbsp;</div>
+					                  </div>
+					                </label>
+					              </div>
+					            </div>
+				                </div>
+				               </div>
+				               
+				               <div class="row align-items-start m-b-20">
+				                <div class="d-flex justify-content-between align-items-start m-t-10">
+				                  <span class="text c-ttl c-ttl__04">ポイント区分</span>
+				                  <span class="tag-icon tag-red m-t-5">必須</span>
+				                </div>
+				                <div>
+				                  <div class="box-register d-flex">
+					              <div class="item" th:each="pointCategoryCdItem, item : ${pointCategoryCdMap}">
+					                <label class="c-radio" th:for="${'pointCategoryCd'+(item.index+1)}">
+					                  <input type="radio" th:field="*{pointCategoryCd}" th:value="${pointCategoryCdItem.key}" />
+					                  <div class="box flex-column">
+					                    <div th:text="${pointCategoryCdItem.value}"></div>
 					                    <div class="circle">&nbsp;</div>
 					                  </div>
 					                </label>

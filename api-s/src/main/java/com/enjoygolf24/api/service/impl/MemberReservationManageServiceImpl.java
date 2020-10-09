@@ -289,8 +289,9 @@ public class MemberReservationManageServiceImpl implements MemberReservationMana
 
 			// ポイント管理更新
 			TblPointManage tblPointManage = pointManageRepository.findByIdMemberCodeAndPointTypeAndStartDateAndEndDate(
-					serviceBean.getMemberCode(), history.getPointCode(), history.getStartDate(),
-					history.getExpireDate());
+					serviceBean.getMemberCode(), history.getPointCode(),
+					DateUtility.toTimestampDayOfFirst(history.getStartDate()),
+					DateUtility.toTimestampDayOfLast(history.getExpireDate()));
 
 			if (tblPointManage != null) {
 				tblPointManage.setConsumedPoint(tblPointManage.getConsumedPoint() + history.getConsumedPoint());
@@ -485,15 +486,6 @@ public class MemberReservationManageServiceImpl implements MemberReservationMana
 				reservationList.stream().filter(p -> p.getPointCategoryCode().equals(PointCategoryCd.EVENT_POINT))
 						.collect(Collectors.toList()).size());
 
-		// 月ポイント予約ポイント
-		reservation.setMonthlyReservationPoint(
-				reservationList.stream().filter(p -> p.getPointCategoryCode().equals(PointCategoryCd.MONTHLY_POINT))
-						.mapToInt(x -> Integer.valueOf(x.getConsumedPoint())).sum());
-		// イベントポイント予約ポイント
-		reservation.setEventReservationPoint(
-				reservationList.stream().filter(p -> p.getPointCategoryCode().equals(PointCategoryCd.EVENT_POINT))
-						.mapToInt(x -> Integer.valueOf(x.getConsumedPoint())).sum());
-
 		reservation.setCurrentMonth(currentMonth.format(dateTimeFormatter));
 		reservation.setNextMonth(nextMonth.format(dateTimeFormatter));
 
@@ -508,10 +500,10 @@ public class MemberReservationManageServiceImpl implements MemberReservationMana
 				reservation.setLimitReservationPoint(master.getMaxReservationPoint());
 			}
 		} else {
-			reservation.setLimitReservationCount(99);
-			reservation.setLimitEventReservationCount(99);
-			reservation.setLimitMonthlyReservationCount(99);
-			reservation.setLimitReservationPoint(99);
+			reservation.setLimitReservationCount(0);
+			reservation.setLimitEventReservationCount(0);
+			reservation.setLimitMonthlyReservationCount(0);
+			reservation.setLimitReservationPoint(0);
 		}
 		return reservation;
 	}

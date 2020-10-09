@@ -32,6 +32,8 @@ public interface CodeTypeCd {
 
 	public static final String NEWS_OPEN_TYPE_CD = "016";
 
+	public static final String RESERVATION_STATUS_TYPE_CD = "017";
+
 	public static final String MACRO_DATE_TYPE_CD = "701";
 
 	public static final String YESNO_TYPE_CD = "900";

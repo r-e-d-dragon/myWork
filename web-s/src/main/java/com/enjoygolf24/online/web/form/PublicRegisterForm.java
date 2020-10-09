@@ -31,6 +31,11 @@ public class PublicRegisterForm implements Serializable {
 	private String aspCode;
 
 	@NotBlank(groups = Insert0.class)
+	private String aspNameForPreUser;
+
+	private String aspCdSelect;
+
+	@NotBlank(groups = Insert0.class)
 	@Size(groups = Insert0.class, max = 80)
 	@Email(groups = Insert0.class)
 	@UniqueEmail(groups = Insert0.class)
@@ -67,8 +72,6 @@ public class PublicRegisterForm implements Serializable {
 
 	@Size(groups = Insert0.class, max = 1200)
 	private String memo;
-
-	private boolean hasChanged;
 
 	private String loginUserCd;
 

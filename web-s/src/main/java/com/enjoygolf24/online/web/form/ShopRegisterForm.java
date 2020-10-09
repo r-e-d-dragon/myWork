@@ -77,12 +77,10 @@ public class ShopRegisterForm implements Serializable {
 	private String line1;
 
 	@NotBlank(groups = Insert0.class)
-	@Zenkaku(groups = Insert0.class, max = 100)
 	@SjisSafe(groups = Insert0.class)
 	private String line1StationInfo;
 
 	@NotBlank(groups = Insert0.class)
-	@Zenkaku(groups = Insert0.class, max = 100)
 	@SjisSafe(groups = Insert0.class)
 	private String line1StationName;
 

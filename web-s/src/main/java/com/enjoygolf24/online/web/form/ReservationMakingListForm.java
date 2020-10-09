@@ -4,13 +4,13 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.enjoygolf24.api.common.constants.ReservationContants;
 import com.enjoygolf24.api.common.database.bean.TblUser;
 import com.enjoygolf24.api.common.database.mybatis.bean.MemberReservationManage;
 import com.enjoygolf24.api.common.utility.DefaultPageSizeUtility;
 import com.enjoygolf24.api.common.validator.annotation.Hankaku;
-import com.enjoygolf24.api.common.validator.annotation.Numeric;
 import com.enjoygolf24.api.common.validator.annotation.PageSize;
+import com.enjoygolf24.api.common.validator.annotation.ReservationDate;
+import com.enjoygolf24.api.common.validator.groups.Insert0;
 import com.enjoygolf24.api.common.validator.groups.Search0;
 
 import lombok.Data;
@@ -24,10 +24,11 @@ public class ReservationMakingListForm implements Serializable {
 	@Hankaku(groups = Search0.class, max = 20)
 	String AspCode;
 
-	@Numeric(groups = Search0.class, max = ReservationContants.RESERVATION_TOTAL_MAX_COUNT)
-	private int reservationCnt;
-
 	String reservationNumber;
+
+	private String reservationTimeForDisplay;
+
+	@ReservationDate(groups = Insert0.class)
 	private String reservationDate;
 	private String memberName;
 	private String loginUserCd;

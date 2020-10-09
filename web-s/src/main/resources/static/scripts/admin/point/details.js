@@ -25,11 +25,7 @@ $(function(){
 		}
 		
 	});
-	
-	$('#pointVariation').keydown(function (e) {
-	    event.preventDefault();	
-       return false;
-	});
+
 	
 	
 });

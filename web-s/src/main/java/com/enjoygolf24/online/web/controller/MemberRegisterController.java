@@ -91,7 +91,7 @@ public class MemberRegisterController {
 		form.setAspCode(aspCode);
 		form.setLoginUserCd(LoginUtility.getLoginUser().getMemberCode());
 		model.addAttribute("aspName", memberRegisterService.getAspName(aspCode));
-		model.addAttribute("memberTypeCdMap", cdMapService.createMapOnlyIncludesReverse(CodeTypeCd.MEMBER_TYPE_CD,
+		model.addAttribute("memberTypeCdMap", cdMapService.createMapOnlyIncludes(CodeTypeCd.MEMBER_TYPE_CD,
 				MemberTypeCd.INSTRUCTOR, MemberTypeCd.MEMBER));
 		model.addAttribute("genderCdMap", cdMapService.createMap(CodeTypeCd.GENDER_CD));
 		model.addAttribute("memberGradeCdMap", cdMapService.createMap(CodeTypeCd.MEMBER_GRADE_CD));
@@ -107,7 +107,7 @@ public class MemberRegisterController {
 	private void initDetailForm(MemberInfoManageForm form, Model model, String memberCode) {
 		form.init(memberInfoManageService, memberCode);
 		form.setLoginUserCd(LoginUtility.getLoginUser().getMemberCode());
-		model.addAttribute("memberTypeCdMap", cdMapService.createMapOnlyIncludesReverse(CodeTypeCd.MEMBER_TYPE_CD,
+		model.addAttribute("memberTypeCdMap", cdMapService.createMapOnlyIncludes(CodeTypeCd.MEMBER_TYPE_CD,
 				MemberTypeCd.INSTRUCTOR, MemberTypeCd.MEMBER));
 		model.addAttribute("genderCdMap", cdMapService.createMap(CodeTypeCd.GENDER_CD));
 		model.addAttribute("memberGradeCdMap", cdMapService.createMap(CodeTypeCd.MEMBER_GRADE_CD));

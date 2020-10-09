@@ -26,16 +26,33 @@
 	<link rel="stylesheet" th:href="@{/css/front/modal-video.min.css}" media="all" />
 	<link rel="stylesheet" th:href="@{/css/front/common.css}" media="all" />
 	<script type="text/javascript" th:src="@{http://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js}"></script>
-	<script type="text/javascript" th:src="@{/scripts/slick/slick.min.js}"></script>
-	<script type="text/javascript" th:src="@{/scripts/front/jquery-modal-video.min.js}"></script>
-	<script type="text/javascript" th:src="@{/scripts/front/common.js}"></script>
-	<script type="text/javascript" th:src="@{/scripts/common.js}"></script>
+	<script type="text/javascript" th:src="@{/scripts/slick/slick.min.js??ver=0.01}"></script>
+	<script type="text/javascript" th:src="@{/scripts/front/jquery-modal-video.min.js??ver=0.01}"></script>
+	<script type="text/javascript" th:src="@{/scripts/front/common.js??ver=0.01}"></script>
+	<script type="text/javascript" th:src="@{/scripts/common.js??ver=0.02}"></script>
 </head>
 
 <body id="top" >
 	<div id="allwrap">
 	    <div layout:replace="~{front/layout/header-reservation::header}"></div>
 	    <main id="booking">
+	    <div class="modal js-modal" style="display: none;">
+        <div class="modal__bg js-modal-close"></div>
+        <div class="modal__content">
+        <div class="js-modal-close" style="cursor: pointer;">閉じる</div>
+          <div class="modalcontent_inner">
+            <ul class="booking_list">
+              <li class="wide"><span>待機室＆Cafe</span></li>
+              <li class="wide checked"><span>301</span><em>Premier</em><div class="circle green"><p>50P</p></div></li>
+              <li><span>201</span><div class="circle"><p>30P</p></div></li>
+		      <li><span>202</span><div class="circle"><p>30P</p></div></li>
+		      <li class="wide"><span>101</span><div class="circle green"><p>50P</p><div></div></li>
+		      <li><span>B101</span><div class="circle"><p>30P</p></div></li>
+		      <li><span>B102</span><div class="circle"><p>30P</p></div></li>
+            </ul>
+          </div>  
+        </div><!--modal__inner-->
+    </div>
 	    	<div class="inner">
 	    		<section>
 	    			<div layout:replace="~{layout/common-error :: errors}"></div>

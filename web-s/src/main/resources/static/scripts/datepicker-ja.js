@@ -11,6 +11,19 @@
 		factory( jQuery.datepicker );
 	}
 }(function( datepicker ) {
+	
+	(function(){
+          var old_fn = $.datepicker._updateDatepicker;
+          $.datepicker._updateDatepicker = function(inst) {
+            old_fn.call(this, inst);
+            var buttonPane = $(this).datepicker("widget").find(".ui-datepicker-buttonpane");
+            var buttonHtml = "<button type='button' class='ui-datepicker-clean ui-state-default ui-priority-primary ui-corner-all'>削除</button>";
+            $(buttonHtml).appendTo(buttonPane).click(
+              function(ev) {
+                $.datepicker._clearDate(inst.input);
+            });
+          }
+      })();
 
 datepicker.regional['ja'] = {
 	closeText: '閉じる',

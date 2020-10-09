@@ -49,7 +49,7 @@ public class CdMapServiceImpl implements CdMapService {
 	@Override
 	public LinkedHashMap<String, String> createMapReverse(String codeType) {
 		LinkedHashMap<String, String> map = new LinkedHashMap<>();
-		codeMasterRepository.findByCodeTypeOrderByCdDesc(codeType).stream()
+		codeMasterRepository.findByCodeTypeOrderByOrderNoDesc(codeType).stream()
 				.forEach(e -> map.put(e.getCd(), e.getName()));
 		return map;
 	}
@@ -81,7 +81,7 @@ public class CdMapServiceImpl implements CdMapService {
 		List<String> includeList = Arrays.asList(includeCds);
 		Predicate<CodeMaster> includeFilter = c -> includeList.contains(c.getCd());
 		LinkedHashMap<String, String> map = new LinkedHashMap<>();
-		codeMasterRepository.findByCodeTypeOrderByCdDesc(codeType).stream().filter(includeFilter)
+		codeMasterRepository.findByCodeTypeOrderByOrderNoDesc(codeType).stream().filter(includeFilter)
 				.forEach(e -> map.put(e.getCd(), e.getName()));
 		return map;
 	}
@@ -110,7 +110,7 @@ public class CdMapServiceImpl implements CdMapService {
 	 */
 	private LinkedHashMap<String, String> createMap(String codeType, Predicate<CodeMaster> mapFilter) {
 		LinkedHashMap<String, String> map = new LinkedHashMap<>();
-		codeMasterRepository.findByCodeTypeOrderByCd(codeType).stream().filter(mapFilter)
+		codeMasterRepository.findByCodeTypeOrderByOrderNo(codeType).stream().filter(mapFilter)
 				.forEach(e -> map.put(e.getCd(), e.getName()));
 		return map;
 	}

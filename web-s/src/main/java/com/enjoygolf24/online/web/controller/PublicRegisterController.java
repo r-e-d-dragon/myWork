@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.enjoygolf24.api.common.database.bean.TblAsp;
 import com.enjoygolf24.api.common.validator.groups.All;
 import com.enjoygolf24.api.service.AspService;
 import com.enjoygolf24.api.service.MemberInfoManageService;
@@ -69,12 +70,17 @@ public class PublicRegisterController {
 			return index(form, model);
 		}
 
-		String memberCode = memberRegisterService.PreMemberRegister(form.createPreMemberRegisterServiceBean());
-		form.setHasChanged(true);
+		TblAsp aspData = aspService.getAsp(form.getAspCode());
+		if (aspData == null || !aspData.getAspName().equals(form.getAspNameForPreUser())) {
+			model.addAttribute("preMemberRegisterForm", form);
+			result.rejectValue("aspCode", "error.user", "店舗選択に問題があります。もう一度選択してください。");
+			return index(form, model);
+		}
 
+		String memberCode = memberRegisterService.PreMemberRegister(form.createPreMemberRegisterServiceBean());
 
 		logger.info("End publicRegister Controller");
-		return index(form, model);
+		return "/front/register/finish";
 	}
 
 	private void initForm(PublicRegisterForm form, Model model) {

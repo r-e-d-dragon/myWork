@@ -3,147 +3,128 @@
     xmlns:th="http://www.thymeleaf.org"
     xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{front/layout/layout-front-main}">
 <head>
-	<title>無料体験のお申し込み｜エンジョイゴルフ24</title>
+	<title>体験申し込み｜エンジョイゴルフ24</title>
 	<meta name="Keywords" content="">
 	<meta name="Description" content="">
 	<meta property="og:image" content="http://">
-	<link th:href="@{/css/admin/base.css}" rel="stylesheet" />
-	<script type="text/javascript" th:src="@{/scripts/sweetalert.min.js}"></script>
-	<script type="text/javascript" th:src="@{/scripts/common.js}"></script>
-	<script type="text/javascript" th:src="@{/scripts/front/register/index.js}"></script>
+	<script type="text/javascript" th:src="@{/scripts/sweetalert.min.js??ver=0.01}"></script>
+	<script type="text/javascript" th:src="@{/scripts/front/register/index.js??ver=0.02}"></script>
 </head>
 <div layout:fragment="content"><!-- /** layout contents start */ -->
 
- 
-    
-  <div class="column_wrap" id="register">  
+ <main id="booking">
+  <div class="inner">
+  <section id="experience">
+    <h1>体験申し込み</h1>
+    <div class="lead">
+    お客様情報をご記入ください。
+    </div>
+    <div class="note"><em>※</em>は必ずご記入をお願い申し上げます。</div>
     
     <form id="form"  method="post" th:action="@{/public/register/finish}" th:object="${publicRegisterForm}">
-        <div class="wrapper mypage-custom-index" id="body-index">
-            <section>
-                <h1 class="c-ttl c-ttl__01 m-b-50">無料体験のお申し込み</h1>
-                <div class="form-register">
-		          <section class="m-b-55">
-					<div class="c-box-account m-b-20">
-		              <h2 class="c-ttl c-ttl__03 m-b-20">お客様情報を入力してください</h2>
-		               
-		               <div class="row align-items-start m-b-20">
-			                <div class="d-flex justify-content-between align-items-start m-t-10">
-			                  <span class="text c-ttl c-ttl__04">店舗</span>
-			                  <span class="tag-icon tag-red m-t-5">必須</span>
-			                </div>
-			                <div>
-			                  <select th:field="*{aspCode}" class="selectBoxCss select-option width-240" th:errorclass="fieldError">
-			                    <option th:each="aspItem : ${aspMap}" th:value="${aspItem.key}" th:text="${aspItem.value}" th:errorclass="fieldError"></option>
-			                  </select>
-			                  <p th:if="${#fields.hasErrors('aspCode')}" class="individual-error" th:errors="*{aspCode}"></p>	
-			                </div>
-			               </div>
-		               
-		               <div class="row align-items-start m-b-20">
-		                 <div class="d-flex justify-content-between align-items-start m-t-10">
-		                   <span id="nameKanji" class="text c-ttl c-ttl__04">お名前</span>
-		                   <span class="tag-icon tag-red m-t-5">必須</span>
-		                 </div>
-		                 <div>
-		                   <div class="width-500 c-box-name d-flex justify-content-between align-items-center">
-		                    <input class="c-input" type="text" maxlength="20" placeholder="山田" style="width: 240px;" th:field="*{lastName}" th:errorclass="fieldError">
-		                    <input class="c-input" type="text" maxlength="20" placeholder="花子" style="width: 240px;" th:field="*{firstName}" th:errorclass="fieldError">
-				           </div>
-				           	<div>
-				           	 <p th:if="${#fields.hasErrors('lastName')}" class="individual-error" th:errors="*{lastName}"></p>
-				             <p th:if="${#fields.hasErrors('firstName')}" class="individual-error" th:errors="*{firstName}"></p>	
-				           	</div>          
-		                  </div>
-		                </div>
-		                
-		                <div class="row align-items-start m-b-20">
-		                 <div class="d-flex justify-content-between align-items-start m-t-10">
-		                   <span id="nameKanji" class="text c-ttl c-ttl__04">フリガナ</span>
-		                   <span class="tag-icon tag-red m-t-5">必須</span>
-		                 </div>
-		                 <div>
-		                   <div class="width-500 c-box-name d-flex justify-content-between align-items-center">
-		                    <input class="c-input" type="text" maxlength="20" placeholder="ヤマダ" style="width: 240px;" th:field="*{lastNameKana}" th:errorclass="fieldError">
-		                    <input class="c-input" type="text" maxlength="20" placeholder="ハナコ"  style="width: 240px;" th:field="*{firstNameKana}" th:errorclass="fieldError">
-				           </div>
-				           <div>
-				           	<p th:if="${#fields.hasErrors('lastNameKana')}" class="individual-error" th:errors="*{lastNameKana}"></p>	
-				           	<p th:if="${#fields.hasErrors('firstNameKana')}" class="individual-error" th:errors="*{firstNameKana}"></p>	
-				           </div>			           
-		                  </div>
-		                </div>
-			            <div class="row align-items-start m-b-20">
-			              <div class="d-flex justify-content-between align-items-start m-t-10"><span class="text c-ttl c-ttl__04">メールアドレス</span>
-			                <span class="tag-icon tag-red m-t-5">必須</span>
-			              </div>
-			              <div>
-			                <input class="c-input" type="text" maxlength="256" placeholder="ユーザ名@ドメイン名" th:field="*{email}" value="" th:errorclass="fieldError" th:classappend="${publicRegisterForm.sameEmailAndEmailConfirm}?'':'fieldError'">
-			              	<div>
-				              <p th:if="${#fields.hasErrors('email')}" class="individual-error" th:errors="*{email}"></p>	
-				              <p th:if="${#fields.hasErrors('sameEmailAndEmailConfirm')}" class="individual-error" th:errors="*{sameEmailAndEmailConfirm}"></p>
-			              	</div>			              	
-			              </div>
-			            </div>
-			            
-			            <div class="row align-items-start m-b-20">
-			              <div class="d-flex justify-content-between align-items-start m-t-10"><span class="text c-ttl c-ttl__04">メールアドレス（確認用）</span>
-			                <span class="tag-icon tag-red m-t-5">必須</span>
-			              </div>
-			              <div>
-			                <input class="c-input" type="text" maxlength="256" placeholder="ユーザ名@ドメイン名" th:field="*{emailConfirm}" value="" th:errorclass="fieldError" th:classappend="${publicRegisterForm.sameEmailAndEmailConfirm}?'':'fieldError'" autocomplete="off">
-			                <div>
-			                  <p th:if="${#fields.hasErrors('emailConfirm')}" class="individual-error" th:errors="*{emailConfirm}"></p>
-			                  <p th:if="${#fields.hasErrors('sameEmailAndEmailConfirm')}" class="individual-error" th:errors="*{sameEmailAndEmailConfirm}"></p>
-			                </div>			                
-			              </div>
-			            </div>
-			            
-			            <div class="row align-items-start m-b-20">
-			              <div class="d-flex justify-content-between align-items-start m-t-10"><span class="text c-ttl c-ttl__04">電話番号</span><span class="tag-icon tag-red m-t-5">必須</span></div>
-			              <div>
-			                <input class="c-input" type="text" th:field="*{phone}" th:errorclass="fieldError" maxlength="20" placeholder="00-0000-0000">
-			                <div>
-			                  <p th:if="${#fields.hasErrors('phone')}" class="individual-error" th:errors="*{phone}"></p>
-			                </div>			                
-			              </div>			               
-			            </div>
-			            
-			            <div class="row align-items-start m-b-80">
-			              <div class="d-flex justify-content-between align-items-start m-t-10"><span class="text c-ttl c-ttl__04">お問い合わせ内容</span>
-			                <span class="tag-icon tag-gray m-t-5">任意</span>
-			              </div>
-			              <div>
-			                <textarea class="c-textarea" cols="4" rows="80" maxlength="1200" th:field="*{memo}" th:errorclass="fieldError" placeholder="ご希望の日付やご質問の内容などをご記入ください。"></textarea>
-			                <div>
-			                  <p th:if="${#fields.hasErrors('memo')}" class="individual-error" th:errors="*{memo}"></p>
-			                </div>			                
-			              </div>
-			            </div>			        
-		            </div>
-		            </section>
-		            </div>
-            
-            <div class="c-box-confirm text-center m-b-70">
-            <div class="m-b-55">
-              <div style="color:red;"><small>※個人情報の扱いについての文言については受領必要</small></div>
-              <input type="hidden" th:field="*{hasChanged}">
-              <a id="registerBtn" class="c-btn btn-primary btn-confirm m-b-15" href="#" th:url="@{/public/register/finish}">登録</a>
-            </div>
-          </div>
-             
-            </section>
-            
-        </div>
+      <dl>
+        <dt>店舗<em>※</em></dt>
+        <dd>
+        	<select class="search-asp-open" th:field="*{aspCdSelect}" style="display:none;">
+			   <option th:each="aspItem : ${aspMap}" th:value="${aspItem.key}" th:text="${aspItem.value}" th:errorclass="fieldError"></option>
+			</select>
+			<input type="hidden" th:field="*{aspCode}" maxlength="20" th:errorclass="fieldError" readonly>
+	        <input type="text" th:field="*{aspNameForPreUser}" maxlength="20" class="search-asp-open" th:errorclass="fieldError" readonly>
+		    <p th:if="${#fields.hasErrors('aspCode')}" class="error" th:errors="*{aspCode}"></p>
+		    <p th:if="${#fields.hasErrors('aspNameForPreUser')}" class="error" th:errors="*{aspNameForPreUser}"></p>
+        </dd>
+        <dt>お名前<em>※</em></dt>
+        <dd>
+	        <input type="text" class="trim" maxlength="20" placeholder="山田" style="width: 240px;" th:field="*{lastName}" th:errorclass="fieldError">
+		    <input type="text" class="trim"maxlength="20" placeholder="花子" style="width: 240px;" th:field="*{firstName}" th:errorclass="fieldError">
+		    <p th:if="${#fields.hasErrors('lastName')}" class="error" th:errors="*{lastName}"></p>
+			<p th:if="${#fields.hasErrors('firstName')}" class="error" th:errors="*{firstName}"></p>
+        </dd>
+        <dt>ふりがな<em>※</em></dt>
+        <dd>
+        	<input type="text" class="trim" maxlength="20" placeholder="ヤマダ" style="width: 240px;" th:field="*{lastNameKana}" th:errorclass="fieldError">
+		    <input type="text" class="trim" maxlength="20" placeholder="ハナコ"  style="width: 240px;" th:field="*{firstNameKana}" th:errorclass="fieldError">
+		    <p th:if="${#fields.hasErrors('lastNameKana')}" class="error" th:errors="*{lastNameKana}"></p>	
+			<p th:if="${#fields.hasErrors('firstNameKana')}" class="error" th:errors="*{firstNameKana}"></p>
+        </dd>
+        <dt>メールアドレス<em>※</em></dt>
+        <dd>
+        	<input type="text" maxlength="256" placeholder="ユーザ名@ドメイン名" th:field="*{email}" value="" th:errorclass="fieldError" th:classappend="${publicRegisterForm.sameEmailAndEmailConfirm}?'':'fieldError'">
+        	<p th:if="${#fields.hasErrors('email')}" class="error" th:errors="*{email}"></p>	
+			<p th:if="${#fields.hasErrors('sameEmailAndEmailConfirm')}" class="error" th:errors="*{sameEmailAndEmailConfirm}"></p>
+        </dd>
+        <dt>メールアドレス（確認用）<em>※</em></dt>
+        <dd>
+        	<input type="text" maxlength="256" placeholder="ユーザ名@ドメイン名" th:field="*{emailConfirm}" value="" th:errorclass="fieldError" th:classappend="${publicRegisterForm.sameEmailAndEmailConfirm}?'':'fieldError'" autocomplete="off">
+        	<p th:if="${#fields.hasErrors('emailConfirm')}" class="error" th:errors="*{emailConfirm}"></p>
+			<p th:if="${#fields.hasErrors('sameEmailAndEmailConfirm')}" class="error" th:errors="*{sameEmailAndEmailConfirm}"></p>
+        </dd>
+        <dt>電話番号（携帯電話可）<em>※</em></dt>
+        <dd>
+        	<input type="text" th:field="*{phone}" th:errorclass="fieldError" maxlength="20" placeholder="00-0000-0000">
+        	<p th:if="${#fields.hasErrors('phone')}" class="error" th:errors="*{phone}"></p>
+        </dd>
+        <dt>お問い合わせ<em></em></dt>
+        <dd>
+        	<textarea maxlength="1200" th:field="*{memo}" th:errorclass="fieldError" placeholder="ご希望の日付やご質問の内容などをご記入ください。"></textarea>
+        	<p th:if="${#fields.hasErrors('memo')}" class="error" th:errors="*{memo}"></p>
+        </dd>
+        
+      </dl>
+      <div style="color:red; text-align: center;">※個人情報の扱いについての文言については受領必要</div>
+      <button type="submit" style="margin-top: 20px;">入力内容を送信する</button>
     </form>
+  </section>
   </div>
-    
-    
-
-  </div>
+  
+  <div class="modal search-asp-modal booking_search" style="display: none;">
+        <div class="modal__bg js-modal-close"></div>
+        <div class="modal__content">
+        <div class="js-modal-close" style="cursor: pointer;">閉じる</div>
+          <div class="modalcontent_inner">
+            
+            <dl class="reserve">
+        <dt>店舗名</dt>
+        <dd><div class="shop">
+          <input type="text" class="input-asp-name">
+          </div>
+        </dd>
+        <dt>住所</dt>
+        <dd>
+          <input type="text" class="input-asp-address">
+        </dd>
+      </dl>
+      <a class="search-ajax-btn user-func" href="" th:url="@{/public/common/searchAsp}">検索</a>
+      
+      <div class="frame" style="display:none;">
+      	  <div class="not-found" style="display:none;">検索結果がないです。</div>
+      	  <div class="founded" style="display:none;">
+		      <div class="sp_only mb10 tac"><small>一覧は横にスクロールできます。</small></div>
+		      <div class="sp_scroll_table">
+		        <table class="reserve_list">
+		          <thead>
+		            <tr>
+		                <th width="20%" class="text-center">店舗名</th>
+		                <th class="text-center">住所</th>
+		                <th width="10%" class="text-center">選択<a class="asp-select-btn" style="display:none;"></a></th>
+		            </tr>
+		          </thead>
+		          <tbody class="asp-result-body">
+		          </tbody>
+		        </table>
+		      	</div>
+		    </div>
+		</div>  
+          </div>  
+        </div><!--modal__inner-->
+    </div>
+  
 </main>
+    
+    
 
-</div>
+  </div>
+
 
 </body>
 </html>

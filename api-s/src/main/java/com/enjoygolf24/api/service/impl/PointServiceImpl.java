@@ -20,11 +20,12 @@ import com.enjoygolf24.api.common.code.PointCategoryCd;
 import com.enjoygolf24.api.common.code.PointTypeCd;
 import com.enjoygolf24.api.common.database.bean.TblPointManage;
 import com.enjoygolf24.api.common.database.bean.TblPointManagePK;
+import com.enjoygolf24.api.common.database.bean.TblPointSettings;
 import com.enjoygolf24.api.common.database.bean.TblUser;
 import com.enjoygolf24.api.common.database.jpa.repository.CodeMasterRepository;
 import com.enjoygolf24.api.common.database.jpa.repository.MemberRepository;
-import com.enjoygolf24.api.common.database.jpa.repository.PointHistoryRepository;
 import com.enjoygolf24.api.common.database.jpa.repository.PointManageRepository;
+import com.enjoygolf24.api.common.database.jpa.repository.PointSettingsRepository;
 import com.enjoygolf24.api.common.database.mybatis.repository.MemberMapper;
 import com.enjoygolf24.api.common.database.mybatis.repository.PointMapper;
 import com.enjoygolf24.api.common.utility.DateUtility;
@@ -53,7 +54,7 @@ public class PointServiceImpl implements PointService {
 	private CodeMasterRepository codeMasterRepository;
 
 	@Autowired
-	private PointHistoryRepository pointHistoryRepository;
+	private PointSettingsRepository pointSettingsRepository;
 
 	@Autowired
 	private PointManageRepository pointManageRepository;
@@ -110,11 +111,23 @@ public class PointServiceImpl implements PointService {
 		newPointManage.setId(pk);
 		newPointManage.setStartDate(DateUtility.toTimestampDayOfFirst(startDate));
 
-		newPointManage.setEndDate(DateUtility.toTimestampDayOfLast(DateUtility.getDate("9999/12/31")));
-		newPointManage.setCategoryCode(PointCategoryCd.EVENT_POINT);
+		newPointManage.setCategoryCode(serviceBean.getPointCategoryCd());
 
 		newPointManage.setPointAmount(pointVariation);
-		newPointManage.setPointType(PointTypeCd.CUSTOM);
+
+		if (PointCategoryCd.EVENT_POINT.equals(serviceBean.getPointCategoryCd())) {
+			newPointManage.setPointType(PointTypeCd.CUSTOM);
+			newPointManage.setEndDate(DateUtility.toTimestampDayOfLast(DateUtility.getDate("9999/12/31")));
+		} else {
+			newPointManage.setPointType(PointTypeCd.MONTLY_POINT);
+			Date endDate;
+			Calendar endC = c;
+			endC.add(Calendar.MONTH, 1);
+			endC.set(Calendar.DAY_OF_MONTH, 0);
+			endDate = endC.getTime();
+
+			newPointManage.setEndDate(DateUtility.toTimestampDayOfLast(endDate));
+		}
 		newPointManage.setConsumedPoint(0);
 		newPointManage.setRegisterDate(current);
 		newPointManage.setRegisterUser(serviceBean.getLoginUserCd());
@@ -165,6 +178,13 @@ public class PointServiceImpl implements PointService {
 
 		TblPointManage pointHistory = pointManageRepository.findById(pk);
 		return pointHistory;
+	}
+
+	@Override
+	public TblPointSettings getPointSettings(String authTypeCd) {
+
+		TblPointSettings pointSettings = pointSettingsRepository.findByAuthTypeCd(authTypeCd);
+		return pointSettings;
 	}
 
 }

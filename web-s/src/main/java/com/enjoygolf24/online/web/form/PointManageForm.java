@@ -9,11 +9,10 @@ import javax.validation.constraints.Size;
 
 import com.enjoygolf24.api.common.code.CodeTypeCd;
 import com.enjoygolf24.api.common.code.PointAppliedMonthCd;
-import com.enjoygolf24.api.common.constants.PointContants;
+import com.enjoygolf24.api.common.database.bean.TblPointSettings;
 import com.enjoygolf24.api.common.database.bean.TblUser;
 import com.enjoygolf24.api.common.utility.DateUtility;
 import com.enjoygolf24.api.common.validator.annotation.CodeMaster;
-import com.enjoygolf24.api.common.validator.annotation.Numeric;
 import com.enjoygolf24.api.common.validator.groups.Insert0;
 import com.enjoygolf24.api.service.PointService;
 import com.enjoygolf24.api.service.bean.PointManageServiceBean;
@@ -48,8 +47,6 @@ public class PointManageForm implements Serializable {
 
 	private int monthlyPointBalanceNextMonth;
 
-	private int eventPointBalanceNextMonth;
-
 	private int pointVariationDefault;
 
 	private int pointVariationMin;
@@ -64,7 +61,6 @@ public class PointManageForm implements Serializable {
 	private String loginUserCd;
 
 	@NotBlank(groups = Insert0.class)
-	@Numeric(groups = Insert0.class, min = PointContants.MIN, max = PointContants.MAX)
 	private String pointVariation;
 
 	@NotBlank(groups = Insert0.class)
@@ -72,8 +68,13 @@ public class PointManageForm implements Serializable {
 	@CodeMaster(groups = Insert0.class, code = CodeTypeCd.POINT_APPLIED_MONTH)
 	private String pointAppliedMonthCd;
 
+	@NotBlank(groups = Insert0.class)
+	@Size(groups = Insert0.class, max = 2)
+	@CodeMaster(groups = Insert0.class, code = CodeTypeCd.POINT_CATEGORY_CD)
+	private String pointCategoryCd;
 
-	public void init(PointService pointService, String memberCode) {
+
+	public void init(PointService pointService, String memberCode, TblPointSettings poingSettings) {
 		this.pointService = pointService;
 		this.selectedMember = pointService.selectMember(memberCode);
 		this.memberCode = memberCode;
@@ -90,14 +91,15 @@ public class PointManageForm implements Serializable {
 
 		pointVariation = null;
 		pointAppliedMonthCd = PointAppliedMonthCd.THIS_MONTH;
+		pointCategoryCd = null;
 
-		pointVariationDefault = PointContants.DEFAULT;
+		pointVariationDefault = poingSettings.getDefaultVal();
 
-		pointVariationMin = PointContants.MIN;
+		pointVariationMin = poingSettings.getMinVal();
 
-		pointVariationMax = PointContants.MAX;
+		pointVariationMax = poingSettings.getMaxVal();
 
-		pointVariationSize = PointContants.SIZE;
+		pointVariationSize = poingSettings.getValSize();
 
 		memo = null;
 
@@ -112,6 +114,7 @@ public class PointManageForm implements Serializable {
 
 		serviceBean.setPointVariation(pointVariation);
 		serviceBean.setPointAppliedMonthCd(pointAppliedMonthCd);
+		serviceBean.setPointCategoryCd(pointCategoryCd);
 		serviceBean.setMemo(memo);
 
 		return serviceBean;

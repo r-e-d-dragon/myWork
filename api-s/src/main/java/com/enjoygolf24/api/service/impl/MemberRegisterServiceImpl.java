@@ -386,14 +386,14 @@ public class MemberRegisterServiceImpl implements MemberRegisterService {
 
 		member.setRegisterDate(current);
 		member.setUpdateDate(current);
+		if (!StringUtils.isEmpty(serviceBean.getMemo())) {
+			member.setMemo(serviceBean.getMemo());
+		}
 
 		if (serviceBean.getLoginUserCd() != null) {
 			member.setRegisterUser(serviceBean.getLoginUserCd());
 			member.setUpdateUser(serviceBean.getLoginUserCd());
 			member.setUseFlag(PreMemberUseFlagCd.PRE_MEMBER_USE_FLAG_NORMAL);
-			if (!StringUtils.isEmpty(serviceBean.getMemo())) {
-				member.setMemo(serviceBean.getMemo());
-			}
 		} else {
 			member.setRegisterUser("FrontUser");
 			member.setUpdateUser("FrontUser");

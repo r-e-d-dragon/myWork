@@ -89,7 +89,14 @@ public class EmailSendServiceImpl implements EmailSendService {
 			replyTo.add(new InternetAddress(fromMailAddress));
 			email.setReplyTo(replyTo);
 
-			email.send();
+			// TODO
+			// TODO
+			// TODO
+			// TODO
+			// TODO
+			// TODO
+			// TODO
+			// email.send();
 		} catch (Exception e) {
 			// 異常 - メール送信失敗
 			throw new RuntimeException("メール送信失敗", e);

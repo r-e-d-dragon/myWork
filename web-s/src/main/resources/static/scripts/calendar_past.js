@@ -5,7 +5,8 @@ $(function(){
         changeYear: true,
 		yearRange: "-100:+0",
         minDate: new Date(1920, 01, 01),
-        maxDate: new Date()
+        maxDate: new Date(),
+		showButtonPanel: true
     });
 
 	$('.calInput').keypress(function(e) {

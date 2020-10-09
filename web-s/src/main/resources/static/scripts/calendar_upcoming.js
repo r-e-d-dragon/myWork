@@ -5,7 +5,8 @@ $(function(){
         changeYear: true,
         //constrainInput: true,
         minDate: new Date(),
-        maxDate: new Date(new Date().setFullYear(new Date().getFullYear() + 5))
+        maxDate: new Date(new Date().setFullYear(new Date().getFullYear() + 5)),
+		showButtonPanel: true
     });
 
 	$('.calInput').keypress(function(e) {

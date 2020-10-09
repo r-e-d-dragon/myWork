@@ -19,10 +19,10 @@
              and register_user = #{registerUserCode}
              </if>
              <if test="registeredMonth != null and registeredMonth != ''">
-             and EXTRACT(YEAR FROM register_date) || '-' || EXTRACT(MONTH FROM register_date) = #{registeredMonth}
+             and EXTRACT(YEAR FROM register_date) || '/' || EXTRACT(MONTH FROM register_date) = #{registeredMonth}
              </if>
              <if test="startMonth != null and startMonth != ''">
-			 and EXTRACT(YEAR FROM start_date) || '-' || EXTRACT(MONTH FROM start_date) = #{startMonth}
+			 and EXTRACT(YEAR FROM start_date) || '/' || EXTRACT(MONTH FROM start_date) = #{startMonth}
              </if>
              </where>
              )p

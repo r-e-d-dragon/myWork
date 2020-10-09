@@ -4,7 +4,7 @@ $(function(){
 	var firstDayOfNextMonth = new Date(today.getFullYear(), today.getMonth(), 1);
 	var lastDayOfNextMonth = new Date(today.getFullYear(), today.getMonth()+2, 0);
 
-	$("#reservationDate").prop('min', setDate(firstDayOfNextMonth));
+	$("#reservationDate").prop('min', setDate(today));
 	$("#reservationDate").prop('max', setDate(lastDayOfNextMonth));
 	
 	var valDate = $("#reservationDate").attr('value');
@@ -28,9 +28,7 @@ $(function(){
 							'\n予約日：' + $('#registerForm #reservationDate').val() +
 							'\n予約時間：' + $('#registerForm #reservationTime').val() +
 							'\n打席番号：' + $('#registerForm #batNumber').val() +
-							'\n使用予定ポイント：' + $('#registerForm #consumedPoint').val() +
-							'\n月ポイント：' + $('#registerForm #monthlyPoint').val()+
-							'\nイベントポイント：' + $('#registerForm #eventPoint').val();
+							'\n使用予定ポイント：' + $('#registerForm #consumedPoint').val();
 		swal({
                title : "予約登録完了しました。",
                text : alertMessage,
@@ -43,25 +41,6 @@ $(function(){
 	
 	
 	$("#btnRegisterBooking*").on("click", function(e) {
-		var dd = parseInt($('#form #reservationCnt').val());
-		if(parseInt($('#form #reservationCnt').val()) > reservationTotalMaxCount){
-			$('#global-error').append('<ul class="ul-error"><li class="li-error"><span>既に予約限度まで予約がありました。追加予約は出来ません。</span><br></li></ul>');
-			return;
-		}
-		var reservationDate = $('#reservationDate').val().replace(/-/g, '/');
-		var reservationTime = $(this).closest('tr').data('timeslotname');
-		var consumedPoint = $(this).closest('tr').data('consumedpoint');
-        var gradeTypeCd = $(this).closest('tr').data('gradetypecd');
-		var batNumberCd = $(this).closest('td').data('batnumbercd');
-		var batNumber = $(this).closest('td').data('batnumber');
-
-		$('#registerForm #reservationDate').val(reservationDate);
-		$('#registerForm #reservationTime').val(reservationTime);
-		$('#registerForm #batNumberCd').val(batNumberCd);
-		$('#registerForm #batNumber').val(batNumber);
-        $('#registerForm #consumedPoint').val(consumedPoint);
-        $('#registerForm #gradeTypeCd').val(gradeTypeCd);
-
 		swal("使用するポイントの種類を選択してください。", {
 		  buttons: {
 		    mothly: "月固定",
@@ -70,16 +49,25 @@ $(function(){
 		  },
 		})
 		.then((value) => {
+				var reservationDate = $('#reservationDate').val().replace(/-/g, '/');
+				var reservationTime = $(this).closest('tr').data('timeslotname');
+				var consumedPoint = $(this).closest('tr').data('consumedpoint');
+		        var gradeTypeCd = $(this).closest('tr').data('gradetypecd');
+				var batNumberCd = $(this).closest('td').data('batnumbercd');
+				var batNumber = $(this).closest('td').data('batnumber');
+		
 		  switch (value) {
 		 
 		    case "mothly":
+			  setRegisterForm(reservationDate, reservationTime, batNumberCd, consumedPoint, gradeTypeCd, batNumber);
 		      $('#pointCategoryCode').val("01");
 			  $('#registerForm').submit();
 		      break;
 		 
 		    case "event":
+			  setRegisterForm(reservationDate, reservationTime, batNumberCd, consumedPoint, gradeTypeCd, batNumber);
 		      $('#pointCategoryCode').val("02");
-			 $('#registerForm').submit();
+			  $('#registerForm').submit();
 		      break;
 		  }
 		});
@@ -110,5 +98,23 @@ $(function(){
 		
 		
 	});
+	
+	$( "#reservationDate" ).change(function() {
+	  $('.booking_search').submit();
+	});
+	
+	$( "#reservationTimeForDisplay" ).change(function() {
+	  $( "#reservationTime" ).val($( "#reservationTimeForDisplay" ).val());
+	  $('.booking_search').submit();
+	});	
+	
+	function setRegisterForm(reservationDate, reservationTime, batNumberCd, consumedPoint, gradeTypeCd, batNumber){
+		        $('#registerForm #reservationDate').val(reservationDate);
+				$('#registerForm #reservationTime').val(reservationTime);
+				$('#registerForm #batNumberCd').val(batNumberCd);
+				$('#registerForm #batNumber').val(batNumber);
+		        $('#registerForm #consumedPoint').val(consumedPoint);
+		        $('#registerForm #gradeTypeCd').val(gradeTypeCd);
+	}
 	
 });

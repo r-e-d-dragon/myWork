@@ -11,16 +11,21 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.enjoygolf24.api.common.database.bean.ZipMaster;
+import com.enjoygolf24.api.service.AspService;
 import com.enjoygolf24.api.service.MemberInfoManageService;
 import com.enjoygolf24.api.service.MemberReservationManageService;
 import com.enjoygolf24.api.service.ZipMasterService;
 import com.enjoygolf24.online.web.json.JsonAddressResponse;
+import com.enjoygolf24.online.web.json.JsonAspResponse;
 import com.enjoygolf24.online.web.json.JsonUserResponse;
 
 @Controller 
 public class CommonAjaxController {
 	
 	private static final Logger logger = LoggerFactory.getLogger(CommonAjaxController.class);
+
+	@Autowired
+	AspService aspService;
 
 	@Autowired
 	ZipMasterService zipService;
@@ -53,6 +58,19 @@ public class CommonAjaxController {
 		response.setData(memberReservationManageService.getMemberReservationInfo(memberCode, reservationDate));
 
 		logger.info("End searchUser Controller");
+		return response;
+	}
+
+	@RequestMapping(value = "/public/common/searchAsp")
+	public @ResponseBody JsonAspResponse searchAsp(@RequestParam(required = false, name = "aspName") String aspName,
+			@RequestParam(required = false, name = "aspAddress") String aspAddress) {
+		logger.info("Start searchAsp Controller");
+
+		JsonAspResponse response = new JsonAspResponse();
+
+		response.setData(aspService.getAspList(aspName, "", aspAddress, 1, 1000));
+
+		logger.info("End searchAsp Controller");
 		return response;
 	}
 }

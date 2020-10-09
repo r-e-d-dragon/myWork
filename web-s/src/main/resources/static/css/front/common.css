@@ -564,7 +564,7 @@ header {
               height: 80px;
               width: 180px;
               box-sizing: border-box;
-              color: #999;
+              color: #666;
               border-bottom: 2px solid transparent;
               transition: 0.3s;
               display: flex;
@@ -2060,7 +2060,8 @@ main#booking h1 {
   margin: 0 0 15px;
   padding: 0 0 5px;
   border-bottom: 1px solid #0aa005;
-  font-size: 18px; }
+  font-size: 18px;
+  position: relative; }
   @media (min-width: 768px) {
     main#booking h1 {
       font-size: 22px; } }
@@ -2494,6 +2495,218 @@ main#booking table.reserve_list tbody td .circle_min.gray{
 }
 
 /*------------------------------------------*/
+.modal {
+  display: none;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000; }
+
+.modal__bg {
+  background: rgba(0, 0, 0, 0.8);
+  height: 100vh;
+  position: absolute;
+  width: 100%; }
+
+.modal__content {
+  background: #fff;
+  left: 50%;
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%); }
+  .modal__content .modalcontent_inner {
+    padding: 15px;
+    width: calc(100vw - 30px);
+    max-height: calc(100vh - 100px);
+    box-sizing: border-box;
+    overflow: auto; }
+    @media (min-width: 768px) {
+      .modal__content .modalcontent_inner {
+        padding: 20px;
+        width: 900px; } }
+  .modal__content .js-modal-close {
+    text-indent: -999em;
+    position: absolute;
+    top: -50px;
+    right: 0;
+    width: 50px;
+    height: 50px;
+    cursor: pointer; }
+    .modal__content .js-modal-close::before {
+      content: "┼";
+      display: block;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(45deg);
+      color: #fff;
+      font-size: 30px;
+      text-indent: 0; }
+
+h1 .modal-btn {
+  background: #0aa005;
+  color: #fff;
+  padding: 2px 20px;
+  border-radius: 100px;
+  cursor: pointer;
+  font-size: 14px;
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  margin: -3px 0 0 0;
+  transition: 0.3s; }
+  h1 .modal-btn:hover {
+    opacity: 0.6; }
+
+/*------------------------------------------*/
+#experience {
+  border-bottom: 1px solid #0aa005;
+  padding: 0 0 20px; }
+  @media (min-width: 768px) {
+    #experience {
+      padding: 0 0 50px; } }
+  #experience em {
+    color: #ea0000;
+    font-style: normal;
+    font-weight: bold; }
+  #experience .lead {
+    background: #e6e6e6;
+    color: #6c6c6c;
+    font-weight: bold;
+    font-size: 17px;
+    padding: 10px 10px 10px 50px;
+    margin: 0  0 15px;
+    position: relative; }
+    @media (min-width: 768px) {
+      #experience .lead {
+        font-size: 15px; } }
+    #experience .lead::before {
+      content: "";
+      width: 30px;
+      height: 30px;
+      background: url(../../images/front/icon12.svg) no-repeat center center/contain;
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      margin-top: -15px; }
+  #experience .note {
+    font-weight: bold;
+    color: #6c6c6c;
+    margin: 0 0 20px; }
+  #experience dl {
+    margin: 0 0 20px;
+    padding: 0; }
+    @media (min-width: 768px) {
+      #experience dl {
+        margin: 0 0 50px; } }
+    #experience dl dt {
+      border: 1px solid #d2d2d2;
+      background: #f7fff3;
+      border-radius: 5px;
+      padding: 10px 15px;
+      margin: 0;
+      clear: both;
+      box-sizing: border-box; }
+      @media (min-width: 768px) {
+        #experience dl dt {
+          float: left;
+          width: 300px; } }
+    #experience dl dd {
+      margin: 0 0 20px;
+      padding: 10px 0 0 0; }
+      @media (min-width: 768px) {
+        #experience dl dd {
+          padding: 0 0 0 320px; } }
+      #experience dl dd input,
+      #experience dl dd textarea {
+        border: 1px solid #d2d2d2;
+        padding: 10px 15px;
+        width: 100%;
+        box-sizing: border-box;
+        border-radius: 5px; }
+      #experience dl dd textarea {
+        height: 160px; }
+      #experience dl dd .error {
+        margin: 5px 0 0 0;
+        color: #ea0000;
+        font-weight: bold; }
+  #experience button[type="submit"],
+  #experience a.btn {
+    background: #0aa005;
+    text-align: center;
+    height: 48px;
+    color: #fff;
+    font-weight: bold;
+    border-radius: 5px;
+    box-shadow: 0 3px 5px 0 rgba(0, 0, 0, 0.2);
+    border: none;
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    max-width: 376px;
+    margin: 20px auto 0px;
+    display: block;
+    transition: 0.3s;
+    text-decoration: none;
+    line-height: 48px; }
+    @media (min-width: 768px) {
+      #experience button[type="submit"],
+      #experience a.btn {
+        margin-top: 50px; } }
+    #experience button[type="submit"]:hover,
+    #experience a.btn:hover {
+      opacity: 0.6; }
+      
+      .fieldError {
+      	background-color: #f5d3d3;
+      }
+
+/*------------------------------------------*/
+
+main#booking .booking_search .search-ajax-btn {
+    background: #0aa005;
+    text-align: center;
+    height: 38px;
+    line-height: 38px;
+    color: #fff;
+    font-weight: bold;
+    border-radius: 5px;
+    border: none;
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    margin: 0 auto 0px;
+    display: block; 
+    
+    margin-bottom:30px; }
+    @media (min-width: 768px) {
+      main#booking .booking_search .search-ajax-btn {
+        width: 280px;
+        opacity: 1; } }
+        
+main#booking .booking_search input {
+        border: 1px solid #d2d2d2;
+        padding: 10px 15px;
+        box-sizing: border-box;
+        border-radius: 5px;
+        width: 270px;
+        font-size: 13px;
+        height: 38px; }
+        
+main#booking .booking_search .asp-select-btn {
+        text-decoration: none; }
+        
+.search-asp-open{
+        border: 1px solid #d2d2d2;
+        padding: 10px 15px;
+        width: 100%;
+        box-sizing: border-box;
+        border-radius: 5px; 
+}
+
+        
 /*------------------------------------------*/
 /*------------------------------------------*/
 /*------------------------------------------*/

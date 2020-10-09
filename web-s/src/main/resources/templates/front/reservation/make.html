@@ -7,12 +7,12 @@
 	<meta name="Keywords" content="">
 	<meta name="Description" content="">
 	<meta property="og:image" content="http://">
-	<script type="text/javascript" th:src="@{/scripts/sweetalert.min.js}"></script>
+	<script type="text/javascript" th:src="@{/scripts/sweetalert.min.js??ver=0.01}"></script>
 	<script type="text/javascript" th:src="@{/scripts/front/reservation/make.js??ver=0.03}"></script>
 </head>
 <div layout:fragment="content"><!-- /** layout contents start */ -->
 
-	<h1>部屋予約（新規）</h1>
+	<h1>部屋予約（新規）<div class="js-modal-open modal-btn">練習場詳細</div></h1>
     <form class="booking_search" id="form"  method="post" th:action="@{/user/reservation/make}" th:object="${reservationMakingForm}">
       <dl class="reserve">
         <dt>店舗<input type="hidden" th:field="*{aspCode}"><input type="hidden" class="aspName" th:value="${aspName}"><input type="hidden" th:field="*{loginUserCd}"></dt>
@@ -26,10 +26,10 @@
         <dd>
           <div class="date"><input class="hasDatepicker" type="date" th:field="*{reservationDate}" th:errorclass="fieldError" placeholder="" min='2020-01-01' max='2100-12-31'></div>
           <div class="time">
-
-          <select th:field="*{reservationTime}">
+			<input type="hidden" th:field="*{reservationTime}">
+          <select th:field="*{reservationTimeForDisplay}">
           	<option selected value="">時間を選択してください。</option>
-		    <option th:each="data , itemStat : ${reservationPointTimeTable}"
+		    <option th:each="data , itemStat : ${reservationPointTimeTableAllTime}"
 		            th:value="${data.timeSlotName}"
 		            th:text="${data.timeSlotName}">
 		    </option>
@@ -55,9 +55,10 @@
                 <td class="text-center"><span th:text="${data.timeSlotName}"></span></td>
                 <td class="text-center"><div th:class="${'circle_min ' +  data.reservationPointCss}"><p th:text="${data.pointAmount + 'P'}"></p></div></td>
                 <td class="text-center" th:each="batData, itemStat : ${data.reservationList}" th:data-batnumbercd="${batData.batNumberCd}" th:data-batnumber="${batData.batNumber}">
-                <span th:if="${batData.expireFlag == '1'}">×</span>
+                <span th:if="${batData.expireFlag == '1' && (batData.memberCode == null || batData.memberCode != loginUserCd)}">×</span>
+                <span th:if="${batData.memberCode == loginUserCd}">私</span>
                 <span th:if="${batData.expireFlag == '0'}">
-                  <span th:if="${batData.emptyFlag == '0'}"></span>
+                  <span th:if="${batData.emptyFlag == '0' && batData.memberCode != loginUserCd}">×</span>
                   <span th:if="${batData.emptyFlag == '1'}"><a id="btnRegisterBooking" class="c-link-text text-blue user-func" href="#">〇</a>(<span th:text="${data.pointAmount}">P</span>)</span>
                 </span>
                 </td>
@@ -99,6 +100,5 @@
       <input type="hidden" th:field="*{reservationCnt}">
       <input type="hidden" th:field="*{reservationPoint}">
     </form>
-
 </body>
 </html>

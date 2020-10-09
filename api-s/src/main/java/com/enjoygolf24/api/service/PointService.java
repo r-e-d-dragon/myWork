@@ -7,6 +7,7 @@ import javax.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import com.enjoygolf24.api.common.database.bean.TblPointManage;
+import com.enjoygolf24.api.common.database.bean.TblPointSettings;
 import com.enjoygolf24.api.common.database.bean.TblUser;
 import com.enjoygolf24.api.service.bean.PointManageServiceBean;
 
@@ -32,5 +33,7 @@ public interface PointService {
 			int pageSize);
 
 	public TblPointManage getHistory(String id, String memberCode);
+
+	public TblPointSettings getPointSettings(String authTypeCd);
 
 }

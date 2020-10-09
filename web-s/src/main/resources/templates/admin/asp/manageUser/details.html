@@ -5,8 +5,8 @@
 <head>
     <title>店舗管理者情報変更</title>
     <link rel="stylesheet" th:href="@{/css/admin/mypage.css}"></link>
-    <script type="text/javascript" th:src="@{/scripts/admin/registerUser/index.js}"></script>
-    <script type="text/javascript" th:src="@{/scripts/admin/asp/user/registerUser.js}"></script>
+    <script type="text/javascript" th:src="@{/scripts/admin/registerUser/index.js??ver=0.01}"></script>
+    <script type="text/javascript" th:src="@{/scripts/admin/asp/user/registerUser.js??ver=0.01}"></script>
 </head>
 <body>
 <div layout:fragment="content"><!-- /** layout contents start */ -->
@@ -44,8 +44,8 @@
 		                 </div>
 		                 <div>
 		                   <div class="width-500 c-box-name d-flex justify-content-between align-items-center">
-		                    <input class="c-input" type="text" maxlength="20" placeholder="山田" style="width: 240px;" th:field="*{lastName}" th:errorclass="fieldError">
-		                    <input class="c-input" type="text" maxlength="20" placeholder="花子" style="width: 240px;" th:field="*{firstName}" th:errorclass="fieldError">
+		                    <input class="c-input trim" type="text" maxlength="20" placeholder="山田" style="width: 240px;" th:field="*{lastName}" th:errorclass="fieldError">
+		                    <input class="c-input trim" type="text" maxlength="20" placeholder="花子" style="width: 240px;" th:field="*{firstName}" th:errorclass="fieldError">
 				           </div>
 		                  </div>
 		                </div>
@@ -57,8 +57,8 @@
 		                 </div>
 		                 <div>
 		                   <div class="width-500 c-box-name d-flex justify-content-between align-items-center">
-		                    <input class="c-input" type="text" maxlength="20" placeholder="ヤマダ" style="width: 240px;" th:field="*{lastNameKana}" th:errorclass="fieldError">
-		                    <input class="c-input" type="text" maxlength="20" placeholder="ハナコ"  style="width: 240px;" th:field="*{firstNameKana}" th:errorclass="fieldError">
+		                    <input class="c-input trim" type="text" maxlength="20" placeholder="ヤマダ" style="width: 240px;" th:field="*{lastNameKana}" th:errorclass="fieldError">
+		                    <input class="c-input trim" type="text" maxlength="20" placeholder="ハナコ"  style="width: 240px;" th:field="*{firstNameKana}" th:errorclass="fieldError">
 				           </div>
 		                  </div>
 		                </div>
@@ -84,7 +84,7 @@
 			            <div class="row align-items-start m-b-20">
 			              <div class="d-flex justify-content-between align-items-start m-t-10"><span class="text c-ttl c-ttl__04">ご住所</span><span class="tag-icon tag-gray m-t-5">任意</span></div>
 			              <div>
-			                <input class="c-input m-b-5" type="text" th:field="*{address1}" th:errorclass="fieldError" maxlength="60" placeholder="" style="width: 500px;">
+			                <input class="c-input m-b-5" type="text" th:field="*{address1}" th:errorclass="fieldError" maxlength="60" placeholder="" style="width: 500px;" readonly>
 			                <input class="c-input" type="text" th:field="*{address2}" th:errorclass="fieldError" maxlength="60" placeholder="" style="width: 500px;">
 			              </div>
 			            </div>

@@ -5,7 +5,7 @@
 <head>
     <title>店舗管理者登録</title>
     <link rel="stylesheet" th:href="@{/css/admin/mypage.css}"></link>
-    <script type="text/javascript" th:src="@{/scripts/admin/asp/create.js}"></script>
+    <script type="text/javascript" th:src="@{/scripts/admin/asp/create.js??ver=0.01}"></script>
 </head>
 <body>
 <div layout:fragment="content"><!-- /** layout contents start */ -->
@@ -79,7 +79,7 @@
 			                <span class="tag-icon tag-red m-t-5">必須</span>
 			              </div>
 			              <div>
-			                <input class="c-input" type="text" maxlength="256" placeholder="担当太郎" th:field="*{managerName}" value="" th:errorclass="fieldError">
+			                <input class="c-input trim" type="text" maxlength="256" placeholder="担当太郎" th:field="*{managerName}" value="" th:errorclass="fieldError">
 			              </div>
 			            </div>
 			            

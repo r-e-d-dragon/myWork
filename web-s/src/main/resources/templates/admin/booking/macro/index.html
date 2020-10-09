@@ -71,6 +71,22 @@
           $(this).tab('show');
           $(this).removeClass('active');
       });
+
+
+      $('#repeatFromReservationTime').change(function() {
+          var value = $(this).val();
+          var hour = value.substr(0,2);
+
+          $("#repeatToReservationTime option").prop('disabled', false);
+          $('#repeatToReservationTime option').removeAttr('selected');
+          $('#repeatToReservationTime option[value="' + value + '"]').attr('selected','selected');
+
+          $('#repeatToReservationTime option').each(function() {
+            if (hour>$(this).val().substr(0,2)) {
+              $(this).prop('disabled', true);
+            }
+          });
+      });
     });
 
     /**

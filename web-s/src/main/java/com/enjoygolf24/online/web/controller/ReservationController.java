@@ -27,7 +27,6 @@ import org.thymeleaf.util.StringUtils;
 import com.enjoygolf24.api.common.code.CodeTypeCd;
 import com.enjoygolf24.api.common.code.PointCategoryCd;
 import com.enjoygolf24.api.common.code.ReservationStatusCd;
-import com.enjoygolf24.api.common.constants.ReservationContants;
 import com.enjoygolf24.api.common.database.bean.TblAsp;
 import com.enjoygolf24.api.common.database.bean.TblUser;
 import com.enjoygolf24.api.common.database.jpa.repository.CodeMasterRepository;
@@ -89,20 +88,29 @@ public class ReservationController {
 
 	@RequestMapping(value = "/make")
 	public String makeReservation(
-			@ModelAttribute("reservationMakingForm") ReservationMakingListForm form,
+			@ModelAttribute("reservationMakingForm") @Validated(All.class) ReservationMakingListForm form,
 			@ModelAttribute("memberReservationRegisterForm") MemberReservationRegisterForm registerForm,
 			HttpServletRequest request, Model model) {
 		logger.info("Start reservation Controller");
 
 		initListForm(form, model);
 
-		List<ReservationPointTimeTableInfo> reservationPointTimeTable = setTimeTable(form, model);
+		List<ReservationPointTimeTableInfo> reservationPointTimeTable = setTimeTable(form, model, false);
 
 		initRegisterForm(form, registerForm, model);
 
 		model.addAttribute("reservationPointTimeTable", reservationPointTimeTable);
+
 		model.addAttribute("reservationMakingForm", form);
 		model.addAttribute("memberReservationRegisterForm", registerForm);
+		model.addAttribute("loginUserCd", LoginUtility.getLoginUser().getMemberCode());
+
+		model.addAttribute("reservationPointTimeTableAllTime", reservationPointTimeTable);
+
+		if (!StringUtil.isEmpty(form.getReservationTime())) {
+			List<ReservationPointTimeTableInfo> reservationPointTimeTableAllTime = setTimeTable(form, model, true);
+			model.addAttribute("reservationPointTimeTableAllTime", reservationPointTimeTableAllTime);
+		}
 
 		logger.info("End reservation Controller");
 		return "/front/reservation/make";
@@ -139,7 +147,23 @@ public class ReservationController {
 			return makeReservation(listForm, form, request, model);
 		}
 
+		List<ReservationPointTimeTableInfo> timeTblTemp = setTimeTable(listForm, model, false);
+
+		Long consumedPointReal = new Long(0);
+		for (ReservationPointTimeTableInfo data : timeTblTemp) {
+			if (data.getTimeSlotName().equals(form.getReservationTime())) {
+				consumedPointReal = data.getPointAmount();
+			}
+		}
+		Long consumedPointLong = new Long(form.getConsumedPoint());
+		if (!consumedPointReal.equals(consumedPointLong)) {
+			model.addAttribute("memberReservationRegisterForm", form);
+			result.rejectValue("consumedPoint", "error.consumedPoint", "{0} : ポイントに問題があります。もう一度確認の上予約し直してください。");
+			return makeReservation(listForm, form, request, model);
+		}
+
 		int consumedPoint = Integer.valueOf(form.getConsumedPoint());
+
 		if (PointCategoryCd.MONTHLY_POINT.equals(form.getPointCategoryCode())) {
 			if (consumedPoint > form.getValidMonthlyPoint()) {
 				model.addAttribute("memberReservationRegisterForm", form);
@@ -201,15 +225,25 @@ public class ReservationController {
 		// 予約情報更新
 		memberReservationManageService.MemberReservationUpdate(form.createMemberReservationServiceBean());
 
-		List<ReservationPointTimeTableInfo> reservationPointTimeTable = setTimeTable(listForm, model);
+		form.setReservationPoint(form.getReservationPoint() + Integer.parseInt(form.getConsumedPoint()));
+		form.setReservationCnt(form.getReservationCnt() + 1);
+
+		List<ReservationPointTimeTableInfo> reservationPointTimeTable = setTimeTable(listForm, model, false);
 
 		model.addAttribute("reservationPointTimeTable", reservationPointTimeTable);
 		model.addAttribute("reservationMakingForm", listForm);
 		form.setHasChanged(true);
 
 		model.addAttribute("memberReservationRegisterForm", form);
+		model.addAttribute("loginUserCd", LoginUtility.getLoginUser().getMemberCode());
 		setMemberPointModel(model);
 		
+		model.addAttribute("reservationPointTimeTableAllTime", reservationPointTimeTable);
+
+		if (!StringUtil.isEmpty(listForm.getReservationTime())) {
+			List<ReservationPointTimeTableInfo> reservationPointTimeTableAllTime = setTimeTable(listForm, model, true);
+			model.addAttribute("reservationPointTimeTableAllTime", reservationPointTimeTableAllTime);
+		}
 
 		logger.info("End finish Controller");
 		return "/front/reservation/make";
@@ -274,7 +308,15 @@ public class ReservationController {
 
 		if (reservation != null) {
 			form.setValid(true);
-			listForm.setReservationCnt(reservation.getReservationList().size());
+			form.setReservationCnt(reservation.getReservationList().size());
+
+			int reservationPoint = 0;
+
+			for (MemberReservationManage memberReservationManage : reservation.getReservationList()) {
+				reservationPoint = reservationPoint + Integer.parseInt(memberReservationManage.getConsumedPoint());
+			}
+
+			form.setReservationPoint(reservationPoint);
 		}
 
 		model.addAttribute("currentMonthlyPoint", reservation.getCurrentMonthlyPoint());
@@ -311,7 +353,6 @@ public class ReservationController {
 		form.setLimitEventReservationCount(reservation.getLimitEventReservationCount());
 		form.setLimitReservationPoint(reservation.getLimitReservationPoint());
 
-		model.addAttribute("reservationTotalMaxCount", ReservationContants.RESERVATION_TOTAL_MAX_COUNT);
 
 	}
 
@@ -333,7 +374,8 @@ public class ReservationController {
 
 	}
 
-	private List<ReservationPointTimeTableInfo> setTimeTable(ReservationMakingListForm form, Model model) {
+	private List<ReservationPointTimeTableInfo> setTimeTable(ReservationMakingListForm form, Model model,
+			boolean isAllTime) {
 		// 予約日 - 初期表示：当日
 		if (StringUtil.isEmpty(form.getReservationDate())) {
 			form.setReservationDate(DateUtility.getCurrentDateTime(DateUtility.DATE_FORMAT));
@@ -351,58 +393,64 @@ public class ReservationController {
 				.getViewReservationPonitTimeTableInfo(DateUtility.getDate(form.getReservationDate()),
 						DateUtility.getDate(form.getReservationDate()));
 
-		// 休日、祝日判定
-		form.setDateKind(reservationPointTimeTable.get(0).getHolydayTypeCd());
-		model.addAttribute("dateType",
-				codeMasterRepository.findByCodeTypeAndCd(CodeTypeCd.HOLIDAY_TYPE_CD, form.getDateKind()).getName());
+		if (reservationPointTimeTable.size() != 0) {
 
-		// 予約情報取得
-		List<MemberReservationManage> memberReservationList = memberReservationManageService.getReservationList(
-				LoginUtility.getLoginUser().getAspCode(), form.getReservationDate(), form.getDateKind());
+			// 休日、祝日判定
+			form.setDateKind(reservationPointTimeTable.get(0).getHolydayTypeCd());
+			model.addAttribute("dateType",
+					codeMasterRepository.findByCodeTypeAndCd(CodeTypeCd.HOLIDAY_TYPE_CD, form.getDateKind()).getName());
 
-		// TODO 打席番号 － コードマスタ
-		List<String> batNumbers = codeMasterRepository.findByCodeTypeOrderByCd("990").stream().map(p -> p.getName())
-				.collect(Collectors.toList());
-		model.addAttribute("batNumbers", batNumbers);
+			// 予約情報取得
+			List<MemberReservationManage> memberReservationList = memberReservationManageService.getReservationList(
+					LoginUtility.getLoginUser().getAspCode(), form.getReservationDate(), form.getDateKind());
 
-		for (ReservationPointTimeTableInfo table : reservationPointTimeTable) {
-			List<MemberReservationManage> reservationList = new ArrayList<MemberReservationManage>();
-
-			String timeSlotName = DateUtility.toTimeString(table.getStartTime()) + "~"
-					+ DateUtility.toTimeString(table.getEndTime());
-			table.setTimeSlotName(timeSlotName);
-
-			// 打席数分
-			for (String batNo : batNumbers) {
-				MemberReservationManage rev = new MemberReservationManage();
-				rev.setBatNumber(batNo);
-				Optional<MemberReservationManage> manage = memberReservationList.stream()
-						.filter(p -> p.getBatNumber().equals(batNo) && p.getTimeSlotName().equals(timeSlotName))
-						.findFirst();
-				if (manage.isPresent()) {
-					rev.setBatNumberCd(manage.get().getBatNumberCd());
-					rev.setConsumedPoint(manage.get().getConsumedPoint());
-					rev.setMemberCode(manage.get().getMemberCode());
-					rev.setEmptyFlag(manage.get().getEmptyFlag());
-					rev.setExpireFlag(manage.get().getExpireFlag());
-					rev.setReservationNumber(manage.get().getReservationNumber());
-				}
-				reservationList.add(rev);
-			}
-			table.setReservationList(reservationList);
-		}
-
-		// if has reservationTime for a condition
-		if (!StringUtils.isEmptyOrWhitespace(form.getReservationTime())) {
-			List<ReservationPointTimeTableInfo> result = reservationPointTimeTable.stream()
-					.filter(item -> form.getReservationTime().equals(item.getTimeSlotName()))
+			// TODO 打席番号 － コードマスタ
+			List<String> batNumbers = codeMasterRepository.findByCodeTypeOrderByCd("990").stream().map(p -> p.getName())
 					.collect(Collectors.toList());
-			reservationPointTimeTable = result;
+			model.addAttribute("batNumbers", batNumbers);
+
+			for (ReservationPointTimeTableInfo table : reservationPointTimeTable) {
+				List<MemberReservationManage> reservationList = new ArrayList<MemberReservationManage>();
+
+				String timeSlotName = DateUtility.toTimeString(table.getStartTime()) + "~"
+						+ DateUtility.toTimeString(table.getEndTime());
+				table.setTimeSlotName(timeSlotName);
+
+				// 打席数分
+				for (String batNo : batNumbers) {
+					MemberReservationManage rev = new MemberReservationManage();
+					rev.setBatNumber(batNo);
+					Optional<MemberReservationManage> manage = memberReservationList.stream()
+							.filter(p -> p.getBatNumber().equals(batNo) && p.getTimeSlotName().equals(timeSlotName))
+							.findFirst();
+					if (manage.isPresent()) {
+						rev.setBatNumberCd(manage.get().getBatNumberCd());
+						rev.setConsumedPoint(manage.get().getConsumedPoint());
+						rev.setMemberCode(manage.get().getMemberCode());
+						rev.setEmptyFlag(manage.get().getEmptyFlag());
+						rev.setExpireFlag(manage.get().getExpireFlag());
+						rev.setReservationNumber(manage.get().getReservationNumber());
+					}
+					reservationList.add(rev);
+				}
+				table.setReservationList(reservationList);
+			}
+
+			if (isAllTime) {
+				return reservationPointTimeTable;
+			}
+
+			// if has reservationTime for a condition
+			if (!StringUtils.isEmptyOrWhitespace(form.getReservationTime())) {
+				List<ReservationPointTimeTableInfo> result = reservationPointTimeTable.stream()
+						.filter(item -> form.getReservationTime().equals(item.getTimeSlotName()))
+						.collect(Collectors.toList());
+				reservationPointTimeTable = result;
+			}
+
 		}
 
 		return reservationPointTimeTable;
 	}
-
-
 
 }

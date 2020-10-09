@@ -21,8 +21,10 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.thymeleaf.util.StringUtils;
 
 import com.enjoygolf24.api.common.code.CodeTypeCd;
+import com.enjoygolf24.api.common.code.OnOffCd;
 import com.enjoygolf24.api.common.code.PointCategoryCd;
 import com.enjoygolf24.api.common.code.ReservationStatusCd;
 import com.enjoygolf24.api.common.database.bean.TblAsp;
@@ -194,6 +196,7 @@ public class MemberReservationManageController {
 		logger.info("Start finish Controller");
 
 		if (result.hasErrors()) {
+			form.setTrigger(OnOffCd.ON);
 			model.addAttribute("memberReservationRegisterForm", form);
 			return registerReservation(form, model);
 		}
@@ -202,12 +205,14 @@ public class MemberReservationManageController {
 				form.getAspCode(), form.getBatNumber(), form.getReservationDate(), form.getReservationTime(),
 				ReservationStatusCd.STATUS_FIXED, false);
 		if (!checkRev.isEmpty()) {
+			form.setTrigger(OnOffCd.ON);
 			model.addAttribute("memberReservationRegisterForm", form);
 			result.rejectValue("memberCode", "error.memberCode", "{0} : 時間超過のため、既に予約されています。");
 			return registerReservation(form, model);
 		}
 		
 		if (!form.isValid()) {
+			form.setTrigger(OnOffCd.ON);
 			model.addAttribute("memberReservationRegisterForm", form);
 			result.rejectValue("validMonthlyPoint", "error.validMonthlyPoint", "{0} : ポイントが足りないため、予約出来ません。　管理者に問い合わせして下さい。");
 			return registerReservation(form, model);
@@ -216,6 +221,7 @@ public class MemberReservationManageController {
 		int consumedPoint = Integer.valueOf(form.getConsumedPoint());
 		if (PointCategoryCd.MONTHLY_POINT.equals(form.getPointCategoryCode())) {
 			if (consumedPoint > form.getValidMonthlyPoint()) {
+				form.setTrigger(OnOffCd.ON);
 				model.addAttribute("memberReservationRegisterForm", form);
 				result.rejectValue("validMonthlyPoint", "error.validMonthlyPoint", "{0} : 月ポイントが足りないため、予約出来ません。");
 				return registerReservation(form, model);
@@ -224,6 +230,7 @@ public class MemberReservationManageController {
 			List<PointManage> validMonPointList = memberReservationManageService.getMemberPointManageList(
 					form.getMemberCode(), PointCategoryCd.MONTHLY_POINT, form.getReservationDate());
 			if (consumedPoint > validMonPointList.stream().mapToInt(x -> x.getPointAmount()).sum()) {
+				form.setTrigger(OnOffCd.ON);
 				model.addAttribute("memberReservationRegisterForm", form);
 				result.rejectValue("validMonthlyPoint", "error.validMonthlyPoint", "{0} : 月ポイントが足りないため、予約出来ません。");
 				return registerReservation(form, model);
@@ -231,6 +238,7 @@ public class MemberReservationManageController {
 		}
 		if (PointCategoryCd.EVENT_POINT.equals(form.getPointCategoryCode())) {
 			if (consumedPoint > form.getValidEventPoint()) {
+				form.setTrigger(OnOffCd.ON);
 				model.addAttribute("memberReservationRegisterForm", form);
 				result.rejectValue("pointCategoryCode", "error.pointCategoryCode", "{0} : イベントポイントが足りないため、予約出来ません。");
 				return registerReservation(form, model);
@@ -239,6 +247,7 @@ public class MemberReservationManageController {
 			List<PointManage> validEvtPointList = memberReservationManageService.getMemberPointManageList(
 					form.getMemberCode(), PointCategoryCd.EVENT_POINT, form.getReservationDate());
 			if (consumedPoint > validEvtPointList.stream().mapToInt(x -> x.getPointAmount()).sum()) {
+				form.setTrigger(OnOffCd.ON);
 				model.addAttribute("memberReservationRegisterForm", form);
 				result.rejectValue("pointCategoryCode", "error.pointCategoryCode", "{0} : イベントポイントが足りないため、予約出来ません。");
 				return registerReservation(form, model);
@@ -399,6 +408,10 @@ public class MemberReservationManageController {
 
 		if (!StringUtil.isEmpty(form.getSelectedMemberCode())) {
 			form.setMemberCode(form.getSelectedMemberCode());
+		}
+
+		if (!StringUtils.isEmptyOrWhitespace(form.getReservationDate())) {
+			form.setReservationDate(form.getReservationDate().replace('-', '/'));
 		}
 
 		form.setPageNo(DefaultPageSizeUtility.PAGE_FIRST);

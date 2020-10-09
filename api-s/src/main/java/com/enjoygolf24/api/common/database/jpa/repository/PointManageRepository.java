@@ -1,6 +1,6 @@
 package com.enjoygolf24.api.common.database.jpa.repository;
 
-import java.util.Date;
+import java.sql.Timestamp;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -14,7 +14,7 @@ public interface PointManageRepository extends JpaRepository<TblPointManage, Str
 	TblPointManage findById(TblPointManagePK id);
 
 	TblPointManage findByIdMemberCodeAndPointTypeAndStartDateAndEndDate(String memberCode, String pointType,
-			Date startDate, Date endDate);
+			Timestamp startDate, Timestamp endDate);
 
 	TblPointManage findByIdMemberCodeAndCategoryCode(String memberCode, String categoryCode);
 

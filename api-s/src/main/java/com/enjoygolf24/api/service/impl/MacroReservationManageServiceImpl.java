@@ -374,8 +374,9 @@ public class MacroReservationManageServiceImpl implements MacroReservationManage
 
 			// ポイント管理更新
 			TblPointManage tblPointManage = pointManageRepository.findByIdMemberCodeAndPointTypeAndStartDateAndEndDate(
-					serviceBean.getMemberCode(), history.getPointCode(), history.getStartDate(),
-					history.getExpireDate());
+					serviceBean.getMemberCode(), history.getPointCode(),
+					DateUtility.toTimestampDayOfFirst(history.getStartDate()),
+					DateUtility.toTimestampDayOfLast(history.getExpireDate()));
 
 			if (tblPointManage != null) {
 				tblPointManage.setConsumedPoint(tblPointManage.getConsumedPoint() + history.getConsumedPoint());

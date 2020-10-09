@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.enjoygolf24.api.common.code.CodeTypeCd;
 import com.enjoygolf24.api.common.database.bean.TblPointManage;
+import com.enjoygolf24.api.common.database.bean.TblPointSettings;
 import com.enjoygolf24.api.common.database.bean.TblUser;
 import com.enjoygolf24.api.common.database.mybatis.bean.MemberReservationManage;
 import com.enjoygolf24.api.common.utility.DefaultPageSizeUtility;
@@ -208,6 +209,15 @@ public class PointManageController {
 			return detailsIndex(form, model);
 		}
 
+		int pointVal = Integer.parseInt(form.getPointVariation());
+		if (pointVal < form.getPointVariationMin() || pointVal > form.getPointVariationMax()) {
+			result.rejectValue("pointVariation", "error.user",
+					"ポイント値は" + form.getPointVariationMin() + "から" + form.getPointVariationMin() + "まで入力して下さい。");
+			setModelMapper(model);
+			model.addAttribute("pointManageForm", form);
+			return detailsIndex(form, model);
+		}
+
 		pointService.insertPoint(form.createPointManageServiceBean());
 
 		initDetailForm(form, model, form.getMemberCode());
@@ -250,52 +260,31 @@ public class PointManageController {
 	}
 
 	private void initDetailForm(PointManageForm form, Model model, String memberCode) {
-		form.init(pointService, memberCode);
 		form.setLoginUserCd(LoginUtility.getLoginUser().getMemberCode());
+		TblPointSettings pointSettings = pointService.getPointSettings(LoginUtility.getLoginUser().getAuthTypeCd());
+		form.init(pointService, memberCode, pointSettings);
 
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/M/d");
 		String stringDate = dateFormat.format(new Date());
 
-		// TODO ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
-//		MemberReservationManage reservation = new MemberReservationManage();
-//
-//		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/M/d");
-//		String stringDate = dateFormat.format(new Date());
-//
-//		// 月ポイント情報取得
-//		List<MemberReservationManage> totMonPointList = memberReservationManageService
-//				.getMemberPointManageList(memberCode, PointCategoryCd.MONTLY_POINT, null);
-//		List<MemberReservationManage> validMonPointList = memberReservationManageService
-//				.getMemberPointManageList(memberCode, PointCategoryCd.MONTLY_POINT, stringDate);
-//		// 月ポイント情報取得
-//
-//
-//		List<MemberReservationManage> totEvtPointList = memberReservationManageService
-//				.getMemberPointManageList(memberCode, PointCategoryCd.EVENT_POINT, null);
-//		List<MemberReservationManage> validEvtPointList = memberReservationManageService
-//				.getMemberPointManageList(memberCode, PointCategoryCd.EVENT_POINT, stringDate);
-//
-//		reservation.setTotalMonthlyPoint(totMonPointList.stream().mapToInt(x -> x.getPointAmount()).sum());
-//		reservation.setTotalEventPoint(totEvtPointList.stream().mapToInt(x -> x.getPointAmount()).sum());
-//		reservation.setValidMonthlyPoint(validMonPointList.stream().mapToInt(x -> x.getPointAmount()).sum());
-//		reservation.setValidEventPoint(validEvtPointList.stream().mapToInt(x -> x.getPointAmount()).sum());
-		// TODO ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
-
 		MemberReservationManage reservation = memberReservationManageService.getMemberReservationInfo(memberCode,
 				stringDate);
 
-		// TODO: modify point of next month
 		form.setEventPointBalance(reservation.getValidEventPoint());
-		form.setMonthlyPointBalance(reservation.getValidMonthlyPoint());
-		// TODO
-//		form.setEventPointBalanceNextMonth(reservation.getTotalEventPoint());
-//		form.setMonthlyPointBalanceNextMonth(reservation.getTotalMonthlyPoint());
+		form.setMonthlyPointBalance(reservation.getCurrentMonthlyPoint());
+		form.setMonthlyPointBalanceNextMonth(reservation.getNextMonthlyPoint());
+
+		model.addAttribute("currentMonth",
+				reservation.getCurrentMonth().substring(reservation.getCurrentMonth().length() - 2));
+		model.addAttribute("nextMonth", reservation.getNextMonth().substring(reservation.getNextMonth().length() - 2));
+
 
 		setModelMapper(model);
 	}
 
 	private void setModelMapper(Model model) {
 		model.addAttribute("pointAppliedMonthCdMap", cdMapService.createMap(CodeTypeCd.POINT_APPLIED_MONTH));
+		model.addAttribute("pointCategoryCdMap", cdMapService.createMap(CodeTypeCd.POINT_CATEGORY_CD));
 
 	}
 

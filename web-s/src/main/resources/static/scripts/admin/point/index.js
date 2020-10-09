@@ -7,6 +7,23 @@ $(function(){
         }
     });
 
+	$(".calInput").datepicker({
+        changeMonth: true,
+        changeYear: true,
+		yearRange: "-100:+0",
+        minDate: new Date(1920, 01, 01),
+        maxDate: new Date(),
+		showButtonPanel: true
+    });
+
+	$('.calInput').keypress(function(e) {
+	    e.preventDefault();
+	});
+	
+	$('.calInput').focus(function(e) {
+	    $(this).blur();
+	});
+	
 
 /*	$('input:checkbox').change(function(){
 		var count = $('[id^="cellItem"]:checked').length;
